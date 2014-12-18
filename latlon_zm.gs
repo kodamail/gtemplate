@@ -7,20 +7,41 @@ function lat_lon_with_zm( args )
 ret = read( 'pwd.tmp' )
 pwd = sublin( ret, 2 )
 '!rm -f pwd.tmp'
-gs=pwd'/lat_lon_with_zm.gs'
+gs = pwd'/lat_lon_with_zm.gs'
 rc = gsfallow("on")
 
 'set line 0'
 'draw rec 0 0 11 8.5'
 
-cnf = subwrd( args, 1 )
+sw = subwrd( args, 1 )
 ***************************************************************
 ***************************************************************
 ***************************************************************
 *
 * set here
 *
-if( cnf != 'cnf' )
+if( sw != 'cnf' )
+  ret = write( 'inc_latlon_zm.gsf', 'function inc_latlon_zm()' )
+  ret = write( 'inc_latlon_zm.gsf', 'ret = latlon_zm()' )
+  ret = write( 'inc_latlon_zm.gsf', 'return ret' )
+  ret = close( 'inc_latlon_zm.gsf' )
+
+  ret = inc_latlon_zm()
+
+*  '!echo $$ > '
+
+  say _a
+exit
+
+*  'run sample_lat_lon_with_zm.gs'
+  ret = test()
+
+*cmd = 'say ok'
+*cmd
+say _a
+say ok
+exit
+
   cmd_fin = ''
 ***************************************************************
 * Variable
