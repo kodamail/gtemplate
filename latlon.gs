@@ -1,4 +1,4 @@
-function lat_lon_with_zm( args )
+function latlon( args )
 'reinit'
 
 * TODO: support mask for ISCCP topography
@@ -21,988 +21,100 @@ sw = subwrd( args, 1 )
 * set here
 *
 if( sw != 'cnf' )
-  ret = write( 'inc_latlon_zm.gsf', 'function inc_latlon_zm()' )
-  ret = write( 'inc_latlon_zm.gsf', 'ret = latlon_zm()' )
-  ret = write( 'inc_latlon_zm.gsf', 'return ret' )
-  ret = close( 'inc_latlon_zm.gsf' )
+  cnf = sw
 
-  ret = inc_latlon_zm()
+* set default values
+  _varid      = ''
+  _cbar       = 'hor'
+  _cbar.1     = '1'
+  _cbar.2     = ''
+  _mpdraw     = 'on'
+  _cont       = 'off'
+  _time_start = ''
+  _time_end   = ''
+  _year       = 2004
+  _month      = 6
+  _year_start = ''
+  _year_end   = ''
+  _fmax       = 0
+  _save       = ''
+  i = 1
+  while( i <= 6 )
+    _disp.i = ''
+    _cont.i = ''
+    i = i + 1
+  endwhile
 
-*  '!echo $$ > '
+* check existence of cnf file
+  ret = read( cnf'.gsf' )
+  stat = sublin( ret, 1 )
+  if( stat != 0 )
+    say 'error: 'cnf'.gsf does not exist'
+    exit
+  endif
 
-  say _a
-exit
+* check multiple-execution
+  ret = read( 'inc_latlon.gsf' )
+  stat = sublin( ret, 1 )
+  if( stat = 0 )
+    say 'error: temporal file inc_latlon.gsf exists. Please remove.'
+    say '(illegal multiple execution may occur)'
+    exit
+  endif
 
-*  'run sample_lat_lon_with_zm.gs'
-  ret = test()
+* load cnf
+  ret = write( 'inc_latlon.gsf', 'function inc_latlon()' )
+  ret = write( 'inc_latlon.gsf', 'ret = 'cnf'()' )
+  ret = write( 'inc_latlon.gsf', 'return ret' )
+  ret = close( 'inc_latlon.gsf' )
+  ret = inc_latlon()
+  '!rm inc_latlon.gsf'
+  
 
-*cmd = 'say ok'
-*cmd
-say _a
-say ok
-exit
+* set default values necessary after loading cnf
+  i = 1
+  while( i <= 6 )
+    if( _cont.i = '' ) ; _cont.i = _cont ; endif
+    i = i + 1
+  endwhile
 
   cmd_fin = ''
-***************************************************************
-* Variable
-***************************************************************
-*varid = 't2m'
-*varid = 'qv2m'
-varid = 'precip'
-*varid = 'mslp'
-*varid = 'sst'
-
-*varid = 'pt_700_minus_925'
-***varid = 'pt_z3000s_minus_z500s'
-*varid = 'iwp'
-*varid = 'lwp'
-
-*varid = 'lw_up_toa'
-*varid = 'lw_up_clr_toa'
-*varid = 'sw_up_toa'
-*varid = 'sw_up_clr_toa'
-*varid = 'sw_down_toa'
-*varid = 'sw_net_toa'
-*varid = 'aw_net_toa'
-*varid = 'lw_crf_toa'
-*varid = 'sw_crf_toa'
-*varid = 'aw_crf_toa'
-
-*varid = 'lw_up_sfc'
-*varid = 'lw_down_sfc'
-*varid = 'lw_net_sfc'
-*varid = 'sw_up_sfc'
-*varid = 'sw_down_sfc'
-*varid = 'sw_net_sfc'
-*varid = 'aw_net_sfc'
-
-*varid = 'lh_sfc'
-*varid = 'sh_sfc'
-
-***varid = 'energy_net_sfc'
-
-
-*varid = 'isccp_all'
-
-*varid = 'isccp_all_vis'
-*varid = 'isccp_all_vis_thin'
-*varid = 'isccp_all_vis_med'
-*varid = 'isccp_all_vis_thick'
-
-*varid = 'isccp_high_vis'
-*varid = 'isccp_middle_vis'
-*varid = 'isccp_low_vis'
-*varid = 'isccp_high_vis_thin'
-*varid = 'isccp_high_vis_med'
-*varid = 'isccp_high_vis_thick'
-*varid = 'isccp_middle_vis_thin'
-*varid = 'isccp_middle_vis_med'
-*varid = 'isccp_middle_vis_thick'
-*varid = 'isccp_low_vis_thin'
-*varid = 'isccp_low_vis_med'
-*varid = 'isccp_low_vis_thick'
-
-*varid = 'isccp_ctp_all'
-*varid = 'isccp_ctp_all_vis'
-*varid = 'isccp_od_all_vis'
-
-
-*varid = subwrd( args, 1 )
-***************************************************************
-
-
-***************************************************************
-* Display style
-***************************************************************
-cbar = 'hor'
-cbar.1 = '2'
-cbar.2 = '6'
-
-*cbar = 'ver'
-*cvar.1 = '1'
-
-*cbar = 'each'
-
-mpdraw = 'on'
-*mpdraw = 'off'
-
-***** 3 raw figs. and 2 diff. figs *****
-if( 1 = 1 )
-  disp.1 = '1'   ; cont.1 = 'off'
-  disp.2 = '2'   ; cont.2 = 'off'
-  disp.3 = '3'   ; cont.3 = 'off'
-*  disp.4 = '3 2' ; cont.4 = 'off'
-  disp.4 = ''    ; cont.4 = 'off'
-  disp.5 = '2 1' ; cont.5 = 'off'
-  disp.6 = '3 1' ; cont.6 = 'off'
-*  disp.4 = '3 1' ; cont.4 = 'off'
-*  disp.5 = '3 2' ; cont.5 = 'off'
-*  disp.6 = '' ; cont.6 = 'off'
-endif
-if( 1 != 1 )
-  disp.1 = '1'   ; cont.1 = 'off'
-  disp.2 = '2'   ; cont.2 = 'off'
-  disp.3 = '3'   ; cont.3 = 'off'
-  disp.4 = ''    ; cont.4 = 'off'
-  disp.5 = '2 1' ; cont.5 = 'off'
-  disp.6 = '3 2' ; cont.6 = 'off'
-endif
-*
-***** 2 raw figs. and 1 diff. figs *****
-if( 1 != 1 )
-**  disp.1 = '1'   ; cont.1 = 'on'
-*  disp.1 = '1'   ; cont.1 = 'off'
-**  disp.2 = '2'   ; cont.2 = 'on'
-*  disp.2 = '2'   ; cont.2 = 'off'
-*  disp.3 = ''   ; cont.3 = 'off'
-*  disp.4 = ''    ; cont.4 = 'off'
-**  disp.5 = '2 1' ; cont.5 = 'on'
-*  disp.5 = '2 1' ; cont.5 = 'off'
-*  disp.6 = '' ; cont.6 = 'off'
-
-*  disp.1 = '1'   ; cont.1 = 'off'
-*  disp.2 = '2'   ; cont.2 = 'off'
-*  disp.3 = '2 1'   ; cont.3 = 'off'
-*  disp.4 = ''    ; cont.4 = 'off'
-*  disp.5 = '' ; cont.5 = 'off'
-*  disp.6 = '' ; cont.6 = 'off'
-
-  disp.1 = ''    ; cont.1 = 'off'
-  disp.2 = '1'   ; cont.2 = 'off'
-  disp.3 = '2'   ; cont.3 = 'off'
-  disp.4 = ''    ; cont.4 = 'off'
-  disp.5 = ''    ; cont.5 = 'off'
-  disp.6 = '2 1' ; cont.6 = 'off'
-endif
-*
-***** raw figs. *****
-if( 1 != 1 )
-  disp.1 = '1' ; cont.1 = 'on'
-  disp.2 = '2' ; cont.2 = 'on'
-  disp.3 = '3' ; cont.3 = 'on'
-  disp.4 = '4' ; cont.4 = 'on'
-  disp.5 = '5' ; cont.5 = 'on'
-  disp.6 = '6' ; cont.6 = 'on'
-endif
-if( 1 != 1 )
-  disp.1 = '1' ; cont.1 = 'off'
-  disp.2 = '' ; cont.2 = 'on'
-  disp.3 = '' ; cont.3 = 'on'
-  disp.4 = '' ; cont.4 = 'on'
-  disp.5 = '' ; cont.5 = 'on'
-  disp.6 = '' ; cont.6 = 'on'
-endif
-*
-***** test figs. *****
-if( 1 != 1 )
-  disp.1 = '1'   ; cont.1 = 'off'
-  disp.2 = '3'   ; cont.2 = 'off'
-  disp.3 = '3 1'   ; cont.3 = 'off'
-  disp.4 = '2' ; cont.4 = 'off'
-  disp.5 = '3' ; cont.5 = 'off'
-  disp.6 = '3 2' ; cont.6 = 'off'
-endif
-*
-***** sensitivity experiments *****
-if( 1 != 1 )
-  disp.1 = '1 4'
-  disp.2 = '2 4'
-  disp.3 = '3 4'
-  disp.4 = '4'
-  disp.5 = '5 4'
-  disp.6 = '6 4'
-endif
-***** for precipitation  *****
-if( 1 != 1 )
-  disp.1 = '1'   ; cont.1 = 'off'
-  disp.2 = '2'   ; cont.2 = 'off'
-  disp.3 = '3'   ; cont.3 = 'off'
-  disp.4 = '4'   ; cont.4 = 'off'
-  disp.5 = '5'   ; cont.5 = 'off'
-  disp.6 = '6'   ; cont.6 = 'off'
-endif
-*
-*
-***************************************************************
-
-
-***************************************************************
-* Time
-***************************************************************
-
-***** monthly/seasonal mean *****
-*year = 2004
-*year = subwrd( args, 2 )
-
-year=2004
-month=6
-*month=7
-*month = 678
-*month = 901
-*month = 345
-*month = subwrd( args, 2 )
-
-***** start/end time *****
-*time_start = '06jun2004'
-**time_start = '18z10jun2004'
-*time_endpp = '11jun2004'
-*
-*time_start = '01jun2004'
-*time_endpp = '30aug2004'
-*
-*time_start = '03z01jan2000'
-*time_endpp = '00z16apr2000'
-
-*time_start = 'jan2000'
-*time_endpp = 'apr2000'
-
-
-***** climatological mean *****
-*year = 'clim'
-
-*year_start = 1978 ; year_end   = 1978
-*month = 678
-*month = 901
-*month = 212
-
-*year_start = 1979 ; year_end   = 1979
-*month = 345
-*month = 678
-*month = 901
-*month = 212
-
-*year_start = 2004 ; year_end   = 2004
-
-*year_start = 1979 ; year_end   = 1988
-*year_start = 1980 ; year_end   = 1989
-*year_start = 1988 ; year_end   = 1988
-
-*year_start = 1984 ; year_end   = 1988
-*year_start = 1985 ; year_end   = 1989
-
-*year_start = 1979 ; year_end   = 1988
-*year_start = 1979 ; year_end   = 1998
-*year_start.2 = year_start + 96 ; year_end.2   = year_end + 96
-*month=12
-*month = 345
-*month = 678
-*month = 901
-*month = 212
-*month = 999
-
-*time_start.1 = 'jun1979' ; time_end.1 = 'may1983'
-*time_start.2 = 'jun2075' ; time_end.2 = 'may2079'
-
-
-* for MIROC5
-*year_start = 1980
-***year_start = 1984  * for SRB3.0
-***year_start = 1995   * for isccp
-*year_end = 2004
-
-* for kinmirai (MIROC3)
-*year_start = 2003
-***year_end = 2010
-*year_end = 2008
-
-* for MIROC t106 (MIROC3.2hi)
-*year_start = 1980
-***year_start = 1984  * for SRB3.0
-***year_start = 1995 * for isccp
-*year_end = 2002
-*year_end = 2001  * for ???
-
-*month = subwrd( args, 2 )
-
-
-***************************************************************
-
-
-***************************************************************
-* Space
-***************************************************************
-region = 'global'
-*region = 'indian'
-*region = 'pacific'
-*region = 'atlantic'
-*region = 'indwpac'
-*region = 'epac'
-*region = 'atlantic'
-*region = 'nhpac'
-*region = 'nhatlantic'
-*region = 'east_asia'
-*region = 'lowlat'
-*region = subwrd( args, 1 )
-***************************************************************
-
-
-***************************************************************
-* Open list
-***************************************************************
-* time_start.f & time_end.f will be set from month without explicitly specifying.
-
-f = 1
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( 'JRA125 'varid' -cdir sl/144x72/tstep' )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-
-  if( month = 345 )
-    clim_arg.f = '01mar%y 31may%y 2000 2009'
-  endif
-  if( month = 678 )
-    clim_arg.f = '01jun%y 31aug%y 2000 2009'
-  endif
-  if( month = 901 )
-    clim_arg.f = '01sep%y 30nov%y 2000 2009'
-  endif
-  if( month = 212 )
-    clim_arg.f = '01dec%y 28feb%ypp 2000 2008'
-  endif
-
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-*  cdir = 'monthly/surface'
-  cdir = 'moda/sfc/240x121'
-  ret = run_list( 'ERA_INTERIM 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  cdir = 'data_conv/surface/144x73/monthly'
-  ret = run_list( 'NCEP1 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( 'SRB3.0 'varid' -time monthly_mean' )
-*  ret = run_list( 'SRB3.0 'varid' -time daily_mean' )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-*  cm   = cmonth( month, 3 )
-*  clim_arg.f = cm % '%y ' % cm % '%y 1983 2004'
-*  clim_arg.f = cm % '%y ' % cm % '%y 1984 2006'
-  if( 1 != 1 )
-    if( month = 345 )
-      clim_arg.f = 'mar%y may%y 1984 2006'
-    endif
-    if( month = 678 )
-      clim_arg.f = 'jun%y aug%y 1984 2006'
-    endif
-    if( month = 901 )
-      clim_arg.f = 'sep%y nov%y 1984 2006'
-    endif
-    if( month = 212 )
-      clim_arg.f = 'dec%y feb%ypp 1984 2005'
-    endif
-  endif
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( 'ERBE 'varid' -time monthly_mean' )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  cm   = cmonth( month, 3 )
-  clim_arg.f = cm % '%y ' % cm % '%y 1985 1988'
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  cdir = 'monthly'
-  ret = run_list( 'MODIS 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  cm   = cmonth( month, 3 )
-*  time_start.f = '01' % cm % '2008'
-*  time_end.f   = '01' % cm % '2010'
-  if( month <= 4 )
-    clim_arg.f = cm % '%y ' % cm % '%y 2008 2011'
-  else
-    clim_arg.f = cm % '%y ' % cm % '%y 2008 2010'
-  endif
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( 'CMAP 'varid  )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  cm   = cmonth( month, 3 )
-*  clim_arg.f = cm % '%y ' % cm % '%y 1979 2007'
-*  clim_arg.f = cm % '%y ' % cm % '%y 1980 2004'
-*  clim_arg.f = cm % '%y ' % cm % '%y 1979 1999'
-*  clim_arg.f = cm % '%y ' % cm % '%y 2001 2009'
-*  clim_arg.f = cm % '%y ' % cm % '%y -ylist 2001,2002,2004,2005,2006,2007,2008,2009'
-*  clim_arg.f = 'jun%y aug%y -ylist 2001,2002,2004,2005,2006,2007,2008,2009'
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 = 1 )
-  ret = run_list( 'GPCP 'varid  )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  cm   = cmonth( month, 3 )
-
-  if( 1 != 1 )
-    clim_arg.f = cm % '%y ' % cm % '%y 1979 2004'
-    if( month = 345 )
-      clim_arg.f = 'mar%y may%y 1979 2004'
-    endif
-    if( month = 678 )
-      clim_arg.f = 'jun%y aug%y 1979 2004'
-    endif
-    if( month = 901 )
-     clim_arg.f = 'sep%y nov%y 1979 2004'
-    endif
-    if( month = 212 )
-      clim_arg.f = 'dec%y feb%ypp 1979 2003'
-    endif
-  endif
-
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( 'GSMaP_TMI 'varid' -cdir monthly' )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  cm   = cmonth( month, 3 )
-*  clim_arg.f = cm % '%y ' % cm % '%y 1998 2006'
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( 'ISCCP_D1_OBS 'varid )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-
-*  cm   = cmonth( month, 3 )
-  if( month = 345 )
-    clim_arg.f = 'mar%y may%y 1995 2008'
-  endif
-  if( month = 678 )
-   clim_arg.f = 'jun%y aug%y 1995 2007'
-  endif
-  if( month = 901 )
-    clim_arg.f = 'sep%y nov%y 1995 2007'
-  endif
-  if( month = 212 )
-    clim_arg.f = 'dec%y feb%ypp 1995 2007'
-  endif
-
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( 'MIROC_cmip5_mAmO_20C_run01 'varid )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  cm   = cmonth( month, 3 )
-*  clim_arg.f = cm % '%y ' % cm % '%y 1980 2004'
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( 'MIROC_kinmirai_mAmO_AR4_SRES_LA_A1_01 'varid )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  cm   = cmonth( month, 3 )
-*  clim_arg.f = cm % '%y ' % cm % '%y 2003 2007'
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( 'MIROC_amip_t106 'varid )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  cm   = cmonth( month, 3 )
-*  clim_arg.f = cm % '%y ' % cm % '%y 1978 2002'
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-
-***************************************************************
-if( 1 != 1 )
-*  cdir = 'sl/144x72/3hr_tstep'
-*  cdir = 'sl/144x72/30dy_mean'
-  cdir = 'advanced/cosp_v1.3/2560x1280/30dy_mean/step4'
-  ret = run_list( 'APE.ctl.gl09.by_iga 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  cdir = 'sl/144x72/tstep'
-  ret = run_list( 'K.200406.L38.gl09.run06 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  cdir = 'sl/144x72/monthly_mean'
-  ret = run_list( 'K.200406.N12.gl09.L38.a 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  cdir = 'sl/144x72/monthly_mean'
-  ret = run_list( 'K.200406.N12.gl09.L38.a.005 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 = 1 )
-  cdir = 'sl/144x72/monthly_mean'
-*  cdir = 'isccp/144x72x49/monthly_mean'
-  ret = run_list( 'K.200406.N12.gl09.L38.b 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 = 1 )
-  cdir = 'sl/144x72/monthly_mean'
-*  cdir = 'isccp/144x72x49/monthly_mean'
-  ret = run_list( 'K.200406.N12.gl09.L38.b.001 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-*  cdir = 'sl/144x72/monthly_mean'
-  cdir = 'isccp/144x72x49/monthly_mean'
-  ret = run_list( 'K.200406.N12.gl09.L38.b.002 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  cdir = 'sl/144x72/tstep'
-*  cdir = 'sl/144x72/monthly_mean'
-*  cdir = 'sl/288x145/tstep'
-  ret = run_list( 'K.200406.L38.gl09.gwd 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-*  cdir = 'sl/360x181/monthly_mean'
-*  cdir = 'sl/360x181/tstep'
-*  cdir = 'sl/288x145/tstep'
-*  cdir = 'sl/144x72/monthly_mean'
-  cdir = 'isccp/144x72x49/monthly_mean'
-  ret = run_list( 'AMIP.N12.197806.gl09.L38.run01 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( 'AMIP2_BOUNDARY 'varid )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( 'AMIP2_BOUNDARY 'varid )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-
-***************************************************************
-if( 1 != 1 )
-*  cdir = 'sl/144x72/monthly_mean'
-  cdir = 'isccp/144x72x49/monthly_mean'
-  ret = run_list( 'AMIP.N12.207406.gl09.L38.run01 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  
-*  cm   = cmonth( month, 3 )
-*  clim_arg.f = cm % '%y ' % cm % '%y ' % (year_start+96) % ' ' % (year_end+96)
-*
-*  if( month = 345 )
-*    clim_arg.f = 'mar%y may%y ' % (year_start+96) % ' ' % (year_end+96)
-*  endif
-*  if( month = 678 )
-*    clim_arg.f = 'jun%y aug%y ' % (year_start+96) % ' ' % (year_end+96)
-*  endif
-*  if( month = 901 )
-*    clim_arg.f = 'sep%y nov%y ' % (year_start+96) % ' ' % (year_end+96)
-*  endif
-*  if( month = 212 )
-*    clim_arg.f = 'dec%y feb%ypp ' % (year_start+96) % ' ' % (year_end+96)
-*  endif
-
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-
-***************************************************************
-if( 1 != 1 )
-*  cdir = 'sl/144x72/3hr_tstep'
-  cdir = 'sl/144x72/30dy_mean'
-  ret = run_list( 'APE.p4k.gl09.by_iga 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-
-***************************************************************
-if( 1 != 1 )
-  cdir = 'sl/2560x1280/monthly_mean'
-*  cdir = 'sl/144x72/monthly_mean'
-  ret = run_list( '200406_AR5 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( '200406_GW 'varid' -time monthly_mean -lon native -lat native' )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-*  cdir = 'sl/144x72/tstep'
-*  cdir = 'ml_plev/320x160x18/monthly_mean'
-  cdir = 'isccp/144x72x49/tstep'
-  ret = run_list( '200406.new.prun2010.gl09 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-*  cdir = 'sl/144x72/tstep'
-*  cdir = 'ml_plev/320x160x18/monthly_mean'
-  cdir = 'isccp/144x72x49/tstep'
-  ret = run_list( 'N12.ES.200406.gl09.L40.ndw6 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-*  cdir = 'sl/2560x1280/monthly_mean'
-  cdir = 'sl/144x72/monthly_mean'
-*  cdir = 'ml_plev/320x160x18/monthly_mean'
-*  cdir = 'isccp/2560x1280x49/monthly_mean'
-  ret = run_list( '200406.new 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-*  cdir = 'sl/2560x1280/monthly_mean'
-*  cdir = 'sl/144x72/monthly_mean'
-  cdir = 'sl/144x72/1dy_mean'
-*  cdir = 'isccp/2560x1280x49/monthly_mean'
-*  ret = run_list( '200406.new.prun2010.gl09 'varid' -cdir 'cdir )
-  ret = run_list( '200406.new.prun2010.gl09_chikira_def 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-*  time_start.f = '01aug2004'
-  time_start.f = '01jun2004'
-  time_end.f   = '29aug2004'
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-
-***************************************************************
-if( 1 != 1 )
-  cdir = 'sl/144x73/monthly_mean'
-  ret = run_list( 'CLIM_MATSIRO_200406.run18 'varid' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-
-***************************************************************
-if( 1 != 1 )
-*  cdir =  'data_conv/'year'/320x160/monthly_mean'
-  cdir =  'data_conv/clim/320x160/monthly_mean'
-  ret = run_list( 'COLA-NICAM 'varid' -cdir 'cdir )
-*  ret = run_list( 'COLA-NICAM 'varid' -time monthly_mean -year 'year )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  run.f = run.f % ' 8yr'
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  cdir =  'clim/320x160_N80/tstep'
-  cdir =  year'/320x160_N80/tstep'
-  ret = run_list( 'COLA-IFS-T2047 'varid' -cdir 'cdir )
-*  ret = run_list( 'COLA-NICAM 'varid' -time monthly_mean -year 'year )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-*  run.f = run.f % ' 8yr'
-*  time_start.f = '06z01jun2004' ; time_end.f   = '00z01jul2004'
-*  time_start.f = '06z01jul2004' ; time_end.f   = '00z01aug2004'
-*  time_start.f = '06z01aug2004' ; time_end.f   = '00z01sep2004'
-  time_start.f = '06z01jun2004' ; time_end.f   = '00z01sep2004'
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( 'CMIP_GW_GL9 'varid' -time monthly_mean -lon native -lat native' )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-if( 1 != 1 )
-  ret = run_list( '200404.new 'varid' -time native -lon native -lat native' )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-* sensitivity experiments
-***************************************************************
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( '200406.new_4water 'varid' -time native -lon zonal_mean' )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( '200406.new_qicrt0 'varid' -time native -lon zonal_mean' )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( '200406.new_qicrt0001 'varid' -time native -lon zonal_mean' )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( '200406.new_qicrt0005 'varid' -time native -lon zonal_mean' )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( '200406.new_qicrt001 'varid' -time native -lon zonal_mean' )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( '200406.new_qicrt01 'varid' -time native -lon zonal_mean' )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-
-
-***************************************************************
-* ISCCP
-***************************************************************
-
-***************************************************************
-if( 1 != 1 )
-  varid.f = 'isccp_high_vis'
-  ret = run_list( 'ISCCP_D1_OBS 'varid.f )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-
-  varid.f = 'isccp_middle_vis'
-  ret = run_list( 'ISCCP_D1_OBS 'varid.f )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-
-  varid.f = 'isccp_low_vis'
-  ret = run_list( 'ISCCP_D1_OBS 'varid.f )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  cdir = 'isccp/2560x1280x49/monthly_mean'
-
-  varid.f = 'isccp_high_vis'
-  ret = run_list( '200406.new 'varid.f' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-
-  varid.f = 'isccp_middle_vis'
-  ret = run_list( '200406.new 'varid.f' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-
-  varid.f = 'isccp_low_vis'
-  ret = run_list( '200406.new 'varid.f' -cdir 'cdir )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-endif
-
-
-***************************************************************
-if( 1 != 1 )
-  varid.f = 'isccp_high_vis'
-  ret = run_list( 'MIROC_cmip5_mAmO_20C_run01 'varid.f )
-*  ret = run_list( 'MIROC_kinmirai_mAmO_AR4_SRES_LA_A1_01 'varid.f )
-*  ret = run_list( 'MIROC_amip_t106 'varid.f )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  cm   = cmonth( month, 3 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-
-  varid.f = 'isccp_middle_vis'
-  ret = run_list( 'MIROC_cmip5_mAmO_20C_run01 'varid.f )
-*  ret = run_list( 'MIROC_kinmirai_mAmO_AR4_SRES_LA_A1_01 'varid.f )
-*  ret = run_list( 'MIROC_amip_t106 'varid.f )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  cm   = cmonth( month, 3 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-
-  varid.f = 'isccp_low_vis'
-  ret = run_list( 'MIROC_cmip5_mAmO_20C_run01 'varid.f )
-*  ret = run_list( 'MIROC_kinmirai_mAmO_AR4_SRES_LA_A1_01 'varid.f )
-*  ret = run_list( 'MIROC_amip_t106 'varid.f )
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  cm   = cmonth( month, 3 )
-  if( var.f != '' ) ; f2df.f = last() ; f = f + 1 ; endif
-
-endif
-
-
-***************************************************************
-say ''
-fmax = f - 1
-***************************************************************
-
-month2 = month
-if( month < 10  ) ; month2 = '0' % month   ; endif
-if( month = 345 ) ; month2 = 'MAM' ; endif
-if( month = 678 ) ; month2 = 'JJA' ; endif
-if( month = 901 ) ; month2 = 'SON' ; endif
-if( month = 212 ) ; month2 = 'DJF' ; endif
-if( month = 999 ) ; month2 = 'ANU' ; endif
-
-save = 'lat_lon_with_zm_'varid'_'year'_'month2
-*save = 'lat_lon_with_zm_'varid'_'region'_'year'_'month2
-*save = 'lat_lon_with_zm_'varid'_'region'_'year_start'_'year_end'_'month2
-
+  say ''
 
 ***************************************************************
 ***************************************************************
 ***************************************************************
 *
-********** arguements from external file **********
+********** arguements from external file (obsolute) **********
 else
 *  cmd_fin = 'quit'
   cmd_fin = ''
 
-  cbar = 'hor'
-  cbar.1 = '2'
-  cbar.2 = '5'
+  _cbar = 'hor'
+  _cbar.1 = '2'
+  _cbar.2 = '5'
 
-  cont.1 = 'off'
-  cont.2 = 'off'
-  cont.3 = 'off'
-  cont.4 = 'off'
-  cont.5 = 'off'
-  cont.6 = 'off'
+  _cont.1 = 'off'
+  _cont.2 = 'off'
+  _cont.3 = 'off'
+  _cont.4 = 'off'
+  _cont.5 = 'off'
+  _cont.6 = 'off'
 
-  mpdraw = 'on'
+  _mpdraw = 'on'
 
   cnf_fname = subwrd( args, 2 )
 
-***** varid-name
+***** _varid-name
   tmp = sublin( read( cnf_fname ), 2 )
-  varid = subwrd( tmp, 1 )
-  varid.1 = subwrd( tmp, 2 )
-  varid.2 = subwrd( tmp, 3 )
-  varid.3 = subwrd( tmp, 4 )
-  varid.4 = subwrd( tmp, 5 )
-  varid.5 = subwrd( tmp, 6 )
-  varid.6 = subwrd( tmp, 7 )
-  say 'varid = ' % varid
+  _varid = subwrd( tmp, 1 )
+  _varid.1 = subwrd( tmp, 2 )
+  _varid.2 = subwrd( tmp, 3 )
+  _varid.3 = subwrd( tmp, 4 )
+  _varid.4 = subwrd( tmp, 5 )
+  _varid.5 = subwrd( tmp, 6 )
+  _varid.6 = subwrd( tmp, 7 )
+  say '_varid = ' % _varid
 
 ***** ( -ym year month | -time start endpp | -clim year_start year_end month)
   tmp = sublin( read( cnf_fname ), 2 )
@@ -1018,69 +130,69 @@ else
     if( tmp.p = '-year' )
 *     e.g. year=2004, month=6
       p = p + 1 ; tmp.p = subwrd( tmp, p )
-      year  = tmp.p
-      say 'year  = ' % year
+      _year  = tmp.p
+      say 'year  = ' % _year
       p = p + 1 ; continue
     endif
 
     if( tmp.p = '-ym' )
 *     e.g. year=2004, month=6
       p = p + 1 ; tmp.p = subwrd( tmp, p )
-      year  = tmp.p
+      _year  = tmp.p
       p = p + 1 ; tmp.p = subwrd( tmp, p )
-      month = tmp.p
-      say 'year  = ' % year
-      say 'month = ' % month
+      _month = tmp.p
+      say 'year  = ' % _year
+      say 'month = ' % _month
       p = p + 1 ; continue
     endif
 
     if( tmp.p = '-time' )
-*     e.g. time_start=01jun2004, time_endpp=01sep2004 (if JJA)
+*     e.g. _time_start=01jun2004, _time_endpp=01sep2004 (if JJA)
       p = p + 1 ; tmp.p = subwrd( tmp, p )
-      time_start  = tmp.p
+      _time_start  = tmp.p
       p = p + 1 ; tmp.p = subwrd( tmp, p )
-      time_endpp  = tmp.p
-      say 'time_start = ' % time_start
-      say 'time_endpp = ' % time_endpp
+      _time_endpp  = tmp.p
+      say '_time_start = ' % _time_start
+      say '_time_endpp = ' % _time_endpp
       p = p + 1 ; continue
     endif
 
 *    if( tmp.p = '-time.1' )
     if( tmph = '-time' )
       p = p + 1 ; tmp.p = subwrd( tmp, p )
-      time_start.tmpt  = tmp.p
+      _time_start.tmpt  = tmp.p
       p = p + 1 ; tmp.p = subwrd( tmp, p )
-      time_endpp.tmpt  = tmp.p
-      say 'time_start.' % tmpt % ' = ' % time_start.tmpt
-      say 'time_endpp.' % tmpt % ' = ' % time_endpp.tmpt
+      _time_endpp.tmpt  = tmp.p
+      say '_time_start.' % tmpt % ' = ' % _time_start.tmpt
+      say '_time_endpp.' % tmpt % ' = ' % _time_endpp.tmpt
       p = p + 1 ; continue
     endif
 
     if( tmp.p = '-clim' )
-      year = 'clim'
+      _year = 'clim'
       p = p + 1 ; tmp.p = subwrd( tmp, p )
-      year_start = tmp.p
+      _year_start = tmp.p
       p = p + 1 ; tmp.p = subwrd( tmp, p )
-      year_end   = tmp.p
+      _year_end   = tmp.p
       p = p + 1 ; tmp.p = subwrd( tmp, p )
-      month      = tmp.p
-      say year_start
-      say year_end
-      say month
+      _month      = tmp.p
+      say _year_start
+      say _year_end
+      say _month
       p = p + 1 ; continue
     endif
 
     if( tmph = '-clim' )
-      year.tmpt = 'clim'
+      _year.tmpt = 'clim'
       p = p + 1 ; tmp.p = subwrd( tmp, p )
-      year_start.tmpt = tmp.p
+      _year_start.tmpt = tmp.p
       p = p + 1 ; tmp.p = subwrd( tmp, p )
-      year_end.tmpt   = tmp.p
+      _year_end.tmpt   = tmp.p
       p = p + 1 ; tmp.p = subwrd( tmp, p )
-      month.tmpt      = tmp.p
-      say year_start.tmpt
-      say year_end.tmpt
-      say month.tmpt
+      _month.tmpt      = tmp.p
+      say _year_start.tmpt
+      say _year_end.tmpt
+      say _month.tmpt
       p = p + 1 ; continue
     endif
 
@@ -1093,26 +205,26 @@ else
 *  tmp4 = subwrd( tmp, 4 )
 *  if( tmp1 = '-ym' )
 **   e.g. year=2004, month=6
-*    year  = tmp2
-*    month = tmp3
-*    say 'year  = ' % year
-*    say 'month = ' % month
+*    _year  = tmp2
+*    _month = tmp3
+*    say 'year  = ' % _year
+*    say 'month = ' % _month
 *  endif
 *  if( tmp1 = '-time' )
-**   e.g. time_start=01jun2004, time_endpp=01sep2004 (if JJA)
-*    time_start  = tmp2
-*    time_endpp  = tmp3
-*    say 'time_start = ' % time_start
-*    say 'time_endpp = ' % time_endpp
+**   e.g. _time_start=01jun2004, _time_endpp=01sep2004 (if JJA)
+*    _time_start  = tmp2
+*    _time_endpp  = tmp3
+*    say '_time_start = ' % _time_start
+*    say '_time_endpp = ' % _time_endpp
 *  endif
 *  if( tmp1 = '-clim' )
-*    year = 'clim'
-*    year_start = tmp2
-*    year_end   = tmp3
-*    month      = tmp4
-*    say year_start
-*    say year_end
-*    say month
+*    _year = 'clim'
+*    _year_start = tmp2
+*    _year_end   = tmp3
+*    _month      = tmp4
+*    say _year_start
+*    say _year_end
+*    say _month
 *  endif
 
 ***** number of dataset
@@ -1128,28 +240,28 @@ else
 ***** display (X 6)
   d = 1
   while( d <= 6 )
-    disp.d = sublin( read( cnf_fname ), 2 )
-    say 'disp #' % d % ': ' % disp.d
+    _disp.d = sublin( read( cnf_fname ), 2 )
+    say 'disp #' % d % ': ' % _disp.d
     d = d + 1
   endwhile
 ***** save
-  save = sublin( read( cnf_fname ), 2 )
+  _save = sublin( read( cnf_fname ), 2 )
 
 ***************************************************************
 * Open list
 ***************************************************************
 f = 1
-fmax = dnum
-while( f <= fmax )
+_fmax = dnum
+while( f <= _fmax )
   ret = run_list( dconf.f )
 
-  run.f = subwrd( ret, 2 )
-  var.f = subwrd( ret, 4 )
-  if( var.f = '' )
+  _run.f = subwrd( ret, 2 )
+  _var.f = subwrd( ret, 4 )
+  if( _var.f = '' )
     say 'error: file (#=' % f % ') does not exist'
     'quit'
   endif
-  f2df.f = last()
+  _f2df.f = last()
   f = f + 1
 endwhile
 
@@ -1162,137 +274,137 @@ endif
 ***************************************************************
 
 
-if( region = 'global' | region = 'region' | region = ''   ) ; latmin = -90 ; latmax = 90 ; lonmin = 0   ; lonmax = 360 ; endif
-if( region = 'indian'     ) ; latmin = -30 ; latmax = 30 ; lonmin = 0   ; lonmax = 120 ; endif
-if( region = 'pacific'    ) ; latmin = -30 ; latmax = 30 ; lonmin = 120 ; lonmax = 240 ; endif
-if( region = 'atlantic'   ) ; latmin = -30 ; latmax = 30 ; lonmin = 240 ; lonmax = 360 ; endif
-if( region = 'indwpac'    ) ; latmin = -30 ; latmax = 30 ; lonmin = 60  ; lonmax = 180 ; endif
-if( region = 'epac'       ) ; latmin = -30 ; latmax = 30 ; lonmin = 180 ; lonmax = 300 ; endif
-if( region = 'atlantic'   ) ; latmin = -30 ; latmax = 30 ; lonmin = 240 ; lonmax = 360 ; endif
-if( region = 'nhpac'      ) ; latmin = 20  ; latmax = 80 ; lonmin = 120 ; lonmax = 240 ; endif
-if( region = 'nhatlantic' ) ; latmin = 20  ; latmax = 80 ; lonmin = 240 ; lonmax = 360 ; endif
-if( region = 'east_asia'  ) ; latmin = 0   ; latmax = 50 ; lonmin = 80  ; lonmax = 180 ; endif
-if( region = 'lowlat'     ) ; latmin = -60 ; latmax = 60 ; lonmin = 0   ; lonmax = 360 ; endif
-
+if( _region = 'global' | _region = '_region' | _region = '' ) 
+                               latmin = -90 ; latmax = 90 ; lonmin = 0   ; lonmax = 360 ; endif
+if( _region = 'indian'     ) ; latmin = -30 ; latmax = 30 ; lonmin = 0   ; lonmax = 120 ; endif
+if( _region = 'pacific'    ) ; latmin = -30 ; latmax = 30 ; lonmin = 120 ; lonmax = 240 ; endif
+if( _region = 'atlantic'   ) ; latmin = -30 ; latmax = 30 ; lonmin = 240 ; lonmax = 360 ; endif
+if( _region = 'indwpac'    ) ; latmin = -30 ; latmax = 30 ; lonmin = 60  ; lonmax = 180 ; endif
+if( _region = 'epac'       ) ; latmin = -30 ; latmax = 30 ; lonmin = 180 ; lonmax = 300 ; endif
+if( _region = 'atlantic'   ) ; latmin = -30 ; latmax = 30 ; lonmin = 240 ; lonmax = 360 ; endif
+if( _region = 'nhpac'      ) ; latmin = 20  ; latmax = 80 ; lonmin = 120 ; lonmax = 240 ; endif
+if( _region = 'nhatlantic' ) ; latmin = 20  ; latmax = 80 ; lonmin = 240 ; lonmax = 360 ; endif
+if( _region = 'east_asia'  ) ; latmin = 0   ; latmax = 50 ; lonmin = 80  ; lonmax = 180 ; endif
+if( _region = 'lowlat'     ) ; latmin = -60 ; latmax = 60 ; lonmin = 0   ; lonmax = 360 ; endif
 
 
 ***************************************************************
 * Automatic Time Setting
 ***************************************************************
-if( year = 'clim' ) ; year = '%y' ; endif
+if( _year = 'clim' ) ; _year = '%y' ; endif
 
 term = ''
-if( time_start = 'time_start' | time_start = '' )
-  if( month >= 1 & month <= 12 )
-    cm   = cmonth( month, 3 )
-    cmpp = cmonth( month+1, 3 )
-    yearpp = year
-    if( month = 12 )
-      if( year = '%y' ) ; yearpp = '%ypp'
-      else              ; yearpp = yearpp + 1 ; endif
+if( _time_start = '_time_start' | _time_start = '' )
+  if( _month >= 1 & _month <= 12 )
+    cm   = cmonth( _month, 3 )
+    cmpp = cmonth( _month+1, 3 )
+    _yearpp = _year
+    if( _month = 12 )
+      if( _year = '%y' ) ; _yearpp = '%ypp'
+      else              ; _yearpp = _yearpp + 1 ; endif
     endif
-    term = cmonth( month )
-    time_start = '01'cm''year
-    time_endpp = '01'cmpp''yearpp
+    term = cmonth( _month )
+    _time_start = '01'cm''_year
+    _time_endpp = '01'cmpp''_yearpp
   endif
-  if( month = 345 )
+  if( _month = 345 )
     term = 'MAM'
-    time_start = '01mar'year
-    time_endpp = '01jun'year
+    _time_start = '01mar'_year
+    _time_endpp = '01jun'_year
   endif
-  if( month = 678 )
+  if( _month = 678 )
     term = 'JJA'
-    time_start = '01jun'year
-    time_endpp = '01sep'year
+    _time_start = '01jun'_year
+    _time_endpp = '01sep'_year
   endif
-  if( month = 901 )
+  if( _month = 901 )
     term = 'SON'
-    time_start = '01sep'year
-    time_endpp = '01dec'year
+    _time_start = '01sep'_year
+    _time_endpp = '01dec'_year
   endif
-  if( month = 212 )
+  if( _month = 212 )
     term = 'DJF'
-    if( year = '%y' ) ; yearpp = '%ypp'
-    else              ; yearpp = year + 1 ; endif
-    time_start = '01dec'year
-    time_endpp = '01mar'yearpp
+    if( _year = '%y' ) ; _yearpp = '%ypp'
+    else              ; _yearpp = _year + 1 ; endif
+    _time_start = '01dec'_year
+    _time_endpp = '01mar'_yearpp
   endif
-  if( month = 999 )
+  if( _month = 999 )
     term = 'ANU'
-    if( year = '%y' ) ; yearpp = '%ypp'
-    else              ; yearpp = year + 1 ; endif
-    time_start = '01jan'year
-    time_endpp = '01jan'yearpp
+    if( _year = '%y' ) ; _yearpp = '%ypp'
+    else              ; _yearpp = _year + 1 ; endif
+    _time_start = '01jan'_year
+    _time_endpp = '01jan'_yearpp
   endif
 else
-  term = time_start' <= time < 'time_endpp
-  year = ''
+  term = _time_start' <= time < '_time_endpp
+  _year = ''
 endif
 
 
 
-* time_start, time_end -> time_start.f, time_end.f
+* _time_start, _time_end -> _time_start.f, _time_end.f
 f = 1
 flag = 0
-while( f <= fmax )
-  'set dfile 'f2df.f
+while( f <= _fmax )
+  'set dfile '_f2df.f
   'set z 1'
 
-  if( time_start.f != 'time_start.'f & time_start.f != '' )
-    clim_arg.f = ''
+  if( _time_start.f != '_time_start.'f & _time_start.f != '' )
+    _clim_arg.f = ''
 
-    time_start.f = t2time( time2t( time_start.f ) )
+    _time_start.f = t2time( time2t( _time_start.f ) )
 
-    if( time_end.f = 'time_end.'f | time_end.f = '' )
-      time_end.f   = t2time( time2t( time_endpp.f ) - 1 )
+    if( _time_end.f = '_time_end.'f | _time_end.f = '' )
+      _time_end.f   = t2time( time2t( _time_endpp.f ) - 1 )
     endif
 
-    run.f = run.f % '(' % time_start.f % '-' % time_end.f % ')'
-    say run.f
+    _run.f = _run.f % '(' % _time_start.f % '-' % _time_end.f % ')'
+    say _run.f
 
-  else ; if( clim_arg.f != 'clim_arg.'f & clim_arg.f != '' )
-    time_start.f = ''
-    time_end.f   = ''
-    run.f = run.f % '(' % clim_arg.f % ')'
-    say run.f
+  else ; if( _clim_arg.f != '_clim_arg.'f & _clim_arg.f != '' )
+    _time_start.f = ''
+    _time_end.f   = ''
+    _run.f = _run.f % '(' % _clim_arg.f % ')'
+    say _run.f
 
-  else ; if( year = '%y' )
+  else ; if( _year = '%y' )
 
-    if( valnum(year_start.f) != 1 )
-      year_start.f = year_start
+    if( valnum(_year_start.f) != 1 )
+      _year_start.f = _year_start
     endif
-    if( valnum(year_end.f) != 1 )
-      year_end.f = year_end
+    if( valnum(_year_end.f) != 1 )
+      _year_end.f = _year_end
     endif
 
 *   2001, 2002: dummy
-    tmp = strrep( time_endpp, '%ypp', 2002 )
+    tmp = strrep( _time_endpp, '%ypp', 2002 )
     tmp = strrep(        tmp, '%y'  , 2001 )
     tmp = t2time( time2t( tmp ) - 1 )
     tmp = strrep(        tmp, 2002, '%ypp' )
-    time_end.f = strrep( tmp, 2001, '%y' )
-*    tmp = strrep( time_endpp, '%ypp', year_end.f+1 )
-*    tmp = strrep(        tmp, '%y'  , year_end.f )
+    _time_end.f = strrep( tmp, 2001, '%y' )
+*    tmp = strrep( _time_endpp, '%ypp', _year_end.f+1 )
+*    tmp = strrep(        tmp, '%y'  , _year_end.f )
 *    tmp = t2time( time2t( tmp ) - 1 )
-*    tmp = strrep(        tmp, year_end.f+1, '%ypp' )
-*    time_end.f = strrep( tmp, year_end.f, '%y' )
+*    tmp = strrep(        tmp, _year_end.f+1, '%ypp' )
+*    _time_end.f = strrep( tmp, _year_end.f, '%y' )
 
-    tmp = strrep( time_start, '%ypp', year_end.f+1 )
-    tmp = strrep(        tmp, '%y'  , year_end.f )
+    tmp = strrep( _time_start, '%ypp', _year_end.f+1 )
+    tmp = strrep(        tmp, '%y'  , _year_end.f )
     tmp = t2time( time2t( tmp ) )
-    tmp = strrep(        tmp, year_end.f+1, '%ypp' )
-    time_start.f = strrep( tmp, year_end.f, '%y' )
+    tmp = strrep(        tmp, _year_end.f+1, '%ypp' )
+    _time_start.f = strrep( tmp, _year_end.f, '%y' )
 
-    clim_arg.f = time_start.f % ' ' % time_end.f % ' ' % year_start.f % ' ' % year_end.f
-    say run.f % ': ' % clim_arg.f
-    time_start.f = ''
-    time_end.f   = ''
+    _clim_arg.f = _time_start.f % ' ' % _time_end.f % ' ' % _year_start.f % ' ' % _year_end.f
+    say _run.f % ': ' % _clim_arg.f
+    _time_start.f = ''
+    _time_end.f   = ''
 
   else
-    time_start.f = t2time( time2t( time_start ) )
-    time_end.f   = t2time( time2t( time_endpp ) - 1 )
-    clim_arg.f = ''
-    say run.f % ': ' % time_start.f % ' - ' % time_end.f
+    _time_start.f = t2time( time2t( _time_start ) )
+    _time_end.f   = t2time( time2t( _time_endpp ) - 1 )
+    _clim_arg.f = ''
+    say _run.f % ': ' % _time_start.f % ' - ' % _time_end.f
 
   endif ; endif ; endif
 
@@ -1300,15 +412,15 @@ while( f <= fmax )
 endwhile
 say ''
 
-if( year = '%y' ) ; year = year_start % '_' year_end  ; endif
+if( _year = '%y' ) ; _year = _year_start % '_' _year_end  ; endif
 
 ***************************************************************
 * Automatic Variable Setting
 ***************************************************************
 f = 1
-while( f <= fmax )
-  if( varid.f = 'varid.'f | varid.f = '' ) ; varid.f = varid ; endif
-  say f % ': ' % varid.f
+while( f <= _fmax )
+  if( _varid.f = '_varid.'f | _varid.f = '' ) ; _varid.f = _varid ; endif
+  say f % ': ' % _varid.f
   f = f + 1
 endwhile
 
@@ -1317,10 +429,10 @@ endwhile
 * Variable List
 ***************************************************************
 f = 1
-while( f <= fmax )
+while( f <= _fmax )
   sname.f = ''
 
-* varid -> varid_base, varid_lev
+* _varid -> _varid_base, _varid_lev
   target.1 = 'u'
   target.2 = 'v'
   target.3 = 't'
@@ -1331,18 +443,17 @@ while( f <= fmax )
   tar = 1
   while( tar <= tarmax )
     target_len = math_strlen(target.tar)
-    tmp1 = substr(varid.f,1,target_len)
-    tmp2 = math_strlen(varid.f)
+    tmp1 = substr(_varid.f,1,target_len)
+    tmp2 = math_strlen(_varid.f)
     if( tmp1 = target.tar & tmp2 > target_len )
-      varid_base = tmp1
-      varid_lev = substr(varid.f,target_len+1,tmp2-target_len)
+      _varid_base = tmp1
+      _varid_lev = substr(_varid.f,target_len+1,tmp2-target_len)
     endif
     tar = tar + 1
   endwhile
 
-
 * variable
-  if( varid.f = 'iwp' )
+  if( _varid.f = 'iwp' )
     name.f = 'Ice Water Path'
     unit.f = 'g/m^2'
 *    min2d.f  = 0 ; int2d.f  = 40   ; max2d.f  = 400
@@ -1355,7 +466,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'lwp' )
+  if( _varid.f = 'lwp' )
     name.f = 'Liquid Water Path'
     unit.f = 'g/m^2'
 *    min2d.f  = 0   ; int2d.f  = 40  ; max2d.f  = 400
@@ -1368,7 +479,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'pt_700_minus_925' )
+  if( _varid.f = 'pt_700_minus_925' )
     name.f = '`3z`0`b700`n-`3z`0`b925`n'
     unit.f = 'K'
     min2d.f  = 10 ; int2d.f  = 2 ; max2d.f  = 30
@@ -1379,7 +490,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'pt_z3000s_minus_z500s' )
+  if( _varid.f = 'pt_z3000s_minus_z500s' )
     name.f = '`3z`0`b700`n-`3z`0`b925`n'
     unit.f = 'K'
     min2d.f  = 10 ; int2d.f  = 2 ; max2d.f  = 30
@@ -1390,7 +501,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'precip' )
+  if( _varid.f = 'precip' )
     name.f = 'Precipitation'
     unit.f = 'mm/day'
     min2d.f  = 1   ; int2d.f  = 1 ; max2d.f  = 20
@@ -1402,7 +513,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'qv2m' )
+  if( _varid.f = 'qv2m' )
     name.f = '2m Specif Humidity'
     unit.f = 'g/kg'
     min2d.f  = 2  ; int2d.f  = 2   ; max2d.f  = 20
@@ -1413,20 +524,20 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid_base = 'qv' & valnum(varid_lev) != 0 )
-    name.f = 'Specif Humidity @ 'varid_lev'hPa'
+  if( _varid_base = 'qv' & valnum(_varid_lev) != 0 )
+    name.f = 'Specif Humidity @ '_varid_lev'hPa'
     unit.f = 'g/kg'
     min2d.f  = 2  ; int2d.f  = 2   ; max2d.f  = 20
     dmin2d.f = -5 ; dint2d.f = 1   ; dmax2d.f = 5
     min1d.f  = 0  ; int1d.f  = 5   ; max1d.f  = 20
     dmin1d.f = -5 ; dint1d.f = 1   ; dmax1d.f = 5
-    if( varid_lev <= 500 )
+    if( _varid_lev <= 500 )
       min2d.f  = 1    ; int2d.f  = 1   ; max2d.f  = 10
       dmin2d.f = -2.5 ; dint2d.f = 0.5 ; dmax2d.f = 2.5
       min1d.f  = 0    ; int1d.f  = 2.5 ; max1d.f  = 10
       dmin1d.f = -2   ; dint1d.f = 1   ; dmax1d.f = 2
     endif
-    if( varid_lev <= 300 )
+    if( _varid_lev <= 300 )
       min2d.f  = 0.2  ; int2d.f  = 0.2  ; max2d.f  = 2.0
       dmin2d.f = -0.5 ; dint2d.f = 0.1  ; dmax2d.f = 0.5
       min1d.f  = 0    ; int1d.f  = 0.5  ; max1d.f  = 2.0
@@ -1436,8 +547,8 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid_base = 'rh' & valnum(varid_lev) != 0 )
-    name.f = 'Relative Humidity @ 'varid_lev'hPa'
+  if( _varid_base = 'rh' & valnum(_varid_lev) != 0 )
+    name.f = 'Relative Humidity @ '_varid_lev'hPa'
     unit.f = '%'
     min2d.f  = 10  ; int2d.f  = 10 ; max2d.f  = 100
     dmin2d.f = -50 ; dint2d.f = 10 ; dmax2d.f = 50
@@ -1447,7 +558,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 't2m' )
+  if( _varid.f = 't2m' )
     name.f = '2m Temperature'
     unit.f = 'K'
     min2d.f  = 200 ; int2d.f  = 10 ; max2d.f  = 320
@@ -1458,20 +569,20 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid_base = 't' & valnum(varid_lev) != 0 )
-    name.f = 'Temperature @ 'varid_lev'hPa'
+  if( _varid_base = 't' & valnum(_varid_lev) != 0 )
+    name.f = 'Temperature @ '_varid_lev'hPa'
     unit.f = '%'
     min2d.f  = 220 ; int2d.f  = 5 ; max2d.f  = 300
     dmin2d.f = -10 ; dint2d.f = 1  ; dmax2d.f = 10
     min1d.f  = 220 ; int1d.f  = 30 ; max1d.f  = 300
     dmin1d.f = -6  ; dint1d.f = 3  ; dmax1d.f = 6
-    if( varid_lev <= 500 )
+    if( _varid_lev <= 500 )
       min2d.f  = 200 ; int2d.f  = 5 ; max2d.f  = 280
       dmin2d.f = -10 ; dint2d.f = 1  ; dmax2d.f = 10
       min1d.f  = 200 ; int1d.f  = 30 ; max1d.f  = 280
       dmin1d.f = -6  ; dint1d.f = 3  ; dmax1d.f = 6
     endif
-    if( varid_lev <= 300 )
+    if( _varid_lev <= 300 )
       min2d.f  = 180 ; int2d.f  = 5 ; max2d.f  = 260
       dmin2d.f = -10 ; dint2d.f = 1  ; dmax2d.f = 10
       min1d.f  = 180 ; int1d.f  = 30 ; max1d.f  = 260
@@ -1481,7 +592,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'sst' )
+  if( _varid.f = 'sst' )
     name.f = 'Sea Surface Temperature'
     unit.f = 'K'
     min2d.f  = 273 ; int2d.f  = 3 ; max2d.f  = 306
@@ -1492,7 +603,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'mslp' )
+  if( _varid.f = 'mslp' )
     name.f = 'MSLP'
     unit.f = 'hPa'
     min2d.f  = 1000  ; int2d.f  = 2   ; max2d.f  = 1030
@@ -1504,7 +615,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'icr' )
+  if( _varid.f = 'icr' )
     name.f = 'Sea Ice Fraction'
     unit.f = '%'
     min2d.f  = 10 ; int2d.f  = 10 ; max2d.f  = 90
@@ -1515,7 +626,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'ice' )
+  if( _varid.f = 'ice' )
     name.f = 'Sea Ice Mass'
     unit.f = 'kg/m`a2`n'
     min2d.f  = 200 ; int2d.f  = 200 ; max2d.f  = 2000
@@ -1526,8 +637,8 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid_base = 'u' & valnum(varid_lev) != 0 )
-    name.f = 'Zonal Wind @ 'varid_lev'hPa'
+  if( _varid_base = 'u' & valnum(_varid_lev) != 0 )
+    name.f = 'Zonal Wind @ '_varid_lev'hPa'
     unit.f = 'm/s'
     min2d.f  = -30 ; int2d.f  = 5  ; max2d.f  = 30
     dmin2d.f = -10 ; dint2d.f = 2  ; dmax2d.f = 10
@@ -1537,9 +648,9 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'lw_up_toa' | varid.f = 'lw_up_clr_toa' )
+  if( _varid.f = 'lw_up_toa' | _varid.f = 'lw_up_clr_toa' )
     name.f = 'Upward Longwave Radiation @ TOA'
-    if( varid.f = 'lw_up_clr_toa' ) ; name.f = name.f % ' (Clear Sky)' ; endif
+    if( _varid.f = 'lw_up_clr_toa' ) ; name.f = name.f % ' (Clear Sky)' ; endif
     unit.f = 'W/m^2'
     min2d.f  = 100 ; int2d.f  = 20  ; max2d.f  = 340
     dmin2d.f = -50 ; dint2d.f = 10  ; dmax2d.f = 50
@@ -1549,7 +660,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'lw_crf_toa' )
+  if( _varid.f = 'lw_crf_toa' )
     name.f = 'Longwave Cloud Radiative Forcing @ TOA'
     unit.f = 'W/m^2'
     min2d.f  = -100 ; int2d.f  = 20  ; max2d.f  = 100
@@ -1560,7 +671,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'lw_up_sfc' )
+  if( _varid.f = 'lw_up_sfc' )
     name.f = 'Upward Longwave Radiation @ Surface'
     unit.f = 'W/m^2'
     min2d.f  = 100 ; int2d.f  = 30  ; max2d.f  = 480
@@ -1571,7 +682,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'lw_down_sfc' )
+  if( _varid.f = 'lw_down_sfc' )
     name.f = 'Downward Longwave Radiation @ Surface'
     unit.f = 'W/m^2'
     min2d.f  = 100 ; int2d.f  = 30  ; max2d.f  = 480
@@ -1582,9 +693,9 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'sw_up_toa' | varid.f = 'sw_up_clr_toa' )
+  if( _varid.f = 'sw_up_toa' | _varid.f = 'sw_up_clr_toa' )
     name.f = 'Upward Shortwave Radiation @ TOA'
-    if( varid.f = 'sw_up_clr_toa' ) ; name.f = name.f % ' (Clear Sky)' ; endif
+    if( _varid.f = 'sw_up_clr_toa' ) ; name.f = name.f % ' (Clear Sky)' ; endif
     unit.f = 'W/m^2'
     min2d.f  = 0   ; int2d.f  = 40  ; max2d.f  = 400
     dmin2d.f = -50 ; dint2d.f = 10  ; dmax2d.f = 50
@@ -1594,7 +705,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'sw_crf_toa' )
+  if( _varid.f = 'sw_crf_toa' )
     name.f = 'Shortwave Cloud Radiative Forcing @ TOA'
     unit.f = 'W/m^2'
     min2d.f  = -100 ; int2d.f  = 20  ; max2d.f  = 100
@@ -1605,7 +716,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'sw_up_sfc' )
+  if( _varid.f = 'sw_up_sfc' )
     name.f = 'Upward Shortwave Radiation @ Surface'
     unit.f = 'W/m^2'
     min2d.f  = 0   ; int2d.f  = 20  ; max2d.f  = 200
@@ -1616,7 +727,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'sw_down_toa' )
+  if( _varid.f = 'sw_down_toa' )
     name.f = 'Downward Shortwave Radiation @ TOA'
     unit.f = 'W/m^2'
     min2d.f  = 0   ; int2d.f  = 50  ; max2d.f  = 500
@@ -1628,7 +739,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'sw_down_sfc' )
+  if( _varid.f = 'sw_down_sfc' )
     name.f = 'Downward Shortwave Radiation @ Surface'
     unit.f = 'W/m^2'
     min2d.f  = 0   ; int2d.f  = 40  ; max2d.f  = 400
@@ -1640,7 +751,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'sw_net_toa' )
+  if( _varid.f = 'sw_net_toa' )
     name.f = 'Down-Upward Shortwave Radiation @ TOA'
     unit.f = 'W/m^2'
     min2d.f  = 0   ; int2d.f  = 40  ; max2d.f  = 400
@@ -1651,7 +762,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'lw_net_sfc' )
+  if( _varid.f = 'lw_net_sfc' )
     name.f = 'Down-Upward Longwave Radiation @ Surface'
     unit.f = 'W/m^2'
     min2d.f  = -200; int2d.f  = 20  ; max2d.f  = 0
@@ -1662,7 +773,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'sw_net_sfc' )
+  if( _varid.f = 'sw_net_sfc' )
     name.f = 'Down-Upward Shortwave Radiation @ Surface'
     unit.f = 'W/m^2'
     min2d.f  = 0   ; int2d.f  = 40  ; max2d.f  = 400
@@ -1673,7 +784,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'aw_net_toa' )
+  if( _varid.f = 'aw_net_toa' )
     name.f = 'Down-Upward Long+Shortwave Radiation @ TOA'
     unit.f = 'W/m^2'
     min2d.f  = -200; int2d.f  = 40  ; max2d.f  = 200
@@ -1684,7 +795,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'aw_crf_toa' )
+  if( _varid.f = 'aw_crf_toa' )
     name.f = 'Long+Shortwave Cloud Radiative Forcing @ TOA'
     unit.f = 'W/m^2'
     min2d.f  = -100 ; int2d.f  = 20  ; max2d.f  = 100
@@ -1695,7 +806,7 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'aw_net_sfc' )
+  if( _varid.f = 'aw_net_sfc' )
     name.f = 'Down-Upward Long+Shortwave Radiation @ Surface'
     unit.f = 'W/m^2'
     min2d.f  = -200; int2d.f  = 40  ; max2d.f  = 200
@@ -1706,9 +817,9 @@ while( f <= fmax )
     dcolor.f = 'bluered'
   endif
 
-  if( varid.f = 'sh_sfc' | varid.f = 'lh_sfc' )
-    if( varid.f = 'sh_sfc' ) ; name.f = 'Surface Sensible Heat Flux' ; endif
-    if( varid.f = 'lh_sfc' ) ; name.f = 'Surface Latent Heat Flux' ; endif
+  if( _varid.f = 'sh_sfc' | _varid.f = 'lh_sfc' )
+    if( _varid.f = 'sh_sfc' ) ; name.f = 'Surface Sensible Heat Flux' ; endif
+    if( _varid.f = 'lh_sfc' ) ; name.f = 'Surface Latent Heat Flux' ; endif
     unit.f = 'W/m^2'
     min2d.f  = -200 ; int2d.f  = 40  ; max2d.f  = 200
     dmin2d.f = -100 ; dint2d.f = 20  ; dmax2d.f = 100
@@ -1720,7 +831,7 @@ while( f <= fmax )
     dcolor.f = 'purple->bluered->maroon'
   endif
 
-  if( varid.f = 'energy_net_sfc' )
+  if( _varid.f = 'energy_net_sfc' )
     name.f = 'Net Downward Surface Energy Flux'
     unit.f = 'W/m^2'
     min2d.f  = -200 ; int2d.f  = 40  ; max2d.f  = 200
@@ -1731,12 +842,12 @@ while( f <= fmax )
     dcolor.f = 'purple->bluered->maroon'
   endif
 
-  if( varid.f = 'land_wg_z1' | varid.f = 'land_wg_z2' | varid.f = 'land_wg_z3' | varid.f = 'land_wg_z4' | varid.f = 'land_wg_z5' )
-    if( varid.f = 'land_wg_z1' ) ; name.f = 'Soil Water @ z=1' ; endif
-    if( varid.f = 'land_wg_z2' ) ; name.f = 'Soil Water @ z=2' ; endif
-    if( varid.f = 'land_wg_z3' ) ; name.f = 'Soil Water @ z=3' ; endif
-    if( varid.f = 'land_wg_z4' ) ; name.f = 'Soil Water @ z=4' ; endif
-    if( varid.f = 'land_wg_z5' ) ; name.f = 'Soil Water @ z=5' ; endif
+  if( _varid.f = 'land_wg_z1' | _varid.f = 'land_wg_z2' | _varid.f = 'land_wg_z3' | _varid.f = 'land_wg_z4' | _varid.f = 'land_wg_z5' )
+    if( _varid.f = 'land_wg_z1' ) ; name.f = 'Soil Water @ z=1' ; endif
+    if( _varid.f = 'land_wg_z2' ) ; name.f = 'Soil Water @ z=2' ; endif
+    if( _varid.f = 'land_wg_z3' ) ; name.f = 'Soil Water @ z=3' ; endif
+    if( _varid.f = 'land_wg_z4' ) ; name.f = 'Soil Water @ z=4' ; endif
+    if( _varid.f = 'land_wg_z5' ) ; name.f = 'Soil Water @ z=5' ; endif
     unit.f = '0-1'
     min2d.f  = 0    ; int2d.f  = 0.1 ; max2d.f  = 1
     dmin2d.f = -0.5 ; dint2d.f = 0.1 ; dmax2d.f = 0.5
@@ -1746,11 +857,11 @@ while( f <= fmax )
     dcolor.f = 'purple->bluered->maroon'
   endif
 
-  tmp = substr( varid.f, 1, 5 )
+  tmp = substr( _varid.f, 1, 5 )
   if( tmp = 'isccp' )
-    if( varid.f = 'isccp_ctp_all' | varid.f = 'isccp_ctp_all_vis' )
+    if( _varid.f = 'isccp_ctp_all' | _varid.f = 'isccp_ctp_all_vis' )
       name.f = 'Cloud Top Pressure by ISCCP'
-      tmp = substr( varid.f, 7, 20 )
+      tmp = substr( _varid.f, 7, 20 )
       sname.f = ', ' % tmp
       unit.f = '%'
       min2d.f  = 100 ; int2d.f  = 100 ; max2d.f  = 900
@@ -1759,9 +870,9 @@ while( f <= fmax )
       dmin1d.f = -50 ; dint1d.f = 25 ; dmax1d.f = 50
       color.f  = 'white-(0)->grainbow'
       dcolor.f = 'purple->blue->white->red->brown'
-    else ; if( varid.f = 'isccp_od_all' | varid.f = 'isccp_od_all_vis' )
+    else ; if( _varid.f = 'isccp_od_all' | _varid.f = 'isccp_od_all_vis' )
       name.f = 'log(Cloud Optical Depth) by ISCCP'
-      tmp = substr( varid.f, 7, 20 )
+      tmp = substr( _varid.f, 7, 20 )
       sname.f = ', ' % tmp
       unit.f = '%'
       min2d.f  = -1 ; int2d.f  = 0.5 ; max2d.f  = 4
@@ -1772,7 +883,7 @@ while( f <= fmax )
       dcolor.f = 'purple->blue->white->red->brown'
     else
       name.f = 'ISCCP Cloud Fraction'
-      tmp = substr( varid.f, 7, 20 )
+      tmp = substr( _varid.f, 7, 20 )
       sname.f = ', ' % tmp
       unit.f = '%'
       min2d.f  = 10  ; int2d.f  = 10 ; max2d.f  = 90
@@ -1800,7 +911,7 @@ endwhile
 ***************************************************************
 *sname = ''
 ** variable
-*if( varid = 'iwp' )
+*if( _varid = 'iwp' )
 *  name = 'Ice Water Path'
 *  unit = 'g/m^2'
 *  min2d  = 0 ; int2d  = 40   ; max2d  = 400
@@ -1811,7 +922,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'lwp' )
+*if( _varid = 'lwp' )
 *  name = 'Liquid Water Path'
 *  unit = 'g/m^2'
 *  min2d  = 0 ; int2d  = 40   ; max2d  = 400
@@ -1822,7 +933,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'pt_700_minus_925' )
+*if( _varid = 'pt_700_minus_925' )
 *  name = '`3z`0`b700`n-`3z`0`b925`n'
 *  unit = 'K'
 *  min2d  = 10 ; int2d  = 2 ; max2d  = 30
@@ -1833,7 +944,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'pt_z3000s_minus_z500s' )
+*if( _varid = 'pt_z3000s_minus_z500s' )
 *  name = '`3z`0`b700`n-`3z`0`b925`n'
 *  unit = 'K'
 *  min2d  = 10 ; int2d  = 2 ; max2d  = 30
@@ -1844,7 +955,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'precip' )
+*if( _varid = 'precip' )
 *  name = 'Precipitation'
 *  unit = 'mm/day'
 *  min2d  = 1   ; int2d  = 1 ; max2d  = 20
@@ -1856,7 +967,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'qv2m' )
+*if( _varid = 'qv2m' )
 *  name = '2m Specif Humidity'
 *  unit = 'g/kg'
 *  min2d  = 2 ; int2d  = 2 ; max2d  = 20
@@ -1867,7 +978,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 't2m' )
+*if( _varid = 't2m' )
 *  name = '2m Temperature'
 *  unit = 'K'
 *  min2d  = 200 ; int2d  = 10 ; max2d  = 320
@@ -1878,9 +989,9 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'lw_up_toa' | varid = 'lw_up_clr_toa' )
+*if( _varid = 'lw_up_toa' | _varid = 'lw_up_clr_toa' )
 *  name = 'Upward Longwave Radiation @ TOA'
-*  if( varid = 'lw_up_clr_toa' ) ; name = name % ' (Clear Sky)' ; endif
+*  if( _varid = 'lw_up_clr_toa' ) ; name = name % ' (Clear Sky)' ; endif
 *  unit = 'W/m^2'
 *  min2d  = 100 ; int2d  = 20  ; max2d  = 340
 *  dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
@@ -1890,7 +1001,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'lw_crf_toa' )
+*if( _varid = 'lw_crf_toa' )
 *  name = 'Longwave Cloud Radiative Forcing @ TOA'
 *  unit = 'W/m^2'
 *  min2d  = -100 ; int2d  = 20  ; max2d  = 100
@@ -1901,7 +1012,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'lw_up_sfc' )
+*if( _varid = 'lw_up_sfc' )
 *  name = 'Upward Longwave Radiation @ Surface'
 *  unit = 'W/m^2'
 *  min2d  = 100 ; int2d  = 30  ; max2d  = 480
@@ -1912,7 +1023,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'lw_down_sfc' )
+*if( _varid = 'lw_down_sfc' )
 *  name = 'Downward Longwave Radiation @ Surface'
 *  unit = 'W/m^2'
 *  min2d  = 100 ; int2d  = 30  ; max2d  = 480
@@ -1923,9 +1034,9 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'sw_up_toa' | varid = 'sw_up_clr_toa' )
+*if( _varid = 'sw_up_toa' | _varid = 'sw_up_clr_toa' )
 *  name = 'Upward Shortwave Radiation @ TOA'
-*  if( varid = 'sw_up_clr_toa' ) ; name = name % ' (Clear Sky)' ; endif
+*  if( _varid = 'sw_up_clr_toa' ) ; name = name % ' (Clear Sky)' ; endif
 *  unit = 'W/m^2'
 *  min2d  = 0   ; int2d  = 40  ; max2d  = 400
 *  dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
@@ -1935,7 +1046,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'sw_crf_toa' )
+*if( _varid = 'sw_crf_toa' )
 *  name = 'Shortwave Cloud Radiative Forcing @ TOA'
 *  unit = 'W/m^2'
 *  min2d  = -100 ; int2d  = 20  ; max2d  = 100
@@ -1946,7 +1057,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'sw_up_sfc' )
+*if( _varid = 'sw_up_sfc' )
 *  name = 'Upward Shortwave Radiation @ Surface'
 *  unit = 'W/m^2'
 *  min2d  = 0   ; int2d  = 20  ; max2d  = 200
@@ -1957,7 +1068,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'sw_down_toa' )
+*if( _varid = 'sw_down_toa' )
 *  name = 'Downward Shortwave Radiation @ TOA'
 *  unit = 'W/m^2'
 *  min2d  = 0   ; int2d  = 50  ; max2d  = 500
@@ -1969,7 +1080,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'sw_down_sfc' )
+*if( _varid = 'sw_down_sfc' )
 *  name = 'Downward Shortwave Radiation @ Surface'
 *  unit = 'W/m^2'
 *  min2d  = 0   ; int2d  = 40  ; max2d  = 400
@@ -1981,7 +1092,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'sw_net_toa' )
+*if( _varid = 'sw_net_toa' )
 *  name = 'Down-Upward Shortwave Radiation @ TOA'
 *  unit = 'W/m^2'
 *  min2d  = 0   ; int2d  = 40  ; max2d  = 400
@@ -1992,7 +1103,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'lw_net_sfc' )
+*if( _varid = 'lw_net_sfc' )
 *  name = 'Down-Upward Longwave Radiation @ Surface'
 *  unit = 'W/m^2'
 *  min2d  = -200; int2d  = 20  ; max2d  = 0
@@ -2003,7 +1114,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'sw_net_sfc' )
+*if( _varid = 'sw_net_sfc' )
 *  name = 'Down-Upward Shortwave Radiation @ Surface'
 *  unit = 'W/m^2'
 *  min2d  = 0   ; int2d  = 40  ; max2d  = 400
@@ -2014,7 +1125,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'aw_net_toa' )
+*if( _varid = 'aw_net_toa' )
 *  name = 'Down-Upward Long+Shortwave Radiation @ TOA'
 *  unit = 'W/m^2'
 *  min2d  = -200; int2d  = 40  ; max2d  = 200
@@ -2025,7 +1136,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'aw_crf_toa' )
+*if( _varid = 'aw_crf_toa' )
 *  name = 'Long+Shortwave Cloud Radiative Forcing @ TOA'
 *  unit = 'W/m^2'
 *  min2d  = -100 ; int2d  = 20  ; max2d  = 100
@@ -2036,7 +1147,7 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'aw_net_sfc' )
+*if( _varid = 'aw_net_sfc' )
 *  name = 'Down-Upward Long+Shortwave Radiation @ Surface'
 *  unit = 'W/m^2'
 *  min2d  = -200; int2d  = 40  ; max2d  = 200
@@ -2047,9 +1158,9 @@ endwhile
 *  dcolor = 'bluered'
 *endif
 *
-*if( varid = 'sh_sfc' | varid = 'lh_sfc' )
-*  if( varid = 'sh_sfc' ) ; name = 'Surface Sensible Heat Flux' ; endif
-*  if( varid = 'lh_sfc' ) ; name = 'Surface Latent Heat Flux' ; endif
+*if( _varid = 'sh_sfc' | _varid = 'lh_sfc' )
+*  if( _varid = 'sh_sfc' ) ; name = 'Surface Sensible Heat Flux' ; endif
+*  if( _varid = 'lh_sfc' ) ; name = 'Surface Latent Heat Flux' ; endif
 *  unit = 'W/m^2'
 *  min2d  = -200 ; int2d  = 40  ; max2d  = 200
 *  dmin2d = -100 ; dint2d = 20  ; dmax2d = 100
@@ -2061,7 +1172,7 @@ endwhile
 *  dcolor = 'purple->bluered->maroon'
 *endif
 *
-*if( varid = 'energy_net_sfc' )
+*if( _varid = 'energy_net_sfc' )
 *  name = 'Net Downward Surface Energy Flux'
 *  unit = 'W/m^2'
 *  min2d  = -200 ; int2d  = 40  ; max2d  = 200
@@ -2072,12 +1183,12 @@ endwhile
 *  dcolor = 'purple->bluered->maroon'
 *endif
 *
-*if( varid = 'land_wg_z1' | varid = 'land_wg_z2' | varid = 'land_wg_z3' | varid = 'land_wg_z4' | varid = 'land_wg_z5' )
-*  if( varid = 'land_wg_z1' ) ; name = 'Soil Water @ z=1' ; endif
-*  if( varid = 'land_wg_z2' ) ; name = 'Soil Water @ z=2' ; endif
-*  if( varid = 'land_wg_z3' ) ; name = 'Soil Water @ z=3' ; endif
-*  if( varid = 'land_wg_z4' ) ; name = 'Soil Water @ z=4' ; endif
-*  if( varid = 'land_wg_z5' ) ; name = 'Soil Water @ z=5' ; endif
+*if( _varid = 'land_wg_z1' | _varid = 'land_wg_z2' | _varid = 'land_wg_z3' | _varid = 'land_wg_z4' | _varid = 'land_wg_z5' )
+*  if( _varid = 'land_wg_z1' ) ; name = 'Soil Water @ z=1' ; endif
+*  if( _varid = 'land_wg_z2' ) ; name = 'Soil Water @ z=2' ; endif
+*  if( _varid = 'land_wg_z3' ) ; name = 'Soil Water @ z=3' ; endif
+*  if( _varid = 'land_wg_z4' ) ; name = 'Soil Water @ z=4' ; endif
+*  if( _varid = 'land_wg_z5' ) ; name = 'Soil Water @ z=5' ; endif
 *  unit = '0-1'
 *  min2d  = 0    ; int2d  = 0.1 ; max2d  = 1
 *  dmin2d = -0.5 ; dint2d = 0.1 ; dmax2d = 0.5
@@ -2087,9 +1198,9 @@ endwhile
 *  dcolor = 'purple->bluered->maroon'
 *endif
 *
-*if( varid = 'isccp_high_vis' )
+*if( _varid = 'isccp_high_vis' )
 *  name = 'ISCCP Visible Cloud Fraction'
-*  if( varid = 'isccp_high_vis' ) ; sname = 'High' ; endif
+*  if( _varid = 'isccp_high_vis' ) ; sname = 'High' ; endif
 *  unit = '%'
 *  min2d  = 10  ; int2d  = 10 ; max2d  = 90
 *  dmin2d = -50 ; dint2d = 10 ; dmax2d = 50
@@ -2106,26 +1217,26 @@ endwhile
 *'setfont tiny -base l'
 **'draw string 0.1 0.25 file : 'gs
 ** horizontal style
-*if( fmax > 3 )
+*if( _fmax > 3 )
 *  f = 1
-*  while( f <= fmax )
+*  while( f <= _fmax )
 *    if( f > 6 ) ; break ; endif
 *    i = f
 *    j = 2
 *    if( i >= 4 ) ; i = i - 3 ; j = j - 1 ; endif
 *    xpos = 3.8 * i - 3.7
 *    ypos = 0.15 * j - 0.05
-*    'draw string 'xpos' 'ypos' 'time_start.f' <= 'run.f' <= 'time_end.f
+*    'draw string 'xpos' 'ypos' '_time_start.f' <= '_run.f' <= '_time_end.f
 *    f = f + 1 
 *  endwhile
 *endif
 ** vertical style
-*if( fmax <= 3 )
+*if( _fmax <= 3 )
 *  f = 1
-*  while( f <= fmax )
+*  while( f <= _fmax )
 *    xpos = 0.1
-*    ypos = 0.15 * (fmax-f+1) - 0.05
-**    'draw string 'xpos' 'ypos' 'time_start.f' <= 'run.f' <= 'time_end.f
+*    ypos = 0.15 * (_fmax-f+1) - 0.05
+**    'draw string 'xpos' 'ypos' '_time_start.f' <= '_run.f' <= '_time_end.f
 *    f = f + 1 
 *  endwhile
 *endif
@@ -2136,22 +1247,22 @@ endwhile
 * Calculate
 ***************************************************************
 f = 1
-while( f <= fmax )
+while( f <= _fmax )
   say 'Processing #'f
-  'set dfile 'f2df.f
+  'set dfile '_f2df.f
   'set lat 'latmin' 'latmax
   'set lon 'lonmin' 'lonmax
   'set z 1'
   'set t 1'
-  if( time_start.f != '' & time_end.f != '' )
-    say 'v'f' = ave( 'var.f', time='time_start.f', time='time_end.f' )'
-    'v'f' = ave( 'var.f', time='time_start.f', time='time_end.f' )'
+  if( _time_start.f != '' & _time_end.f != '' )
+    say 'v'f' = ave( '_var.f', time='_time_start.f', time='_time_end.f' )'
+    'v'f' = ave( '_var.f', time='_time_start.f', time='_time_end.f' )'
   endif
 
-  if( clim_arg.f != '' )
-*    'clave2 'var.f' 'clim_arg.f' v'f
-    say 'clave 'var.f' 'clim_arg.f' v'f
-    'clave 'var.f' 'clim_arg.f' v'f
+  if( _clim_arg.f != '' )
+*    'clave2 '_var.f' '_clim_arg.f' v'f
+    say 'clave '_var.f' '_clim_arg.f' v'f
+    'clave '_var.f' '_clim_arg.f' v'f
   endif
 
   f = f + 1
@@ -2171,13 +1282,13 @@ while( d <= 6 )
   xwid = ''
   'mul 2 3 'i' 'j' -xoffset 'xo' -yoffset 'yo' 'xwid
   'set grads off'
-  'set mpdraw 'mpdraw
+  'set mpdraw '_mpdraw
 
-  f1 = subwrd( disp.d, 1 )
-  f2 = subwrd( disp.d, 2 )
+  f1 = subwrd( _disp.d, 1 )
+  f2 = subwrd( _disp.d, 2 )
 
   if( f1 = '' ) ; d = d + 1 ; continue ;  endif
-  'set dfile 'f2df.f1
+  'set dfile '_f2df.f1
   'set z 1'
 *  'set dfile 'f1
 
@@ -2195,7 +1306,7 @@ while( d <= 6 )
   endif
 
   'd v'
-  if( cbar.i = d )
+  if( _cbar.i = d )
     xposmin = 5.0 * i - 3.6
     xposmax = xposmin + 4.3
     'q shades'
@@ -2204,7 +1315,7 @@ while( d <= 6 )
     endif
   endif
 
-  if( cont.d = 'on' )
+  if( _cont.d = 'on' )
       'set gxout contour'; 'set cthick 6'; 'set ccolor 1'
     if( f2 = '' )
 *      'set cint 'int2d
@@ -2217,15 +1328,15 @@ while( d <= 6 )
   endif
 
   'setfont small'
-  if( f2 = '' ) ; 'draws ('run.f1')' % sname.f1
-  else ; 'draws ('run.f1') - ('run.f2')' % sname.f1 ; endif
+  if( f2 = '' ) ; 'draws ('_run.f1')' % sname.f1
+  else ; 'draws ('_run.f1') - ('_run.f2')' % sname.f1 ; endif
 
 *  if( d = 1 )
 *    'setfont normal'
 *    'draws -yoffset 0.25 -pos tl -base bl 'name' for 'term' ['unit']'
     'setfont normal -base tl'
-*    'draw string 1.4 8.4 'name' for 'term' 'year' ['unit']'
-    'draw string 1.4 8.4 'name.f1' for 'term' 'year' ['unit.f1']'
+*    'draw string 1.4 8.4 'name' for 'term' '_year' ['unit']'
+    'draw string 1.4 8.4 'name.f1' for 'term' '_year' ['unit.f1']'
 *  endif
 
 *** zonal mean ***
@@ -2273,7 +1384,7 @@ while( d <= 6 )
 *    'd d'
 *
 *    'setfont small'
-*    'draws ('run.f1') - ('run.f2')'
+*    'draws ('_run.f1') - ('_run.f2')'
 *
 *  endif
 
@@ -2283,8 +1394,8 @@ endwhile
 
 
 
-if( save != 'save' & save != '' )
-  'save 'save
+if( _save != '_save' & _save != '' )
+  'save '_save
 endif
 
 cmd_fin
