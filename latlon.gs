@@ -432,783 +432,59 @@ f = 1
 while( f <= _fmax )
   sname.f = ''
 
-* _varid -> _varid_base, _varid_lev
-  target.1 = 'u'
-  target.2 = 'v'
-  target.3 = 't'
-  target.4 = 'rh'
-  target.5 = 'qv'
-  tarmax = 5
+* varid, varcnf -> name, unit, min, ...
+* 1. call get_varcnf without varcnfid (default varcnf will be set)
+* 2. load cnf
+* 3. call get_varcnf again if varcnfid is set in cnf.
 
-  tar = 1
-  while( tar <= tarmax )
-    target_len = math_strlen(target.tar)
-    tmp1 = substr(_varid.f,1,target_len)
-    tmp2 = math_strlen(_varid.f)
-    if( tmp1 = target.tar & tmp2 > target_len )
-      _varid_base = tmp1
-      _varid_lev = substr(_varid.f,target_len+1,tmp2-target_len)
-    endif
-    tar = tar + 1
-  endwhile
+  get_varcnf( f, _varid.f )
 
-* variable
-  if( _varid.f = 'iwp' )
-    name.f = 'Ice Water Path'
-    unit.f = 'g/m^2'
-*    min2d.f  = 0 ; int2d.f  = 40   ; max2d.f  = 400
-*    dmin2d.f = -200; dint2d.f = 40  ; dmax2d.f = 200
-    min2d.f  = 20 ; int2d.f  = 20   ; max2d.f  = 200
-    dmin2d.f = -50; dint2d.f = 10  ; dmax2d.f = 50
-    min1d.f  = 0   ; int1d.f  = 100 ; max1d.f  = 200
-    dmin1d.f = -40 ; dint1d.f = 20  ; dmax1d.f = 40
-    color.f = 'grainbow'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'lwp' )
-    name.f = 'Liquid Water Path'
-    unit.f = 'g/m^2'
-*    min2d.f  = 0   ; int2d.f  = 40  ; max2d.f  = 400
-*    dmin2d.f = -200; dint2d.f = 40  ; dmax2d.f = 200
-    min2d.f  = 20 ; int2d.f  = 20   ; max2d.f  = 200
-    dmin2d.f = -50; dint2d.f = 10  ; dmax2d.f = 50
-    min1d.f  = 0   ; int1d.f  = 100 ; max1d.f  = 200
-    dmin1d.f = -40 ; dint1d.f = 20  ; dmax1d.f = 40
-    color.f = 'grainbow'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'pt_700_minus_925' )
-    name.f = '`3z`0`b700`n-`3z`0`b925`n'
-    unit.f = 'K'
-    min2d.f  = 10 ; int2d.f  = 2 ; max2d.f  = 30
-    dmin2d.f = -5 ; dint2d.f = 1 ; dmax2d.f = 5
-    min1d.f  = 10 ; int1d.f  = 5 ; max1d.f  = 30
-    dmin1d.f = -5 ; dint1d.f = 2.5 ; dmax1d.f = 5
-    color.f = 'grainbow'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'pt_z3000s_minus_z500s' )
-    name.f = '`3z`0`b700`n-`3z`0`b925`n'
-    unit.f = 'K'
-    min2d.f  = 10 ; int2d.f  = 2 ; max2d.f  = 30
-    dmin2d.f = -5 ; dint2d.f = 1 ; dmax2d.f = 5
-    min1d.f  = 10 ; int1d.f  = 5 ; max1d.f  = 30
-    dmin1d.f = -5 ; dint1d.f = 2.5 ; dmax1d.f = 5
-    color.f = 'grainbow'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'precip' )
-    name.f = 'Precipitation'
-    unit.f = 'mm/day'
-    min2d.f  = 1   ; int2d.f  = 1 ; max2d.f  = 20
-    dmin2d.f = -10 ; dint2d.f = 1 ; dmax2d.f = 10
-    min1d.f  = 0   ; int1d.f  = 3 ; max1d.f  = 15
-    dmin1d.f = -6  ; dint1d.f = 2 ; dmax1d.f = 6
-*    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    color.f = 'white-(0)->grainbow'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'qv2m' )
-    name.f = '2m Specif Humidity'
-    unit.f = 'g/kg'
-    min2d.f  = 2  ; int2d.f  = 2   ; max2d.f  = 20
-    dmin2d.f = -2 ; dint2d.f = 0.4 ; dmax2d.f = 2
-    min1d.f  = 0  ; int1d.f  = 5   ; max1d.f  = 20
-    dmin1d.f = -2 ; dint1d.f = 1   ; dmax1d.f = 2
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid_base = 'qv' & valnum(_varid_lev) != 0 )
-    name.f = 'Specif Humidity @ '_varid_lev'hPa'
-    unit.f = 'g/kg'
-    min2d.f  = 2  ; int2d.f  = 2   ; max2d.f  = 20
-    dmin2d.f = -5 ; dint2d.f = 1   ; dmax2d.f = 5
-    min1d.f  = 0  ; int1d.f  = 5   ; max1d.f  = 20
-    dmin1d.f = -5 ; dint1d.f = 1   ; dmax1d.f = 5
-    if( _varid_lev <= 500 )
-      min2d.f  = 1    ; int2d.f  = 1   ; max2d.f  = 10
-      dmin2d.f = -2.5 ; dint2d.f = 0.5 ; dmax2d.f = 2.5
-      min1d.f  = 0    ; int1d.f  = 2.5 ; max1d.f  = 10
-      dmin1d.f = -2   ; dint1d.f = 1   ; dmax1d.f = 2
-    endif
-    if( _varid_lev <= 300 )
-      min2d.f  = 0.2  ; int2d.f  = 0.2  ; max2d.f  = 2.0
-      dmin2d.f = -0.5 ; dint2d.f = 0.1  ; dmax2d.f = 0.5
-      min1d.f  = 0    ; int1d.f  = 0.5  ; max1d.f  = 2.0
-      dmin1d.f = -0.5 ; dint1d.f = 0.25 ; dmax1d.f = 0.5
-    endif
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid_base = 'rh' & valnum(_varid_lev) != 0 )
-    name.f = 'Relative Humidity @ '_varid_lev'hPa'
-    unit.f = '%'
-    min2d.f  = 10  ; int2d.f  = 10 ; max2d.f  = 100
-    dmin2d.f = -50 ; dint2d.f = 10 ; dmax2d.f = 50
-    min1d.f  = 0   ; int1d.f  = 25 ; max1d.f  = 100
-    dmin1d.f = -20 ; dint1d.f = 10 ; dmax1d.f = 20
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 't2m' )
-    name.f = '2m Temperature'
-    unit.f = 'K'
-    min2d.f  = 200 ; int2d.f  = 10 ; max2d.f  = 320
-    dmin2d.f = -10 ; dint2d.f = 1  ; dmax2d.f = 10
-    min1d.f  = 220 ; int1d.f  = 30 ; max1d.f  = 310
-    dmin1d.f = -6  ; dint1d.f = 3  ; dmax1d.f = 6
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid_base = 't' & valnum(_varid_lev) != 0 )
-    name.f = 'Temperature @ '_varid_lev'hPa'
-    unit.f = '%'
-    min2d.f  = 220 ; int2d.f  = 5 ; max2d.f  = 300
-    dmin2d.f = -10 ; dint2d.f = 1  ; dmax2d.f = 10
-    min1d.f  = 220 ; int1d.f  = 30 ; max1d.f  = 300
-    dmin1d.f = -6  ; dint1d.f = 3  ; dmax1d.f = 6
-    if( _varid_lev <= 500 )
-      min2d.f  = 200 ; int2d.f  = 5 ; max2d.f  = 280
-      dmin2d.f = -10 ; dint2d.f = 1  ; dmax2d.f = 10
-      min1d.f  = 200 ; int1d.f  = 30 ; max1d.f  = 280
-      dmin1d.f = -6  ; dint1d.f = 3  ; dmax1d.f = 6
-    endif
-    if( _varid_lev <= 300 )
-      min2d.f  = 180 ; int2d.f  = 5 ; max2d.f  = 260
-      dmin2d.f = -10 ; dint2d.f = 1  ; dmax2d.f = 10
-      min1d.f  = 180 ; int1d.f  = 30 ; max1d.f  = 260
-      dmin1d.f = -6  ; dint1d.f = 3  ; dmax1d.f = 6
-    endif
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'sst' )
-    name.f = 'Sea Surface Temperature'
-    unit.f = 'K'
-    min2d.f  = 273 ; int2d.f  = 3 ; max2d.f  = 306
-    dmin2d.f = -3  ; dint2d.f = 0.5  ; dmax2d.f = 3
-    min1d.f  = 270 ; int1d.f  = 10 ; max1d.f  = 306
-    dmin1d.f = -3  ; dint1d.f = 1.5  ; dmax1d.f = 3
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'mslp' )
-    name.f = 'MSLP'
-    unit.f = 'hPa'
-    min2d.f  = 1000  ; int2d.f  = 2   ; max2d.f  = 1030
-*    dmin2d.f = -10 ; dint2d.f = 2 ; dmax2d.f = 10
-    dmin2d.f = -5 ; dint2d.f = 1 ; dmax2d.f = 5
-    min1d.f  = 1005  ; int1d.f  = 5   ; max1d.f  = 1025
-    dmin1d.f = -10 ; dint1d.f = 5   ; dmax1d.f = 10
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'icr' )
-    name.f = 'Sea Ice Fraction'
-    unit.f = '%'
-    min2d.f  = 10 ; int2d.f  = 10 ; max2d.f  = 90
-    dmin2d.f = -25  ; dint2d.f = 5  ; dmax2d.f = 25
-    min1d.f  = 0 ; int1d.f  = 25 ; max1d.f  = 100
-    dmin1d.f = -50  ; dint1d.f = 25  ; dmax1d.f = 50
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'ice' )
-    name.f = 'Sea Ice Mass'
-    unit.f = 'kg/m`a2`n'
-    min2d.f  = 200 ; int2d.f  = 200 ; max2d.f  = 2000
-    dmin2d.f = -100  ; dint2d.f = 10  ; dmax2d.f = 100
-    min1d.f  = 0 ; int1d.f  = 500 ; max1d.f  = 2000
-    dmin1d.f = -500  ; dint1d.f = 100  ; dmax1d.f = 500
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid_base = 'u' & valnum(_varid_lev) != 0 )
-    name.f = 'Zonal Wind @ '_varid_lev'hPa'
-    unit.f = 'm/s'
-    min2d.f  = -30 ; int2d.f  = 5  ; max2d.f  = 30
-    dmin2d.f = -10 ; dint2d.f = 2  ; dmax2d.f = 10
-    min1d.f  = -30 ; int1d.f  = 15 ; max1d.f  = 30
-    dmin1d.f = -10 ; dint1d.f = 5  ; dmax1d.f = 10
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'lw_up_toa' | _varid.f = 'lw_up_clr_toa' )
-    name.f = 'Upward Longwave Radiation @ TOA'
-    if( _varid.f = 'lw_up_clr_toa' ) ; name.f = name.f % ' (Clear Sky)' ; endif
-    unit.f = 'W/m^2'
-    min2d.f  = 100 ; int2d.f  = 20  ; max2d.f  = 340
-    dmin2d.f = -50 ; dint2d.f = 10  ; dmax2d.f = 50
-    min1d.f  = 100 ; int1d.f  = 50  ; max1d.f  = 300
-    dmin1d.f = -50 ; dint1d.f = 25  ; dmax1d.f = 50
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'lw_crf_toa' )
-    name.f = 'Longwave Cloud Radiative Forcing @ TOA'
-    unit.f = 'W/m^2'
-    min2d.f  = -100 ; int2d.f  = 20  ; max2d.f  = 100
-    dmin2d.f = -50  ; dint2d.f = 10  ; dmax2d.f = 50
-    min1d.f  = -100 ; int1d.f  = 50  ; max1d.f  = 100
-    dmin1d.f = -50  ; dint1d.f = 25  ; dmax1d.f = 50
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'lw_up_sfc' )
-    name.f = 'Upward Longwave Radiation @ Surface'
-    unit.f = 'W/m^2'
-    min2d.f  = 100 ; int2d.f  = 30  ; max2d.f  = 480
-    dmin2d.f = -50 ; dint2d.f = 10  ; dmax2d.f = 50
-    min1d.f  = 100 ; int1d.f  = 200 ; max1d.f  = 500
-    dmin1d.f = -50 ; dint1d.f = 25  ; dmax1d.f = 50
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'lw_down_sfc' )
-    name.f = 'Downward Longwave Radiation @ Surface'
-    unit.f = 'W/m^2'
-    min2d.f  = 100 ; int2d.f  = 30  ; max2d.f  = 480
-    dmin2d.f = -50 ; dint2d.f = 10  ; dmax2d.f = 50
-    min1d.f  = 100 ; int1d.f  = 200 ; max1d.f  = 500
-    dmin1d.f = -50 ; dint1d.f = 25  ; dmax1d.f = 50
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'sw_up_toa' | _varid.f = 'sw_up_clr_toa' )
-    name.f = 'Upward Shortwave Radiation @ TOA'
-    if( _varid.f = 'sw_up_clr_toa' ) ; name.f = name.f % ' (Clear Sky)' ; endif
-    unit.f = 'W/m^2'
-    min2d.f  = 0   ; int2d.f  = 40  ; max2d.f  = 400
-    dmin2d.f = -50 ; dint2d.f = 10  ; dmax2d.f = 50
-    min1d.f  = 0   ; int1d.f  = 100 ; max1d.f  = 300
-    dmin1d.f = -50 ; dint1d.f = 25  ; dmax1d.f = 50
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'sw_crf_toa' )
-    name.f = 'Shortwave Cloud Radiative Forcing @ TOA'
-    unit.f = 'W/m^2'
-    min2d.f  = -100 ; int2d.f  = 20  ; max2d.f  = 100
-    dmin2d.f = -50  ; dint2d.f = 10  ; dmax2d.f = 50
-    min1d.f  = -100 ; int1d.f  = 50  ; max1d.f  = 100
-    dmin1d.f = -50  ; dint1d.f = 25  ; dmax1d.f = 50
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'sw_up_sfc' )
-    name.f = 'Upward Shortwave Radiation @ Surface'
-    unit.f = 'W/m^2'
-    min2d.f  = 0   ; int2d.f  = 20  ; max2d.f  = 200
-    dmin2d.f = -50 ; dint2d.f = 10  ; dmax2d.f = 50
-    min1d.f  = 0   ; int1d.f  = 100 ; max1d.f  = 200
-    dmin1d.f = -50 ; dint1d.f = 25  ; dmax1d.f = 50
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'sw_down_toa' )
-    name.f = 'Downward Shortwave Radiation @ TOA'
-    unit.f = 'W/m^2'
-    min2d.f  = 0   ; int2d.f  = 50  ; max2d.f  = 500
-    dmin2d.f = -50 ; dint2d.f = 10  ; dmax2d.f = 50
-    min1d.f  = 0   ; int1d.f  = 250 ; max1d.f  = 500
-    dmin1d.f = -50 ; dint1d.f = 25  ; dmax1d.f = 50
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-*    color.f = 'grainbow'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'sw_down_sfc' )
-    name.f = 'Downward Shortwave Radiation @ Surface'
-    unit.f = 'W/m^2'
-    min2d.f  = 0   ; int2d.f  = 40  ; max2d.f  = 400
-    dmin2d.f = -50 ; dint2d.f = 10  ; dmax2d.f = 50
-    min1d.f  = 0   ; int1d.f  = 100 ; max1d.f  = 400
-    dmin1d.f = -50 ; dint1d.f = 25  ; dmax1d.f = 50
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-*    color.f = 'grainbow'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'sw_net_toa' )
-    name.f = 'Down-Upward Shortwave Radiation @ TOA'
-    unit.f = 'W/m^2'
-    min2d.f  = 0   ; int2d.f  = 40  ; max2d.f  = 400
-    dmin2d.f = -50 ; dint2d.f = 10  ; dmax2d.f = 50
-    min1d.f  = 0   ; int1d.f  = 100 ; max1d.f  = 300
-    dmin1d.f = -50 ; dint1d.f = 25  ; dmax1d.f = 50
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'lw_net_sfc' )
-    name.f = 'Down-Upward Longwave Radiation @ Surface'
-    unit.f = 'W/m^2'
-    min2d.f  = -200; int2d.f  = 20  ; max2d.f  = 0
-    dmin2d.f = -50 ; dint2d.f = 10  ; dmax2d.f = 50
-    min1d.f  = -100; int1d.f  = 50  ; max1d.f  = 0
-    dmin1d.f = -50 ; dint1d.f = 25  ; dmax1d.f = 50
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'sw_net_sfc' )
-    name.f = 'Down-Upward Shortwave Radiation @ Surface'
-    unit.f = 'W/m^2'
-    min2d.f  = 0   ; int2d.f  = 40  ; max2d.f  = 400
-    dmin2d.f = -50 ; dint2d.f = 10  ; dmax2d.f = 50
-    min1d.f  = 0   ; int1d.f  = 100 ; max1d.f  = 300
-    dmin1d.f = -50 ; dint1d.f = 25  ; dmax1d.f = 50
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'aw_net_toa' )
-    name.f = 'Down-Upward Long+Shortwave Radiation @ TOA'
-    unit.f = 'W/m^2'
-    min2d.f  = -200; int2d.f  = 40  ; max2d.f  = 200
-    dmin2d.f = -50 ; dint2d.f = 10  ; dmax2d.f = 50
-    min1d.f  = -200; int1d.f  = 100 ; max1d.f  = 200
-    dmin1d.f = -50 ; dint1d.f = 25  ; dmax1d.f = 50
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'aw_crf_toa' )
-    name.f = 'Long+Shortwave Cloud Radiative Forcing @ TOA'
-    unit.f = 'W/m^2'
-    min2d.f  = -100 ; int2d.f  = 20  ; max2d.f  = 100
-    dmin2d.f = -50  ; dint2d.f = 10  ; dmax2d.f = 50
-    min1d.f  = -100 ; int1d.f  = 50  ; max1d.f  = 100
-    dmin1d.f = -50  ; dint1d.f = 25  ; dmax1d.f = 50
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'aw_net_sfc' )
-    name.f = 'Down-Upward Long+Shortwave Radiation @ Surface'
-    unit.f = 'W/m^2'
-    min2d.f  = -200; int2d.f  = 40  ; max2d.f  = 200
-    dmin2d.f = -50 ; dint2d.f = 10  ; dmax2d.f = 50
-    min1d.f  = -200; int1d.f  = 100 ; max1d.f  = 200
-    dmin1d.f = -50 ; dint1d.f = 25  ; dmax1d.f = 50
-    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor.f = 'bluered'
-  endif
-
-  if( _varid.f = 'sh_sfc' | _varid.f = 'lh_sfc' )
-    if( _varid.f = 'sh_sfc' ) ; name.f = 'Surface Sensible Heat Flux' ; endif
-    if( _varid.f = 'lh_sfc' ) ; name.f = 'Surface Latent Heat Flux' ; endif
-    unit.f = 'W/m^2'
-    min2d.f  = -200 ; int2d.f  = 40  ; max2d.f  = 200
-    dmin2d.f = -100 ; dint2d.f = 20  ; dmax2d.f = 100
-    min1d.f  = -200 ; int1d.f  = 100 ; max1d.f  = 200
-    dmin1d.f = -50  ; dint1d.f = 25  ; dmax1d.f = 50
-*    color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
-    color.f = 'purple->bluered->maroon'
-*    dcolor.f = 'bluered'
-    dcolor.f = 'purple->bluered->maroon'
-  endif
-
-  if( _varid.f = 'energy_net_sfc' )
-    name.f = 'Net Downward Surface Energy Flux'
-    unit.f = 'W/m^2'
-    min2d.f  = -200 ; int2d.f  = 40  ; max2d.f  = 200
-    dmin2d.f = -100 ; dint2d.f = 20  ; dmax2d.f = 100
-    min1d.f  = -200 ; int1d.f  = 100 ; max1d.f  = 200
-    dmin1d.f = -50  ; dint1d.f = 25  ; dmax1d.f = 50
-    color.f = 'purple->bluered->maroon'
-    dcolor.f = 'purple->bluered->maroon'
-  endif
-
-  if( _varid.f = 'land_wg_z1' | _varid.f = 'land_wg_z2' | _varid.f = 'land_wg_z3' | _varid.f = 'land_wg_z4' | _varid.f = 'land_wg_z5' )
-    if( _varid.f = 'land_wg_z1' ) ; name.f = 'Soil Water @ z=1' ; endif
-    if( _varid.f = 'land_wg_z2' ) ; name.f = 'Soil Water @ z=2' ; endif
-    if( _varid.f = 'land_wg_z3' ) ; name.f = 'Soil Water @ z=3' ; endif
-    if( _varid.f = 'land_wg_z4' ) ; name.f = 'Soil Water @ z=4' ; endif
-    if( _varid.f = 'land_wg_z5' ) ; name.f = 'Soil Water @ z=5' ; endif
-    unit.f = '0-1'
-    min2d.f  = 0    ; int2d.f  = 0.1 ; max2d.f  = 1
-    dmin2d.f = -0.5 ; dint2d.f = 0.1 ; dmax2d.f = 0.5
-    min1d.f  = 0    ; int1d.f  = 0.5 ; max1d.f  = 1
-    dmin1d.f = -0.5 ; dint1d.f = 0.1 ; dmax1d.f = 0.5
-    color.f = 'grainbow'
-    dcolor.f = 'purple->bluered->maroon'
-  endif
 
   tmp = substr( _varid.f, 1, 5 )
   if( tmp = 'isccp' )
     if( _varid.f = 'isccp_ctp_all' | _varid.f = 'isccp_ctp_all_vis' )
-      name.f = 'Cloud Top Pressure by ISCCP'
+      _name.f = 'Cloud Top Pressure by ISCCP'
       tmp = substr( _varid.f, 7, 20 )
       sname.f = ', ' % tmp
-      unit.f = '%'
-      min2d.f  = 100 ; int2d.f  = 100 ; max2d.f  = 900
-      dmin2d.f = -50 ; dint2d.f = 10  ; dmax2d.f = 50
-      min1d.f  = 100 ; int1d.f  = 200 ; max1d.f  = 900
-      dmin1d.f = -50 ; dint1d.f = 25 ; dmax1d.f = 50
-      color.f  = 'white-(0)->grainbow'
-      dcolor.f = 'purple->blue->white->red->brown'
+      _unit.f = '%'
+      _min2d.f  = 100 ; _int2d.f  = 100 ; _max2d.f  = 900
+      _dmin2d.f = -50 ; _dint2d.f = 10  ; _dmax2d.f = 50
+      _min1d.f  = 100 ; _int1d.f  = 200 ; _max1d.f  = 900
+      _dmin1d.f = -50 ; _dint1d.f = 25 ; _dmax1d.f = 50
+      _color.f  = 'white-(0)->grainbow'
+      _dcolor.f = 'purple->blue->white->red->brown'
     else ; if( _varid.f = 'isccp_od_all' | _varid.f = 'isccp_od_all_vis' )
-      name.f = 'log(Cloud Optical Depth) by ISCCP'
+      _name.f = 'log(Cloud Optical Depth) by ISCCP'
       tmp = substr( _varid.f, 7, 20 )
       sname.f = ', ' % tmp
-      unit.f = '%'
-      min2d.f  = -1 ; int2d.f  = 0.5 ; max2d.f  = 4
-      dmin2d.f = -0.5 ; dint2d.f = 0.1  ; dmax2d.f = 0.5
-      min1d.f  = -1 ; int1d.f  = 1 ; max1d.f  = 4
-      dmin1d.f = -0.5 ; dint1d.f = 0.5 ; dmax1d.f = 0.5
-      color.f  = 'white-(0)->grainbow'
-      dcolor.f = 'purple->blue->white->red->brown'
+      _unit.f = '%'
+      _min2d.f  = -1 ; _int2d.f  = 0.5 ; _max2d.f  = 4
+      _dmin2d.f = -0.5 ; _dint2d.f = 0.1  ; _dmax2d.f = 0.5
+      _min1d.f  = -1 ; _int1d.f  = 1 ; _max1d.f  = 4
+      _dmin1d.f = -0.5 ; _dint1d.f = 0.5 ; _dmax1d.f = 0.5
+      _color.f  = 'white-(0)->grainbow'
+      _dcolor.f = 'purple->blue->white->red->brown'
     else
-      name.f = 'ISCCP Cloud Fraction'
+      _name.f = 'ISCCP Cloud Fraction'
       tmp = substr( _varid.f, 7, 20 )
       sname.f = ', ' % tmp
-      unit.f = '%'
-      min2d.f  = 10  ; int2d.f  = 10 ; max2d.f  = 90
-      dmin2d.f = -50 ; dint2d.f = 10 ; dmax2d.f = 50
-*      dmin2d.f = -10 ; dint2d.f = 2 ; dmax2d.f = 10
-      min1d.f  = 0   ; int1d.f  = 25 ; max1d.f  = 100
-      dmin1d.f = -20 ; dint1d.f = 10 ; dmax1d.f = 20
-*      dmin1d.f = -10 ; dint1d.f = 5 ; dmax1d.f = 10
-      color.f  = 'white-(0)->grainbow'
-      dcolor.f = 'purple->blue->white->red->brown'
-*      dcolor.f = 'white->white->gray'
+      _unit.f = '%'
+      _min2d.f  = 10  ; _int2d.f  = 10 ; _max2d.f  = 90
+      _dmin2d.f = -50 ; _dint2d.f = 10 ; _dmax2d.f = 50
+*      _dmin2d.f = -10 ; _dint2d.f = 2 ; _dmax2d.f = 10
+      _min1d.f  = 0   ; _int1d.f  = 25 ; _max1d.f  = 100
+      _dmin1d.f = -20 ; _dint1d.f = 10 ; _dmax1d.f = 20
+*      _dmin1d.f = -10 ; _dint1d.f = 5 ; _dmax1d.f = 10
+      _color.f  = 'white-(0)->grainbow'
+      _dcolor.f = 'purple->blue->white->red->brown'
+*      _dcolor.f = 'white->white->gray'
     endif ; endif
   endif
-
-
-
 
 
   f = f + 1
 endwhile
 
-
-***************************************************************
-* Variable List (to be deleted)
-***************************************************************
-*sname = ''
-** variable
-*if( _varid = 'iwp' )
-*  name = 'Ice Water Path'
-*  unit = 'g/m^2'
-*  min2d  = 0 ; int2d  = 40   ; max2d  = 400
-*  dmin2d = -200; dint2d = 40  ; dmax2d = 200
-*  min1d  = 0   ; int1d  = 100 ; max1d  = 200
-*  dmin1d = -40 ; dint1d = 20  ; dmax1d = 40
-*  color = 'grainbow'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'lwp' )
-*  name = 'Liquid Water Path'
-*  unit = 'g/m^2'
-*  min2d  = 0 ; int2d  = 40   ; max2d  = 400
-*  dmin2d = -200; dint2d = 40  ; dmax2d = 200
-*  min1d  = 0   ; int1d  = 100 ; max1d  = 200
-*  dmin1d = -40 ; dint1d = 20  ; dmax1d = 40
-*  color = 'grainbow'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'pt_700_minus_925' )
-*  name = '`3z`0`b700`n-`3z`0`b925`n'
-*  unit = 'K'
-*  min2d  = 10 ; int2d  = 2 ; max2d  = 30
-*  dmin2d = -5 ; dint2d = 1 ; dmax2d = 5
-*  min1d  = 10 ; int1d  = 5 ; max1d  = 30
-*  dmin1d = -5 ; dint1d = 2.5 ; dmax1d = 5
-*  color = 'grainbow'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'pt_z3000s_minus_z500s' )
-*  name = '`3z`0`b700`n-`3z`0`b925`n'
-*  unit = 'K'
-*  min2d  = 10 ; int2d  = 2 ; max2d  = 30
-*  dmin2d = -5 ; dint2d = 1 ; dmax2d = 5
-*  min1d  = 10 ; int1d  = 5 ; max1d  = 30
-*  dmin1d = -5 ; dint1d = 2.5 ; dmax1d = 5
-*  color = 'grainbow'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'precip' )
-*  name = 'Precipitation'
-*  unit = 'mm/day'
-*  min2d  = 1   ; int2d  = 1 ; max2d  = 20
-*  dmin2d = -10 ; dint2d = 1 ; dmax2d = 10
-*  min1d  = 0   ; int1d  = 3 ; max1d  = 15
-*  dmin1d = -6  ; dint1d = 2 ; dmax1d = 6
-**  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-*  color = 'white-(0)->grainbow'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'qv2m' )
-*  name = '2m Specif Humidity'
-*  unit = 'g/kg'
-*  min2d  = 2 ; int2d  = 2 ; max2d  = 20
-*  dmin2d = -2 ; dint2d = 0.4  ; dmax2d = 2
-*  min1d  = 0 ; int1d  = 5 ; max1d  = 20
-*  dmin1d = -2  ; dint1d = 1  ; dmax1d = 2
-*  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 't2m' )
-*  name = '2m Temperature'
-*  unit = 'K'
-*  min2d  = 200 ; int2d  = 10 ; max2d  = 320
-*  dmin2d = -10 ; dint2d = 1  ; dmax2d = 10
-*  min1d  = 220 ; int1d  = 30 ; max1d  = 310
-*  dmin1d = -6  ; dint1d = 3  ; dmax1d = 6
-*  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'lw_up_toa' | _varid = 'lw_up_clr_toa' )
-*  name = 'Upward Longwave Radiation @ TOA'
-*  if( _varid = 'lw_up_clr_toa' ) ; name = name % ' (Clear Sky)' ; endif
-*  unit = 'W/m^2'
-*  min2d  = 100 ; int2d  = 20  ; max2d  = 340
-*  dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-*  min1d  = 100 ; int1d  = 50  ; max1d  = 300
-*  dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-*  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'lw_crf_toa' )
-*  name = 'Longwave Cloud Radiative Forcing @ TOA'
-*  unit = 'W/m^2'
-*  min2d  = -100 ; int2d  = 20  ; max2d  = 100
-*  dmin2d = -50  ; dint2d = 10  ; dmax2d = 50
-*  min1d  = -100 ; int1d  = 50  ; max1d  = 100
-*  dmin1d = -50  ; dint1d = 25  ; dmax1d = 50
-*  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'lw_up_sfc' )
-*  name = 'Upward Longwave Radiation @ Surface'
-*  unit = 'W/m^2'
-*  min2d  = 100 ; int2d  = 30  ; max2d  = 480
-*  dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-*  min1d  = 100 ; int1d  = 200 ; max1d  = 500
-*  dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-*  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'lw_down_sfc' )
-*  name = 'Downward Longwave Radiation @ Surface'
-*  unit = 'W/m^2'
-*  min2d  = 100 ; int2d  = 30  ; max2d  = 480
-*  dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-*  min1d  = 100 ; int1d  = 200 ; max1d  = 500
-*  dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-*  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'sw_up_toa' | _varid = 'sw_up_clr_toa' )
-*  name = 'Upward Shortwave Radiation @ TOA'
-*  if( _varid = 'sw_up_clr_toa' ) ; name = name % ' (Clear Sky)' ; endif
-*  unit = 'W/m^2'
-*  min2d  = 0   ; int2d  = 40  ; max2d  = 400
-*  dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-*  min1d  = 0   ; int1d  = 100 ; max1d  = 300
-*  dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-*  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'sw_crf_toa' )
-*  name = 'Shortwave Cloud Radiative Forcing @ TOA'
-*  unit = 'W/m^2'
-*  min2d  = -100 ; int2d  = 20  ; max2d  = 100
-*  dmin2d = -50  ; dint2d = 10  ; dmax2d = 50
-*  min1d  = -100 ; int1d  = 50  ; max1d  = 100
-*  dmin1d = -50  ; dint1d = 25  ; dmax1d = 50
-*  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'sw_up_sfc' )
-*  name = 'Upward Shortwave Radiation @ Surface'
-*  unit = 'W/m^2'
-*  min2d  = 0   ; int2d  = 20  ; max2d  = 200
-*  dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-*  min1d  = 0   ; int1d  = 100 ; max1d  = 200
-*  dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-*  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'sw_down_toa' )
-*  name = 'Downward Shortwave Radiation @ TOA'
-*  unit = 'W/m^2'
-*  min2d  = 0   ; int2d  = 50  ; max2d  = 500
-*  dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-*  min1d  = 0   ; int1d  = 250 ; max1d  = 500
-*  dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-*  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-**  color = 'grainbow'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'sw_down_sfc' )
-*  name = 'Downward Shortwave Radiation @ Surface'
-*  unit = 'W/m^2'
-*  min2d  = 0   ; int2d  = 40  ; max2d  = 400
-*  dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-*  min1d  = 0   ; int1d  = 100 ; max1d  = 400
-*  dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-*  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-**  color = 'grainbow'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'sw_net_toa' )
-*  name = 'Down-Upward Shortwave Radiation @ TOA'
-*  unit = 'W/m^2'
-*  min2d  = 0   ; int2d  = 40  ; max2d  = 400
-*  dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-*  min1d  = 0   ; int1d  = 100 ; max1d  = 300
-*  dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-*  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'lw_net_sfc' )
-*  name = 'Down-Upward Longwave Radiation @ Surface'
-*  unit = 'W/m^2'
-*  min2d  = -200; int2d  = 20  ; max2d  = 0
-*  dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-*  min1d  = -100; int1d  = 50  ; max1d  = 0
-*  dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-*  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'sw_net_sfc' )
-*  name = 'Down-Upward Shortwave Radiation @ Surface'
-*  unit = 'W/m^2'
-*  min2d  = 0   ; int2d  = 40  ; max2d  = 400
-*  dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-*  min1d  = 0   ; int1d  = 100 ; max1d  = 300
-*  dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-*  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'aw_net_toa' )
-*  name = 'Down-Upward Long+Shortwave Radiation @ TOA'
-*  unit = 'W/m^2'
-*  min2d  = -200; int2d  = 40  ; max2d  = 200
-*  dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-*  min1d  = -200; int1d  = 100 ; max1d  = 200
-*  dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-*  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'aw_crf_toa' )
-*  name = 'Long+Shortwave Cloud Radiative Forcing @ TOA'
-*  unit = 'W/m^2'
-*  min2d  = -100 ; int2d  = 20  ; max2d  = 100
-*  dmin2d = -50  ; dint2d = 10  ; dmax2d = 50
-*  min1d  = -100 ; int1d  = 50  ; max1d  = 100
-*  dmin1d = -50  ; dint1d = 25  ; dmax1d = 50
-*  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'aw_net_sfc' )
-*  name = 'Down-Upward Long+Shortwave Radiation @ Surface'
-*  unit = 'W/m^2'
-*  min2d  = -200; int2d  = 40  ; max2d  = 200
-*  dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-*  min1d  = -200; int1d  = 100 ; max1d  = 200
-*  dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-*  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-*  dcolor = 'bluered'
-*endif
-*
-*if( _varid = 'sh_sfc' | _varid = 'lh_sfc' )
-*  if( _varid = 'sh_sfc' ) ; name = 'Surface Sensible Heat Flux' ; endif
-*  if( _varid = 'lh_sfc' ) ; name = 'Surface Latent Heat Flux' ; endif
-*  unit = 'W/m^2'
-*  min2d  = -200 ; int2d  = 40  ; max2d  = 200
-*  dmin2d = -100 ; dint2d = 20  ; dmax2d = 100
-*  min1d  = -200 ; int1d  = 100 ; max1d  = 200
-*  dmin1d = -50  ; dint1d = 25  ; dmax1d = 50
-**  color = 'purple->blue->aqua->lime->yellow->red->maroon'
-*  color = 'purple->bluered->maroon'
-**  dcolor = 'bluered'
-*  dcolor = 'purple->bluered->maroon'
-*endif
-*
-*if( _varid = 'energy_net_sfc' )
-*  name = 'Net Downward Surface Energy Flux'
-*  unit = 'W/m^2'
-*  min2d  = -200 ; int2d  = 40  ; max2d  = 200
-*  dmin2d = -100 ; dint2d = 20  ; dmax2d = 100
-*  min1d  = -200 ; int1d  = 100 ; max1d  = 200
-*  dmin1d = -50  ; dint1d = 25  ; dmax1d = 50
-*  color = 'purple->bluered->maroon'
-*  dcolor = 'purple->bluered->maroon'
-*endif
-*
-*if( _varid = 'land_wg_z1' | _varid = 'land_wg_z2' | _varid = 'land_wg_z3' | _varid = 'land_wg_z4' | _varid = 'land_wg_z5' )
-*  if( _varid = 'land_wg_z1' ) ; name = 'Soil Water @ z=1' ; endif
-*  if( _varid = 'land_wg_z2' ) ; name = 'Soil Water @ z=2' ; endif
-*  if( _varid = 'land_wg_z3' ) ; name = 'Soil Water @ z=3' ; endif
-*  if( _varid = 'land_wg_z4' ) ; name = 'Soil Water @ z=4' ; endif
-*  if( _varid = 'land_wg_z5' ) ; name = 'Soil Water @ z=5' ; endif
-*  unit = '0-1'
-*  min2d  = 0    ; int2d  = 0.1 ; max2d  = 1
-*  dmin2d = -0.5 ; dint2d = 0.1 ; dmax2d = 0.5
-*  min1d  = 0    ; int1d  = 0.5 ; max1d  = 1
-*  dmin1d = -0.5 ; dint1d = 0.1 ; dmax1d = 0.5
-*  color = 'grainbow'
-*  dcolor = 'purple->bluered->maroon'
-*endif
-*
-*if( _varid = 'isccp_high_vis' )
-*  name = 'ISCCP Visible Cloud Fraction'
-*  if( _varid = 'isccp_high_vis' ) ; sname = 'High' ; endif
-*  unit = '%'
-*  min2d  = 10  ; int2d  = 10 ; max2d  = 90
-*  dmin2d = -50 ; dint2d = 10 ; dmax2d = 50
-*  min1d  = 0   ; int1d  = 25 ; max1d  = 100
-*  dmin1d = -20 ; dint1d = 10 ; dmax1d = 20
-*  color = 'white-(0)->grainbow'
-*  dcolor = 'purple->blue->white->red->brown'
-*endif
 
 
 ***************************************************************
@@ -1296,12 +572,12 @@ while( d <= 6 )
 
 ***** raw data *****
   if( f2 = '' )
-*    'color -kind 'color' 'min2d' 'max2d' 'int2d
-    'color -kind 'color.f1' 'min2d.f1' 'max2d.f1' 'int2d.f1
+*    'color -kind '_color' '_min2d' '_max2d' '_int2d
+    'color -kind '_color.f1' '_min2d.f1' '_max2d.f1' '_int2d.f1
     'v = v'f1
   else
-*    'color -kind 'dcolor' 'dmin2d' 'dmax2d' 'dint2d
-    'color -kind 'dcolor.f1' 'dmin2d.f1' 'dmax2d.f1' 'dint2d.f1
+*    'color -kind '_dcolor' '_dmin2d' '_dmax2d' '_dint2d
+    'color -kind '_dcolor.f1' '_dmin2d.f1' '_dmax2d.f1' '_dint2d.f1
     'v = v'f1' - lterp( v'f2', v'f1' )'
   endif
 
@@ -1318,11 +594,11 @@ while( d <= 6 )
   if( _cont.d = 'on' )
       'set gxout contour'; 'set cthick 6'; 'set ccolor 1'
     if( f2 = '' )
-*      'set cint 'int2d
-      'set cint 'int2d.f1
+*      'set cint '_int2d
+      'set cint '_int2d.f1
     else
-*      'set cint 'dint2d
-      'set cint 'dint2d.f1
+*      'set cint '_dint2d
+      'set cint '_dint2d.f1
     endif
     'd v'
   endif
@@ -1333,10 +609,8 @@ while( d <= 6 )
 
 *  if( d = 1 )
 *    'setfont normal'
-*    'draws -yoffset 0.25 -pos tl -base bl 'name' for 'term' ['unit']'
     'setfont normal -base tl'
-*    'draw string 1.4 8.4 'name' for 'term' '_year' ['unit']'
-    'draw string 1.4 8.4 'name.f1' for 'term' '_year' ['unit.f1']'
+    'draw string 1.4 8.4 '_name.f1' for 'term' '_year' ['_unit.f1']'
 *  endif
 
 *** zonal mean ***
@@ -1346,10 +620,10 @@ while( d <= 6 )
   if( i = 2 ) ; 'set parea 9.8 10.8 'ypos' 'ypos+2.0 ; endif
 
   'set xyrev on'
-*  if( f2 = '' ) ; 'set vrange 'min1d' 'max1d ; 'set xlint 'int1d
-  if( f2 = '' ) ; 'set vrange 'min1d.f1' 'max1d.f1 ; 'set xlint 'int1d.f1
-*  else ; 'set vrange 'dmin1d' 'dmax1d ; 'set xlint 'dint1d ; endif
-  else ; 'set vrange 'dmin1d.f1' 'dmax1d.f1 ; 'set xlint 'dint1d.f1 ; endif
+*  if( f2 = '' ) ; 'set vrange '_min1d' '_max1d ; 'set xlint '_int1d
+  if( f2 = '' ) ; 'set vrange '_min1d.f1' '_max1d.f1 ; 'set xlint '_int1d.f1
+*  else ; 'set vrange '_dmin1d' '_dmax1d ; 'set xlint '_dint1d ; endif
+  else ; 'set vrange '_dmin1d.f1' '_dmax1d.f1 ; 'set xlint '_dint1d.f1 ; endif
   'set ylab off'
   'set cmark 0' ; 'set cthick 6' ; 'set ccolor 1'
   'zm = ave( v, lon='lonmin', lon='lonmax', -b )'
@@ -1374,13 +648,13 @@ while( d <= 6 )
 *
 **    diff( 'v'f2, f2, 'v'f1, f1, 'd' )
 *    'd = v'f1' - lterp( v'f2', v'f1' )'
-*    'color 'dmin' 'dmax' 'dint' -kind 'dcolor
+*    'color '_dmin' '_dmax' '_dint' -kind '_dcolor
 *    'd d'
 *
 *    xpos = 3.5 * i - 2.7
 *    ypos = 4.0 * j - 3.5
 *    'xcbar 'xpos' 'xpos+3.0' 'ypos' 'ypos+0.15' -line on -fstep 2 -foffset 1 -fwidth 0.08 -fheight 0.08'
-*    'set gxout contour'; 'set cint 'dint;  'set cthick 6'; 'set ccolor 1'
+*    'set gxout contour'; 'set cint '_dint;  'set cthick 6'; 'set ccolor 1'
 *    'd d'
 *
 *    'setfont small'
@@ -1462,3 +736,440 @@ function v2s( var )
   value = subwrd( result, 4 )
   return value
 end function
+
+
+*
+* varid, varcnfid -> name, unit, min, ...
+*
+function get_varcnf( f, varid, varcnfid )
+
+* varid -> varid_base, varid_lev
+  target.1 = 'u'
+  target.2 = 'v'
+  target.3 = 't'
+  target.4 = 'rh'
+  target.5 = 'qv'
+  tarmax = 5
+
+  tar = 1
+  while( tar <= tarmax )
+    target_len = math_strlen(target.tar)
+    tmp1 = substr(varid,1,target_len)
+    tmp2 = math_strlen(varid)
+    if( tmp1 = target.tar & tmp2 > target_len )
+      varid_base = tmp1
+      varid_lev = substr(varid,target_len+1,tmp2-target_len)
+    endif
+    tar = tar + 1
+  endwhile
+
+  if( varid = 'iwp' )
+    _name.f = 'Ice Water Path'
+    _unit.f = 'g/m^2'
+    _min2d.f  = 20  ; _int2d.f  = 20  ; _max2d.f  = 200
+    _dmin2d.f = -50 ; _dint2d.f = 10  ; _dmax2d.f = 50
+    _min1d.f  = 0   ; _int1d.f  = 100 ; _max1d.f  = 200
+    _dmin1d.f = -40 ; _dint1d.f = 20  ; _dmax1d.f = 40
+    _color.f  = 'grainbow'
+    _dcolor.f = 'bluered'
+    if( varcnfid = '2' )
+      _min2d.f  = 0    ; _int2d.f  = 40 ; _max2d.f  = 400
+      _dmin2d.f = -200 ; _dint2d.f = 40 ; _dmax2d.f = 200
+    endif
+  endif
+
+  if( varid = 'lwp' )
+    _name.f = 'Liquid Water Path'
+    _unit.f = 'g/m^2'
+    _min2d.f  = 20  ; _int2d.f  = 20  ; _max2d.f  = 200
+    _dmin2d.f = -50 ; _dint2d.f = 10  ; _dmax2d.f = 50
+    _min1d.f  = 0   ; _int1d.f  = 100 ; _max1d.f  = 200
+    _dmin1d.f = -40 ; _dint1d.f = 20  ; _dmax1d.f = 40
+    _color.f  = 'grainbow'
+    _dcolor.f = 'bluered'
+    if( varcnfid = '2' )
+      _min2d.f  = 0    ; _int2d.f  = 40 ; _max2d.f  = 400
+      _dmin2d.f = -200 ; _dint2d.f = 40 ; _dmax2d.f = 200
+    endif
+  endif
+
+  if( varid = 'pt_700_minus_925' )
+    _name.f = '`3z`0`b700`n-`3z`0`b925`n'
+    _unit.f = 'K'
+    _min2d.f  = 10 ; _int2d.f  = 2   ; _max2d.f  = 30
+    _dmin2d.f = -5 ; _dint2d.f = 1   ; _dmax2d.f = 5
+    _min1d.f  = 10 ; _int1d.f  = 5   ; _max1d.f  = 30
+    _dmin1d.f = -5 ; _dint1d.f = 2.5 ; _dmax1d.f = 5
+    _color.f  = 'grainbow'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'pt_z3000s_minus_z500s' )
+    _name.f = '`3z`0`b700`n-`3z`0`b925`n'
+    _unit.f = 'K'
+    _min2d.f  = 10 ; _int2d.f  = 2   ; _max2d.f  = 30
+    _dmin2d.f = -5 ; _dint2d.f = 1   ; _dmax2d.f = 5
+    _min1d.f  = 10 ; _int1d.f  = 5   ; _max1d.f  = 30
+    _dmin1d.f = -5 ; _dint1d.f = 2.5 ; _dmax1d.f = 5
+    _color.f  = 'grainbow'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'precip' )
+    _name.f = 'Precipitation'
+    _unit.f = 'mm/day'
+    _min2d.f  = 1   ; _int2d.f  = 1 ; _max2d.f  = 20
+    _dmin2d.f = -10 ; _dint2d.f = 1 ; _dmax2d.f = 10
+    _min1d.f  = 0   ; _int1d.f  = 3 ; _max1d.f  = 15
+    _dmin1d.f = -6  ; _dint1d.f = 2 ; _dmax1d.f = 6
+*    _color.f = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _color.f  = 'white-(0)->grainbow'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'qv2m' )
+    _name.f = '2m Specif Humidity'
+    _unit.f = 'g/kg'
+    _min2d.f  = 2  ; _int2d.f  = 2   ; _max2d.f  = 20
+    _dmin2d.f = -2 ; _dint2d.f = 0.4 ; _dmax2d.f = 2
+    _min1d.f  = 0  ; _int1d.f  = 5   ; _max1d.f  = 20
+    _dmin1d.f = -2 ; _dint1d.f = 1   ; _dmax1d.f = 2
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid_base = 'qv' & valnum(varid_lev) != 0 )
+    _name.f = 'Specif Humidity @ 'varid_lev'hPa'
+    _unit.f = 'g/kg'
+    _min2d.f  = 2  ; _int2d.f  = 2   ; _max2d.f  = 20
+    _dmin2d.f = -5 ; _dint2d.f = 1   ; _dmax2d.f = 5
+    _min1d.f  = 0  ; _int1d.f  = 5   ; _max1d.f  = 20
+    _dmin1d.f = -5 ; _dint1d.f = 1   ; _dmax1d.f = 5
+    if( varid_lev <= 500 )
+      _min2d.f  = 1    ; _int2d.f  = 1   ; _max2d.f  = 10
+      _dmin2d.f = -2.5 ; _dint2d.f = 0.5 ; _dmax2d.f = 2.5
+      _min1d.f  = 0    ; _int1d.f  = 2.5 ; _max1d.f  = 10
+      _dmin1d.f = -2   ; _dint1d.f = 1   ; _dmax1d.f = 2
+    endif
+    if( varid_lev <= 300 )
+      _min2d.f  = 0.2  ; _int2d.f  = 0.2  ; _max2d.f  = 2.0
+      _dmin2d.f = -0.5 ; _dint2d.f = 0.1  ; _dmax2d.f = 0.5
+      _min1d.f  = 0    ; _int1d.f  = 0.5  ; _max1d.f  = 2.0
+      _dmin1d.f = -0.5 ; _dint1d.f = 0.25 ; _dmax1d.f = 0.5
+    endif
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid_base = 'rh' & valnum(varid_lev) != 0 )
+    _name.f = 'Relative Humidity @ 'varid_lev'hPa'
+    _unit.f = '%'
+    _min2d.f  = 10  ; _int2d.f  = 10 ; _max2d.f  = 100
+    _dmin2d.f = -50 ; _dint2d.f = 10 ; _dmax2d.f = 50
+    _min1d.f  = 0   ; _int1d.f  = 25 ; _max1d.f  = 100
+    _dmin1d.f = -20 ; _dint1d.f = 10 ; _dmax1d.f = 20
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 't2m' )
+    _name.f = '2m Temperature'
+    _unit.f = 'K'
+    _min2d.f  = 200 ; _int2d.f  = 10 ; _max2d.f  = 320
+    _dmin2d.f = -10 ; _dint2d.f = 1  ; _dmax2d.f = 10
+    _min1d.f  = 220 ; _int1d.f  = 30 ; _max1d.f  = 310
+    _dmin1d.f = -6  ; _dint1d.f = 3  ; _dmax1d.f = 6
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid_base = 't' & valnum(varid_lev) != 0 )
+    _name.f = 'Temperature @ 'varid_lev'hPa'
+    _unit.f = '%'
+    _min2d.f  = 220 ; _int2d.f  = 5  ; _max2d.f  = 300
+    _dmin2d.f = -10 ; _dint2d.f = 1  ; _dmax2d.f = 10
+    _min1d.f  = 220 ; _int1d.f  = 30 ; _max1d.f  = 300
+    _dmin1d.f = -6  ; _dint1d.f = 3  ; _dmax1d.f = 6
+    if( varid_lev <= 500 )
+      _min2d.f  = 200 ; _int2d.f  = 5  ; _max2d.f  = 280
+      _dmin2d.f = -10 ; _dint2d.f = 1  ; _dmax2d.f = 10
+      _min1d.f  = 200 ; _int1d.f  = 30 ; _max1d.f  = 280
+      _dmin1d.f = -6  ; _dint1d.f = 3  ; _dmax1d.f = 6
+    endif
+    if( varid_lev <= 300 )
+      _min2d.f  = 180 ; _int2d.f  = 5  ; _max2d.f  = 260
+      _dmin2d.f = -10 ; _dint2d.f = 1  ; _dmax2d.f = 10
+      _min1d.f  = 180 ; _int1d.f  = 30 ; _max1d.f  = 260
+      _dmin1d.f = -6  ; _dint1d.f = 3  ; _dmax1d.f = 6
+    endif
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'sst' )
+    _name.f = 'Sea Surface Temperature'
+    _unit.f = 'K'
+    _min2d.f  = 273 ; _int2d.f  = 3   ; _max2d.f  = 306
+    _dmin2d.f = -3  ; _dint2d.f = 0.5 ; _dmax2d.f = 3
+    _min1d.f  = 270 ; _int1d.f  = 10  ; _max1d.f  = 306
+    _dmin1d.f = -3  ; _dint1d.f = 1.5 ; _dmax1d.f = 3
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'mslp' )
+    _name.f = 'MSLP'
+    _unit.f = 'hPa'
+    _min2d.f  = 1000 ; _int2d.f  = 2 ; _max2d.f  = 1030
+*    _dmin2d.f = -10  ; _dint2d.f = 2 ; _dmax2d.f = 10
+    _dmin2d.f = -5   ; _dint2d.f = 1 ; _dmax2d.f = 5
+    _min1d.f  = 1005 ; _int1d.f  = 5 ; _max1d.f  = 1025
+    _dmin1d.f = -10  ; _dint1d.f = 5 ; _dmax1d.f = 10
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'icr' )
+    _name.f = 'Sea Ice Fraction'
+    _unit.f = '%'
+    _min2d.f  = 10  ; _int2d.f  = 10 ; _max2d.f  = 90
+    _dmin2d.f = -25 ; _dint2d.f = 5  ; _dmax2d.f = 25
+    _min1d.f  = 0   ; _int1d.f  = 25 ; _max1d.f  = 100
+    _dmin1d.f = -50 ; _dint1d.f = 25 ; _dmax1d.f = 50
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'ice' )
+    _name.f = 'Sea Ice Mass'
+    _unit.f = 'kg/m`a2`n'
+    _min2d.f  = 200  ; _int2d.f  = 200 ; _max2d.f  = 2000
+    _dmin2d.f = -100 ; _dint2d.f = 10  ; _dmax2d.f = 100
+    _min1d.f  = 0    ; _int1d.f  = 500 ; _max1d.f  = 2000
+    _dmin1d.f = -500 ; _dint1d.f = 100 ; _dmax1d.f = 500
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid_base = 'u' & valnum(varid_lev) != 0 )
+    _name.f = 'Zonal Wind @ 'varid_lev'hPa'
+    _unit.f = 'm/s'
+    _min2d.f  = -30 ; _int2d.f  = 5  ; _max2d.f  = 30
+    _dmin2d.f = -10 ; _dint2d.f = 2  ; _dmax2d.f = 10
+    _min1d.f  = -30 ; _int1d.f  = 15 ; _max1d.f  = 30
+    _dmin1d.f = -10 ; _dint1d.f = 5  ; _dmax1d.f = 10
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'lw_up_toa' | varid = 'lw_up_clr_toa' )
+    _name.f = 'Upward Longwave Radiation @ TOA'
+    if( varid = 'lw_up_clr_toa' ) ; _name.f = _name.f % ' (Clear Sky)' ; endif
+    _unit.f = 'W/m^2'
+    _min2d.f  = 100 ; _int2d.f  = 20  ; _max2d.f  = 340
+    _dmin2d.f = -50 ; _dint2d.f = 10  ; _dmax2d.f = 50
+    _min1d.f  = 100 ; _int1d.f  = 50  ; _max1d.f  = 300
+    _dmin1d.f = -50 ; _dint1d.f = 25  ; _dmax1d.f = 50
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'lw_crf_toa' )
+    _name.f = 'Longwave Cloud Radiative Forcing @ TOA'
+    _unit.f = 'W/m^2'
+    _min2d.f  = -100 ; _int2d.f  = 20  ; _max2d.f  = 100
+    _dmin2d.f = -50  ; _dint2d.f = 10  ; _dmax2d.f = 50
+    _min1d.f  = -100 ; _int1d.f  = 50  ; _max1d.f  = 100
+    _dmin1d.f = -50  ; _dint1d.f = 25  ; _dmax1d.f = 50
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'lw_up_sfc' )
+    _name.f = 'Upward Longwave Radiation @ Surface'
+    _unit.f = 'W/m^2'
+    _min2d.f  = 100 ; _int2d.f  = 30  ; _max2d.f  = 480
+    _dmin2d.f = -50 ; _dint2d.f = 10  ; _dmax2d.f = 50
+    _min1d.f  = 100 ; _int1d.f  = 200 ; _max1d.f  = 500
+    _dmin1d.f = -50 ; _dint1d.f = 25  ; _dmax1d.f = 50
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'lw_down_sfc' )
+    _name.f = 'Downward Longwave Radiation @ Surface'
+    _unit.f = 'W/m^2'
+    _min2d.f  = 100 ; _int2d.f  = 30  ; _max2d.f  = 480
+    _dmin2d.f = -50 ; _dint2d.f = 10  ; _dmax2d.f = 50
+    _min1d.f  = 100 ; _int1d.f  = 200 ; _max1d.f  = 500
+    _dmin1d.f = -50 ; _dint1d.f = 25  ; _dmax1d.f = 50
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'sw_up_toa' | varid = 'sw_up_clr_toa' )
+    _name.f = 'Upward Shortwave Radiation @ TOA'
+    if( varid = 'sw_up_clr_toa' ) ; _name.f = _name.f % ' (Clear Sky)' ; endif
+    _unit.f = 'W/m^2'
+    _min2d.f  = 0   ; _int2d.f  = 40  ; _max2d.f  = 400
+    _dmin2d.f = -50 ; _dint2d.f = 10  ; _dmax2d.f = 50
+    _min1d.f  = 0   ; _int1d.f  = 100 ; _max1d.f  = 300
+    _dmin1d.f = -50 ; _dint1d.f = 25  ; _dmax1d.f = 50
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'sw_crf_toa' )
+    _name.f = 'Shortwave Cloud Radiative Forcing @ TOA'
+    _unit.f = 'W/m^2'
+    _min2d.f  = -100 ; _int2d.f  = 20  ; _max2d.f  = 100
+    _dmin2d.f = -50  ; _dint2d.f = 10  ; _dmax2d.f = 50
+    _min1d.f  = -100 ; _int1d.f  = 50  ; _max1d.f  = 100
+    _dmin1d.f = -50  ; _dint1d.f = 25  ; _dmax1d.f = 50
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'sw_up_sfc' )
+    _name.f = 'Upward Shortwave Radiation @ Surface'
+    _unit.f = 'W/m^2'
+    _min2d.f  = 0   ; _int2d.f  = 20  ; _max2d.f  = 200
+    _dmin2d.f = -50 ; _dint2d.f = 10  ; _dmax2d.f = 50
+    _min1d.f  = 0   ; _int1d.f  = 100 ; _max1d.f  = 200
+    _dmin1d.f = -50 ; _dint1d.f = 25  ; _dmax1d.f = 50
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'sw_down_toa' )
+    _name.f = 'Downward Shortwave Radiation @ TOA'
+    _unit.f = 'W/m^2'
+    _min2d.f  = 0   ; _int2d.f  = 50  ; _max2d.f  = 500
+    _dmin2d.f = -50 ; _dint2d.f = 10  ; _dmax2d.f = 50
+    _min1d.f  = 0   ; _int1d.f  = 250 ; _max1d.f  = 500
+    _dmin1d.f = -50 ; _dint1d.f = 25  ; _dmax1d.f = 50
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+*    _color.f  = 'grainbow'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'sw_down_sfc' )
+    _name.f = 'Downward Shortwave Radiation @ Surface'
+    _unit.f = 'W/m^2'
+    _min2d.f  = 0   ; _int2d.f  = 40  ; _max2d.f  = 400
+    _dmin2d.f = -50 ; _dint2d.f = 10  ; _dmax2d.f = 50
+    _min1d.f  = 0   ; _int1d.f  = 100 ; _max1d.f  = 400
+    _dmin1d.f = -50 ; _dint1d.f = 25  ; _dmax1d.f = 50
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+*    _color.f  = 'grainbow'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'sw_net_toa' )
+    _name.f = 'Down-Upward Shortwave Radiation @ TOA'
+    _unit.f = 'W/m^2'
+    _min2d.f  = 0   ; _int2d.f  = 40  ; _max2d.f  = 400
+    _dmin2d.f = -50 ; _dint2d.f = 10  ; _dmax2d.f = 50
+    _min1d.f  = 0   ; _int1d.f  = 100 ; _max1d.f  = 300
+    _dmin1d.f = -50 ; _dint1d.f = 25  ; _dmax1d.f = 50
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'lw_net_sfc' )
+    _name.f = 'Down-Upward Longwave Radiation @ Surface'
+    _unit.f = 'W/m^2'
+    _min2d.f  = -200; _int2d.f  = 20  ; _max2d.f  = 0
+    _dmin2d.f = -50 ; _dint2d.f = 10  ; _dmax2d.f = 50
+    _min1d.f  = -100; _int1d.f  = 50  ; _max1d.f  = 0
+    _dmin1d.f = -50 ; _dint1d.f = 25  ; _dmax1d.f = 50
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'sw_net_sfc' )
+    _name.f = 'Down-Upward Shortwave Radiation @ Surface'
+    _unit.f = 'W/m^2'
+    _min2d.f  = 0   ; _int2d.f  = 40  ; _max2d.f  = 400
+    _dmin2d.f = -50 ; _dint2d.f = 10  ; _dmax2d.f = 50
+    _min1d.f  = 0   ; _int1d.f  = 100 ; _max1d.f  = 300
+    _dmin1d.f = -50 ; _dint1d.f = 25  ; _dmax1d.f = 50
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'aw_net_toa' )
+    _name.f = 'Down-Upward Long+Shortwave Radiation @ TOA'
+    _unit.f = 'W/m^2'
+    _min2d.f  = -200; _int2d.f  = 40  ; _max2d.f  = 200
+    _dmin2d.f = -50 ; _dint2d.f = 10  ; _dmax2d.f = 50
+    _min1d.f  = -200; _int1d.f  = 100 ; _max1d.f  = 200
+    _dmin1d.f = -50 ; _dint1d.f = 25  ; _dmax1d.f = 50
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'aw_crf_toa' )
+    _name.f = 'Long+Shortwave Cloud Radiative Forcing @ TOA'
+    _unit.f = 'W/m^2'
+    _min2d.f  = -100 ; _int2d.f  = 20  ; _max2d.f  = 100
+    _dmin2d.f = -50  ; _dint2d.f = 10  ; _dmax2d.f = 50
+    _min1d.f  = -100 ; _int1d.f  = 50  ; _max1d.f  = 100
+    _dmin1d.f = -50  ; _dint1d.f = 25  ; _dmax1d.f = 50
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'aw_net_sfc' )
+    _name.f = 'Down-Upward Long+Shortwave Radiation @ Surface'
+    _unit.f = 'W/m^2'
+    _min2d.f  = -200; _int2d.f  = 40  ; _max2d.f  = 200
+    _dmin2d.f = -50 ; _dint2d.f = 10  ; _dmax2d.f = 50
+    _min1d.f  = -200; _int1d.f  = 100 ; _max1d.f  = 200
+    _dmin1d.f = -50 ; _dint1d.f = 25  ; _dmax1d.f = 50
+    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _dcolor.f = 'bluered'
+  endif
+
+  if( varid = 'sh_sfc' | varid = 'lh_sfc' )
+    if( varid = 'sh_sfc' ) ; _name.f = 'Surface Sensible Heat Flux' ; endif
+    if( varid = 'lh_sfc' ) ; _name.f = 'Surface Latent Heat Flux'   ; endif
+    _unit.f = 'W/m^2'
+    _min2d.f  = -200 ; _int2d.f  = 40  ; _max2d.f  = 200
+    _dmin2d.f = -100 ; _dint2d.f = 20  ; _dmax2d.f = 100
+    _min1d.f  = -200 ; _int1d.f  = 100 ; _max1d.f  = 200
+    _dmin1d.f = -50  ; _dint1d.f = 25  ; _dmax1d.f = 50
+*    _color.f  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    _color.f  = 'purple->bluered->maroon'
+*    _dcolor.f = 'bluered'
+    _dcolor.f = 'purple->bluered->maroon'
+  endif
+
+  if( varid = 'energy_net_sfc' )
+    _name.f = 'Net Downward Surface Energy Flux'
+    _unit.f = 'W/m^2'
+    _min2d.f  = -200 ; _int2d.f  = 40  ; _max2d.f  = 200
+    _dmin2d.f = -100 ; _dint2d.f = 20  ; _dmax2d.f = 100
+    _min1d.f  = -200 ; _int1d.f  = 100 ; _max1d.f  = 200
+    _dmin1d.f = -50  ; _dint1d.f = 25  ; _dmax1d.f = 50
+    _color.f  = 'purple->bluered->maroon'
+    _dcolor.f = 'purple->bluered->maroon'
+  endif
+
+  if( varid = 'land_wg_z1' | varid = 'land_wg_z2' | varid = 'land_wg_z3' | varid = 'land_wg_z4' | varid = 'land_wg_z5' )
+    if( varid = 'land_wg_z1' ) ; _name.f = 'Soil Water @ z=1' ; endif
+    if( varid = 'land_wg_z2' ) ; _name.f = 'Soil Water @ z=2' ; endif
+    if( varid = 'land_wg_z3' ) ; _name.f = 'Soil Water @ z=3' ; endif
+    if( varid = 'land_wg_z4' ) ; _name.f = 'Soil Water @ z=4' ; endif
+    if( varid = 'land_wg_z5' ) ; _name.f = 'Soil Water @ z=5' ; endif
+    _unit.f = '0-1'
+    _min2d.f  = 0    ; _int2d.f  = 0.1 ; _max2d.f  = 1
+    _dmin2d.f = -0.5 ; _dint2d.f = 0.1 ; _dmax2d.f = 0.5
+    _min1d.f  = 0    ; _int1d.f  = 0.5 ; _max1d.f  = 1
+    _dmin1d.f = -0.5 ; _dint1d.f = 0.1 ; _dmax1d.f = 0.5
+    _color.f  = 'grainbow'
+    _dcolor.f = 'purple->bluered->maroon'
+  endif
+
+return
+
