@@ -727,12 +727,21 @@ if(1 != 1)
 
 
 ***************************************************************
+*  if( runid = 'GPCP' & varid = 'precip' )
+*    run = 'GPCP'
+*    dir = '/cwork5/kodama/dataset_ngatm/gpcp'
+*    tail = 'gpcp_big.ctl'
+*    fv   = dtopen( dir, tail )
+*    var = 'p.'fv'(z=1)'
+*  endif
+
+***************************************************************
   if( runid = 'GPCP' & varid = 'precip' )
-    run = 'GPCP'
-    dir = '/cwork5/kodama/dataset_ngatm/gpcp'
-    tail = 'gpcp_big.ctl'
+    run = 'GPCP.v2.2'
+    dir = '/mwork0/ngatm/NOAA/gpcp_v2.2/ctl'
+    tail = 'gpcp_v2.2_psg.ctl'
     fv   = dtopen( dir, tail )
-    var = 'p.'fv'(z=1)'
+    var = 'precip.'fv'(z=1)'
   endif
 
 
