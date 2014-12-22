@@ -856,4 +856,8 @@ _save = 'latlon_' % _varid % '_' % _year % '_' % month2
 *_save = 'latlon_' % _varid % '_' % _region % '_' % _year_start % '_' % _year_end % '_' % month2
 
 
+* override varcnf if necessary
+*_max2d = 80
+*_color = 'bluered'
+
 return
