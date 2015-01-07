@@ -725,14 +725,22 @@ if(1 != 1)
       var = 'toa_cre_lw_mon.'fv'(z=1)'
     endif
 
-*      if( varid = 'sw_up_toa' )
-*      if( varid = 'sw_up_clr_toa' )
-*      if( varid = 'sw_down_toa' )
-*      if( varid = 'sw_crf_toa' )
-*      if( varid = 'sw_net_toa' )
-*      if( varid = 'aw_net_toa' )
-*      if( varid = 'aw_crf_toa' )
-*      if( varid = 'aw_net_sfc' )
+    if( varid = 'sw_up_toa' )
+      fv   = dtopen( dir, tail )
+      var = 'toa_sw_all_mon.'fv'(z=1)'
+    endif
+    if( varid = 'sw_up_clr_toa' )
+      fv   = dtopen( dir, tail )
+      var = 'toa_sw_clr_mon.'fv'(z=1)'
+    endif
+    if( varid = 'sw_crf_toa' )
+      fv   = dtopen( dir, tail )
+      var = 'toa_cre_sw_mon.'fv'(z=1)'
+    endif
+    if( varid = 'sw_down_toa' )
+      fv   = dtopen( dir, tail )
+      var = 'solar_mon.'fv'(z=1)'
+    endif
   endif
 
 
