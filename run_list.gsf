@@ -16,6 +16,8 @@ say 'args: ' % args
   i = 3
   while( i < 1000 )
     key = subwrd( args, i ) ; i = i + 1
+    if( key = '' ) ; break ; endif
+
     if( key = '-lon' )
       lon = subwrd( args, i ) ; i = i + 1
     endif
@@ -701,6 +703,39 @@ if(1 != 1)
 
 
   endif
+
+
+
+***************************************************************
+  if( runid = 'CERES_EBAF_TOA_Ed2.8' )
+    run = 'CERES_EBAF'
+    dir = '/cwork5/kodama/dataset/CERES/EBAF_TOA'
+    tail = 'CERES_EBAF-TOA_Ed2.8_Subset_200003-201310.nc'
+
+    if( varid = 'lw_up_toa' )
+      fv   = dtopen( dir, tail )
+      var = 'toa_lw_all_mon.'fv'(z=1)'
+    endif
+    if( varid = 'lw_up_clr_toa' )
+      fv   = dtopen( dir, tail )
+      var = 'toa_lw_clr_mon.'fv'(z=1)'
+    endif
+    if( varid = 'lw_crf_toa' )
+      fv   = dtopen( dir, tail )
+      var = 'toa_cre_lw_mon.'fv'(z=1)'
+    endif
+
+*      if( varid = 'sw_up_toa' )
+*      if( varid = 'sw_up_clr_toa' )
+*      if( varid = 'sw_down_toa' )
+*      if( varid = 'sw_crf_toa' )
+*      if( varid = 'sw_net_toa' )
+*      if( varid = 'aw_net_toa' )
+*      if( varid = 'aw_crf_toa' )
+*      if( varid = 'aw_net_sfc' )
+  endif
+
+
 
 
 
@@ -1714,6 +1749,7 @@ endif
 
 *
 ***************************************************************
+
 
   ret = ""
   if( run != '' ) ; ret = ret % '-run ' % run % ' ' ; endif
