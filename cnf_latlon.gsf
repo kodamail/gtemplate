@@ -12,7 +12,7 @@ function cnf_latlon()
 *
 *_varid = 't2m'
 *_varid = 'qv2m'
-_varid = 'precip'
+*_varid = 'precip'
 *_varid = 'mslp'
 *_varid = 'sst'
 
@@ -28,7 +28,7 @@ _varid = 'precip'
 *_varid = 'sw_down_toa'
 *_varid = 'sw_net_toa'
 *_varid = 'aw_net_toa'
-*_varid = 'lw_crf_toa'
+_varid = 'lw_crf_toa'
 *_varid = 'sw_crf_toa'
 *_varid = 'aw_crf_toa'
 
@@ -75,8 +75,8 @@ _varid = 'precip'
 * TODO: re-arrange here, e.g., vertical cbar w/o zm, position of cbar for fewer figures.
 *
 _cbar = 'hor'
-_cbar.1 = '3'
-_cbar.2 = '6'
+_cbar.1 = '2'
+_cbar.2 = '5'
 
 *_cbar = 'ver'
 *_cbar.1 = '1'
@@ -101,9 +101,9 @@ _mpdraw = 'on'
 if( 1 = 1 )
   _disp.1 = '1'
   _disp.2 = '2'
-  _disp.3 = '3'
+*  _disp.3 = '3'
   _disp.5 = '2 1'
-  _disp.6 = '3 1'
+*  _disp.6 = '3 1'
 endif
 *
 *----- Time
@@ -141,8 +141,8 @@ endif
 *
 * 2. monthly or seasonal mean
 *
-_year = 2004
-_month = 6
+*_year = 2004
+*_month = 6
 *_month = 678
 
 *
@@ -182,6 +182,9 @@ _month = 6
 
 *_time_start.1 = 'jun1979' ; _time_end.1 = 'may1983'
 *_time_start.2 = 'jun2075' ; _time_end.2 = 'may2079'
+
+_time_start.1 = 'jan2001' ; _time_end.1 = 'dec2012'
+_time_start.2 = 'jan1979' ; _time_end.2 = 'dec1998'
 
 
 * for MIROC5
@@ -305,6 +308,16 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
+if( 1 = 1 )
+  ret = run_list( 'CERES_EBAF_TOA_Ed2.8 '_varid' -time monthly_mean' )
+  _run.f = subwrd( ret, 2 )
+  _var.f = subwrd( ret, 4 )
+*  cm   = cmonth( month, 3 )
+  if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
+endif
+
+
+***************************************************************
 if( 1 != 1 )
   cdir = 'monthly'
   ret = run_list( 'MODIS '_varid' -cdir 'cdir )
@@ -338,7 +351,7 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 = 1 )
+if( 1 != 1 )
   ret = run_list( 'GPCP '_varid  )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
@@ -470,7 +483,7 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 = 1 )
+if( 1 != 1 )
   cdir = 'sl/144x72/monthly_mean'
 *  cdir = 'isccp/144x72x49/monthly_mean'
   ret = run_list( 'K.200406.N12.gl09.L38.b '_varid' -cdir 'cdir )
@@ -480,7 +493,7 @@ if( 1 = 1 )
 endif
 
 ***************************************************************
-if( 1 = 1 )
+if( 1 != 1 )
   cdir = 'sl/144x72/monthly_mean'
 *  cdir = 'isccp/144x72x49/monthly_mean'
   ret = run_list( 'K.200406.N12.gl09.L38.b.001 '_varid' -cdir 'cdir )
@@ -511,12 +524,12 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 != 1 )
-*  cdir = 'sl/360x181/monthly_mean'
+if( 1 = 1 )
+  cdir = 'sl/360x181/monthly_mean'
 *  cdir = 'sl/360x181/tstep'
 *  cdir = 'sl/288x145/tstep'
 *  cdir = 'sl/144x72/monthly_mean'
-  cdir = 'isccp/144x72x49/monthly_mean'
+*  cdir = 'isccp/144x72x49/monthly_mean'
   ret = run_list( 'AMIP.N12.197806.gl09.L38.run01 '_varid' -cdir 'cdir )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
@@ -859,5 +872,12 @@ _save = 'latlon_' % _varid % '_' % _year % '_' % month2
 * override varcnf if necessary
 *_max2d = 80
 *_color = 'bluered'
+
+_min2d  = -100 ; _int2d  = 20  ; _max2d  = 100
+_dmin2d = -10  ; _dint2d = 2  ; _dmax2d = 10
+_min1d  = -100 ; _int1d  = 50  ; _max1d  = 100
+_dmin1d = -10  ; _dint1d = 5  ; _dmax1d = 10
+
+
 
 return

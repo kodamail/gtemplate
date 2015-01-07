@@ -888,6 +888,10 @@ if(1 != 1)
       fv   = dtopen( dir, tail )
       var = 'hthick.'fv'+mthick.'fv'+lthick.'fv
     endif
+    if( varid = 'isccp_high_middle_vis' )
+      fv   = dtopen( dir, tail )
+      var = 'hthin.'fv'+hmed.'fv'+hthick.'fv'+mthin.'fv'+mmed.'fv'+mthick.'fv
+    endif
 
     varid_h = substr( varid, 1, 5 )
     pcat = substr( varid, 8, 1 )
@@ -2632,6 +2636,12 @@ function nicam2( varid, dir, dir2, sepdir )
     tail = 'dfq_isccp2/dfq_isccp2.ctl'
     fv   = dtopen( dir, tail )
     if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=6,z=7)+sum(100*dfq_isccp2.'fv',z=13,z=14)+sum(100*dfq_isccp2.'fv',z=20,z=21)+sum(100*dfq_isccp2.'fv',z=27,z=28)+sum(100*dfq_isccp2.'fv',z=34,z=35)+sum(100*dfq_isccp2.'fv',z=41,z=42)+sum(100*dfq_isccp2.'fv',z=48,z=49)' ; endif
+  endif
+  if( varid = 'isccp_high_middle_vis' )
+    tail = 'dfq_isccp2.ctl'
+    if( sepdir != 'no' ) ; tail = 'dfq_isccp2/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=2,z=7)+sum(100*dfq_isccp2.'fv',z=9,z=14)+sum(100*dfq_isccp2.'fv',z=16,z=21)+sum(100*dfq_isccp2.'fv',z=23,z=28)+sum(100*dfq_isccp2.'fv',z=30,z=35)' ; endif
   endif
   if( varid = 'dfq_isccp2' )
     tail = 'dfq_isccp2.ctl'
