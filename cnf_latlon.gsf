@@ -23,13 +23,13 @@ function cnf_latlon()
 
 *_varid = 'lw_up_toa'
 *_varid = 'lw_up_clr_toa'
+*_varid = 'lw_crf_toa'
 *_varid = 'sw_up_toa'
 *_varid = 'sw_up_clr_toa'
+*_varid = 'sw_crf_toa'
 *_varid = 'sw_down_toa'
 *_varid = 'sw_net_toa'
 *_varid = 'aw_net_toa'
-_varid = 'lw_crf_toa'
-*_varid = 'sw_crf_toa'
 *_varid = 'aw_crf_toa'
 
 *_varid = 'lw_up_sfc'
@@ -101,9 +101,9 @@ _mpdraw = 'on'
 if( 1 = 1 )
   _disp.1 = '1'
   _disp.2 = '2'
-*  _disp.3 = '3'
+  _disp.3 = '3'
   _disp.5 = '2 1'
-*  _disp.6 = '3 1'
+  _disp.6 = '3 1'
 endif
 *
 *----- Time
@@ -136,14 +136,18 @@ endif
 *
 * 1. time mean
 *
-*_time_start = '06z01jun2004'
-*_time_endpp = '00z01jul2004'
+*_time_start = '06z01jun2004' ; _time_endpp = '00z01jul2004'
+*_time_start = 'jun2004' ; _time_endpp = 'jun2005'
 *
 * 2. monthly or seasonal mean
 *
-*_year = 2004
+_year = 2004
 *_month = 6
-*_month = 678
+_month = 678
+*_month = 901
+*_month = 212
+*_year = 2005
+*_month = 345
 
 *
 * 2. climatological monthly or seasonal mean
@@ -183,8 +187,8 @@ endif
 *_time_start.1 = 'jun1979' ; _time_end.1 = 'may1983'
 *_time_start.2 = 'jun2075' ; _time_end.2 = 'may2079'
 
-_time_start.1 = 'jan2001' ; _time_end.1 = 'dec2012'
-_time_start.2 = 'jan1979' ; _time_end.2 = 'dec1998'
+*_time_start.1 = 'jan2001' ; _time_end.1 = 'dec2012'
+*_time_start.2 = 'jan1979' ; _time_end.2 = 'dec1998'
 
 
 * for MIROC5
@@ -254,6 +258,15 @@ endif
 
 ***************************************************************
 if( 1 != 1 )
+  cdir = 'ctl_monthly'
+  ret = run_list( 'JRA55 '_varid' -cdir 'cdir )
+  _run.f = subwrd( ret, 2 )
+  _var.f = subwrd( ret, 4 )
+  if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
+endif
+
+***************************************************************
+if( 1 != 1 )
 *  cdir = 'monthly/surface'
   cdir = 'moda/sfc/240x121'
   ret = run_list( 'ERA_INTERIM '_varid' -cdir 'cdir )
@@ -308,7 +321,7 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 = 1 )
+if( 1 != 1 )
   ret = run_list( 'CERES_EBAF_TOA_Ed2.8 '_varid' -time monthly_mean' )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
@@ -355,7 +368,7 @@ if( 1 != 1 )
   ret = run_list( 'GPCP '_varid  )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
-  cm   = cmonth( _month, 3 )
+*  cm   = cmonth( _month, 3 )
 
   if( 1 != 1 )
     _clim_arg.f = cm % '%y ' % cm % '%y 1979 2004'
@@ -389,24 +402,24 @@ endif
 
 
 ***************************************************************
-if( 1 != 1 )
+if( 1 = 1 )
   ret = run_list( 'ISCCP_D1_OBS '_varid )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
 
 *  cm   = cmonth( _month, 3 )
-  if( _month = 345 )
-    _clim_arg.f = 'mar%y may%y 1995 2008'
-  endif
-  if( _month = 678 )
-   _clim_arg.f = 'jun%y aug%y 1995 2007'
-  endif
-  if( _month = 901 )
-    _clim_arg.f = 'sep%y nov%y 1995 2007'
-  endif
-  if( _month = 212 )
-    _clim_arg.f = 'dec%y feb%ypp 1995 2007'
-  endif
+*  if( _month = 345 )
+*    _clim_arg.f = 'mar%y may%y 1995 2008'
+*  endif
+*  if( _month = 678 )
+*   _clim_arg.f = 'jun%y aug%y 1995 2007'
+*  endif
+*  if( _month = 901 )
+*    _clim_arg.f = 'sep%y nov%y 1995 2007'
+*  endif
+*  if( _month = 212 )
+*    _clim_arg.f = 'dec%y feb%ypp 1995 2007'
+*  endif
 
   if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
 endif
@@ -483,9 +496,11 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 != 1 )
-  cdir = 'sl/144x72/monthly_mean'
-*  cdir = 'isccp/144x72x49/monthly_mean'
+if( 1 = 1 )
+*  cdir = 'sl/144x72/monthly_mean'
+*  cdir = 'sl/288x145/monthly_mean'
+*  cdir = 'sl/2560x1280/monthly_mean'
+  cdir = 'isccp/144x72x49/monthly_mean'
   ret = run_list( 'K.200406.N12.gl09.L38.b '_varid' -cdir 'cdir )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
@@ -494,8 +509,10 @@ endif
 
 ***************************************************************
 if( 1 != 1 )
-  cdir = 'sl/144x72/monthly_mean'
-*  cdir = 'isccp/144x72x49/monthly_mean'
+*  cdir = 'sl/144x72/monthly_mean'
+*  cdir = 'sl/288x145/monthly_mean'
+*  cdir = 'sl/2560x1280/monthly_mean'
+  cdir = 'isccp/144x72x49/monthly_mean'
   ret = run_list( 'K.200406.N12.gl09.L38.b.001 '_varid' -cdir 'cdir )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
@@ -503,8 +520,10 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 != 1 )
+if( 1 = 1 )
 *  cdir = 'sl/144x72/monthly_mean'
+*  cdir = 'sl/288x145/monthly_mean'
+*  cdir = 'sl/2560x1280/monthly_mean'
   cdir = 'isccp/144x72x49/monthly_mean'
   ret = run_list( 'K.200406.N12.gl09.L38.b.002 '_varid' -cdir 'cdir )
   _run.f = subwrd( ret, 2 )
@@ -524,7 +543,7 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 = 1 )
+if( 1 != 1 )
   cdir = 'sl/360x181/monthly_mean'
 *  cdir = 'sl/360x181/tstep'
 *  cdir = 'sl/288x145/tstep'
@@ -864,20 +883,27 @@ if( _month = 901 ) ; month2 = 'SON' ; endif
 if( _month = 212 ) ; month2 = 'DJF' ; endif
 if( _month = 999 ) ; month2 = 'ANU' ; endif
 *
-_save = 'latlon_' % _varid % '_' % _year % '_' % month2
+dir = 'figures/'_run.1
+r = 2
+while( _run.r != '' & _run.r != '_run.'r & r <= 5 )
+  dir = dir % '_vs_'_run.r
+  r = r + 1
+endwhile
+'!mkdir -p 'dir
+*
+_save = dir'/latlon_' % _varid % '_' % _year % '_' % month2
 *_save = 'latlon_' % _varid % '_' % _region % '_' % _year % '_' % month2
 *_save = 'latlon_' % _varid % '_' % _region % '_' % _year_start % '_' % _year_end % '_' % month2
+*_save = ''
 
 
 * override varcnf if necessary
 *_max2d = 80
 *_color = 'bluered'
 
-_min2d  = -100 ; _int2d  = 20  ; _max2d  = 100
-_dmin2d = -10  ; _dint2d = 2  ; _dmax2d = 10
-_min1d  = -100 ; _int1d  = 50  ; _max1d  = 100
-_dmin1d = -10  ; _dint1d = 5  ; _dmax1d = 10
-
-
+*_min2d  = -100 ; _int2d  = 20  ; _max2d  = 100
+*_dmin2d = -10  ; _dint2d = 2  ; _dmax2d = 10
+*_min1d  = -100 ; _int1d  = 50  ; _max1d  = 100
+*_dmin1d = -10  ; _dint1d = 5  ; _dmax1d = 10
 
 return

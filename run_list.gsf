@@ -139,6 +139,11 @@ say 'args: ' % args
       fv   = dtopen( dir, tail )
       var = 'TMPprs.'fv
     endif
+    if( varid = 't2m' & cdir = 'ctl_monthly' )
+      tail = 'anl_surf125.monthly.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'TMP2m.'fv
+    endif
   endif
 
 ***************************************************************
@@ -743,6 +748,11 @@ if(1 != 1)
     endif
   endif
 
+    if( varid = 'aw_net_toa' )
+      fv   = dtopen( dir, tail )
+      var = '-toa_lw_all_mon.'fv'(z=1)-toa_sw_all_mon.'fv'(z=1)+solar_mon.'fv'(z=1)'
+    endif
+
 
 
 
@@ -787,15 +797,17 @@ if(1 != 1)
     var = 'precip.'fv'(z=1)'
   endif
 
-
 ***************************************************************
   if( runid = 'GSMaP_TMI' & varid = 'precip' )
     run = 'GSMaP_TMI'
-    dir = '/cwork5/kodama/dataset_ngatm/GSMaP/'cdir
-    tail = 'GSMaP_TMI.' % cdir % '.ctl'
+*    dir = '/cwork5/kodama/dataset_ngatm/GSMaP/'cdir
+    dir = '/mwork0/ngatm/JAXA/GSMsP/GSMaP/monthly'
+    tail = 'GSMaP_TMI.monthly.ctl'
     fv   = dtopen( dir, tail )
     var = '24*precip.'fv
   endif
+
+
 
 ***************************************************************
   if( runid = 'ISCCP_D1_OBS' & ( varid = '' | varid = 'varid' ) )
