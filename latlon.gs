@@ -17,9 +17,6 @@ sw = subwrd( args, 1 )
 ***************************************************************
 ***************************************************************
 ***************************************************************
-*
-* set here
-*
 if( sw != 'cnf' )
   cnf = sw
 
@@ -292,7 +289,7 @@ if( _time_start = '_time_start' | _time_start = '' )
     _yearpp = _year
     if( _month = 12 )
       if( _year = '%y' ) ; _yearpp = '%ypp'
-      else              ; _yearpp = _yearpp + 1 ; endif
+      else               ; _yearpp = _yearpp + 1 ; endif
     endif
     term = cmonth( _month )
     _time_start = '01'cm''_year
@@ -316,14 +313,14 @@ if( _time_start = '_time_start' | _time_start = '' )
   if( _month = 212 )
     term = 'DJF'
     if( _year = '%y' ) ; _yearpp = '%ypp'
-    else              ; _yearpp = _year + 1 ; endif
+    else               ; _yearpp = _year + 1 ; endif
     _time_start = '01dec'_year
     _time_endpp = '01mar'_yearpp
   endif
   if( _month = 999 )
     term = 'ANU'
     if( _year = '%y' ) ; _yearpp = '%ypp'
-    else              ; _yearpp = _year + 1 ; endif
+    else               ; _yearpp = _year + 1 ; endif
     _time_start = '01jan'_year
     _time_endpp = '01jan'_yearpp
   endif
@@ -413,7 +410,7 @@ while( f <= _fmax )
   f = f + 1
 endwhile
 
-*exit
+
 ***************************************************************
 * Variable List
 ***************************************************************
@@ -482,9 +479,7 @@ while( f <= _fmax )
   endif
 
   if( _clim_arg.f != '' )
-*    'clave2 '_var.f' '_clim_arg.f' v'f
-    say 'clave '_var.f' '_clim_arg.f' v'f
-    'clave '_var.f' '_clim_arg.f' v'f
+    prex( 'clave '_var.f' '_clim_arg.f' v'f )
   endif
 
   f = f + 1

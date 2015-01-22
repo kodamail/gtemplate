@@ -47,7 +47,7 @@ function cnf_latlon()
 
 *_varid = 'isccp_all'
 
-*_varid = 'isccp_all_vis'
+_varid = 'isccp_all_vis'
 *_varid = 'isccp_all_vis_thin'
 *_varid = 'isccp_all_vis_med'
 *_varid = 'isccp_all_vis_thick'
