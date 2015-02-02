@@ -30,6 +30,7 @@ if( sw != 'cnf' )
   _cbar.1     = '1'
   _cbar.2     = ''
   _cont       = 'off'
+  _shade      = 'on'
   _time_start = ''
   _time_end   = ''
   _year       = 2004
@@ -45,9 +46,10 @@ if( sw != 'cnf' )
   _save       = ''
   i = 1
   while( i <= 6 )
-    _disp.i = ''
-    _cont.i = ''
-    _over.i = ''
+    _disp.i  = ''
+    _cont.i  = ''
+    _shade.i = ''
+    _over.i  = ''
     i = i + 1
   endwhile
 
@@ -85,7 +87,8 @@ if( sw != 'cnf' )
 * set default and/or necessary values necessary after loading cnf
   i = 1
   while( i <= 6 )
-    if( _cont.i = '' ) ; _cont.i = _cont ; endif
+    if( _cont.i  = '' ) ; _cont.i  = _cont  ; endif
+    if( _shade.i = '' ) ; _shade.i = _shade ; endif
     i = i + 1
   endwhile
 
@@ -101,6 +104,7 @@ if( sw != 'cnf' )
     if( (   _dmax != '' &   _dmax !=   '_dmax' ) & (   _dmax.f = '' |   _dmax.f =   '_dmax.'f ) ) ;   _dmax.f =   _dmax ; endif
     if( (  _color != '' &  _color !=  '_color' ) & (  _color.f = '' |  _color.f =  '_color.'f ) ) ;  _color.f =  _color ; endif
     if( ( _dcolor != '' & _dcolor != '_dcolor' ) & ( _dcolor.f = '' | _dcolor.f = '_dcolor.'f ) ) ; _dcolor.f = _dcolor ; endif
+
     f = f + 1
   endwhile
 
@@ -581,9 +585,11 @@ while( d <= 6 )
     'set lon 0'
     'set t 1'
 
-    if( _varid = 'mim_divf' )
-      'color 'color
-      'd v'f1
+    if( _shade.d = 'on' )
+   
+      if( _varid = 'mim_divf' )
+        'color 'color
+        'd v'f1
 
 *      'set arrowhead 0.05'
 *      'set arrlab off'
@@ -595,29 +601,29 @@ while( d <= 6 )
 *      'set arrscl 1 'base ; 'set cthick 4'; 'set ccolor 3'
 *      'd skip( maskout(epy'f1'/(lev*100),-(lev-100)*(lev-0))*'my', 5, 1); epz'f1'/(lev*100) * 'mz
 
-      'set arrowhead 0.05'
-      'set arrlab off'
-      'vy = epy'f1'*'my
-      'vz = epz'f1'*'mz
-*      'vm = sqrt(epy'f1'*epy'f1'+epz'f1'*epz'f1')'
-      'vm = sqrt(vy*vy+vz*vz)'
+        'set arrowhead 0.05'
+        'set arrlab off'
+        'vy = epy'f1'*'my
+        'vz = epz'f1'*'mz
+*        'vm = sqrt(epy'f1'*epy'f1'+epz'f1'*epz'f1')'
+        'vm = sqrt(vy*vy+vz*vz)'
 
-      base = 3e+8
-      'set arrscl 0.5 'base ; 'set cthick 1'; 'set ccolor 14'
-      'd skip( maskout( maskout( vy, (vm-3e+7) ),-(lev-1000)*(lev-0)), 'sy.f1', 'sz.f1'); vz'
+        base = 3e+8
+        'set arrscl 0.5 'base ; 'set cthick 1'; 'set ccolor 14'
+        'd skip( maskout( maskout( vy, (vm-3e+7) ),-(lev-1000)*(lev-0)), 'sy.f1', 'sz.f1'); vz'
 
-      base = 3e+7
-      'set arrscl 0.5 'base ; 'set cthick 6'; 'set ccolor 1'
-      'd skip( maskout( maskout( vy, -(vm-3e+6)*(vm-3e+7) ),-(lev-1000)*(lev-0)), 'sy.f1', 'sz.f1'); vz'
+        base = 3e+7
+        'set arrscl 0.5 'base ; 'set cthick 6'; 'set ccolor 1'
+        'd skip( maskout( maskout( vy, -(vm-3e+6)*(vm-3e+7) ),-(lev-1000)*(lev-0)), 'sy.f1', 'sz.f1'); vz'
 
-      base = 3e+6
-      'set arrscl 0.51 'base ; 'set cthick 1'; 'set ccolor 1'
-      'd skip( maskout( maskout( vy, -(vm-3e+6) ),-(lev-1000)*(lev-0)), 'sy.f1', 'sz.f1'); vz'
+        base = 3e+6
+        'set arrscl 0.51 'base ; 'set cthick 1'; 'set ccolor 1'
+        'd skip( maskout( maskout( vy, -(vm-3e+6) ),-(lev-1000)*(lev-0)), 'sy.f1', 'sz.f1'); vz'
 
-    else
-      'color -kind '_color.f1' '_min.f1' '_max.f1' '_int.f1
-      'd v'f1
-    endif
+      else
+        'color -kind '_color.f1' '_min.f1' '_max.f1' '_int.f1
+        'd v'f1
+      endif
 
 *   for calculating minimum value of mass streamfunction
 *    'set x 1'
@@ -641,9 +647,10 @@ while( d <= 6 )
 *    'set lon 0'
 *    'set t 1'
 
-    xpos = 3.5 * i - 2.7
-    ypos = 4.0 * j - 3.5
-    'xcbar 'xpos' 'xpos+3.0' 'ypos' 'ypos+0.15' -line on -fstep 2 -foffset 1 -fwidth 0.08 -fheight 0.08'
+      xpos = 3.5 * i - 2.7
+      ypos = 4.0 * j - 3.5
+      'xcbar 'xpos' 'xpos+3.0' 'ypos' 'ypos+0.15' -line on -fstep 2 -foffset 1 -fwidth 0.08 -fheight 0.08'
+    endif
 
     if( _cont.d = 'on' )
       'set gxout contour'
@@ -672,7 +679,14 @@ while( d <= 6 )
     endif
 
     'setfont small'
-    'draws ('_run.f1')'
+
+    if( _title.f1 = '' | _title.f1 =  '_title.'f1 )
+      'draws ('_run.f1')'
+    else
+      'draws ('_title.f1')'
+    endif
+
+
 
 ***** diff data *****
   else
@@ -682,13 +696,15 @@ while( d <= 6 )
     'set lon 0'
     'set t 1'
 
-    diff( 'v'f2, f2, 'v'f1, f1, 'd' )
-    'color '_dmin.f1' '_dmax.f1' '_dint.f1' -kind '_dcolor.f1
-    'd d'
+    if( _shade.d = 'on' )
+      diff( 'v'f2, f2, 'v'f1, f1, 'd' )
+      'color '_dmin.f1' '_dmax.f1' '_dint.f1' -kind '_dcolor.f1
+      'd d'
 
-    xpos = 3.5 * i - 2.7
-    ypos = 4.0 * j - 3.5
-    'xcbar 'xpos' 'xpos+3.0' 'ypos' 'ypos+0.15' -line on -fstep 2 -foffset 1 -fwidth 0.08 -fheight 0.08'
+      xpos = 3.5 * i - 2.7
+      ypos = 4.0 * j - 3.5
+      'xcbar 'xpos' 'xpos+3.0' 'ypos' 'ypos+0.15' -line on -fstep 2 -foffset 1 -fwidth 0.08 -fheight 0.08'
+    endif
 
     if( _cont.d = 'on' )
       'set gxout contour'; 'set cint '_dint.f1;  'set cthick 6'; 'set ccolor 1'
