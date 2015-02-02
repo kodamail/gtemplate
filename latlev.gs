@@ -55,8 +55,14 @@ if( sw != 'cnf' )
   ret = read( cnf'.gsf' )
   stat = sublin( ret, 1 )
   if( stat != 0 )
-    say 'error: 'cnf'.gsf does not exist'
-    exit
+    ret = read( cnf )
+    stat = sublin( ret, 1 )
+    if( stat != 0 )
+      say 'error: 'cnf'.gsf does not exist'
+      exit
+    else
+      cnf = substr( cnf, 1, math_strlen(cnf)-4 )
+    endif
   endif
 
 * check multiple-execution
