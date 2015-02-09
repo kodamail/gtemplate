@@ -108,8 +108,8 @@ endif
 * 2. monthly or seasonal mean
 *
 _year = 2004
-*_month = 6
-_month = 678
+_month = 6
+*_month = 678
 *_month = 901
 *_month = 212
 *_year = 2005
@@ -367,8 +367,8 @@ endif
 
 
 if( 1 = 1 )
-*  cdir = 'ml_plev/zmean_72x37/monthly_mean'
-  cdir = 'ml_plev/zmean_145x37/monthly_mean'
+  cdir = 'ml_plev/zmean_72x37/monthly_mean'
+*  cdir = 'ml_plev/zmean_145x37/monthly_mean'
   sy.f = 8 ; sz.f = 1
   ret = run_list( 'K.200406.N12.gl09.L38.b '_varid' -cdir 'cdir )
   _run.f = subwrd( ret, 2 )
@@ -376,7 +376,7 @@ if( 1 = 1 )
   if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
 endif
 
-if( 1 = 1 )
+if( 1 != 1 )
 *  cdir = 'ml_plev/zmean_72x37/monthly_mean'
   cdir = 'ml_plev/zmean_145x37/monthly_mean'
   sy.f = 8 ; sz.f = 1
@@ -391,6 +391,16 @@ if( 1 != 1 )
   cdir = 'ml_plev/zmean_145x37/monthly_mean'
   sy.f = 8 ; sz.f = 1
   ret = run_list( 'K.200406.N12.gl09.L38.b.002 '_varid' -cdir 'cdir )
+  _run.f = subwrd( ret, 2 )
+  _var.f = subwrd( ret, 4 )
+  if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
+endif
+
+if( 1 = 1 )
+  cdir = 'ml_plev/zmean_72x37/monthly_mean'
+*  cdir = 'ml_plev/zmean_145x37/monthly_mean'
+  sy.f = 8 ; sz.f = 1
+  ret = run_list( 'K.200406.N12.gl09.L38.b.003 '_varid' -cdir 'cdir )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
   if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif

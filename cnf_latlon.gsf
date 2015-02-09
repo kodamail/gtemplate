@@ -12,7 +12,7 @@ function cnf_latlon()
 *
 *_varid = 't2m'
 *_varid = 'qv2m'
-*_varid = 'precip'
+_varid = 'precip'
 *_varid = 'mslp'
 *_varid = 'sst'
 
@@ -47,7 +47,7 @@ function cnf_latlon()
 
 *_varid = 'isccp_all'
 
-_varid = 'isccp_all_vis'
+*_varid = 'isccp_all_vis'
 *_varid = 'isccp_all_vis_thin'
 *_varid = 'isccp_all_vis_med'
 *_varid = 'isccp_all_vis_thick'
@@ -142,8 +142,8 @@ endif
 * 2. monthly or seasonal mean
 *
 _year = 2004
-*_month = 6
-_month = 678
+_month = 6
+*_month = 678
 *_month = 901
 *_month = 212
 *_year = 2005
@@ -364,7 +364,7 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 != 1 )
+if( 1 = 1 )
   ret = run_list( 'GPCP '_varid  )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
@@ -402,7 +402,7 @@ endif
 
 
 ***************************************************************
-if( 1 = 1 )
+if( 1 != 1 )
   ret = run_list( 'ISCCP_D1_OBS '_varid )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
@@ -497,10 +497,10 @@ endif
 
 ***************************************************************
 if( 1 = 1 )
-*  cdir = 'sl/144x72/monthly_mean'
+  cdir = 'sl/144x72/monthly_mean'
 *  cdir = 'sl/288x145/monthly_mean'
 *  cdir = 'sl/2560x1280/monthly_mean'
-  cdir = 'isccp/144x72x49/monthly_mean'
+*  cdir = 'isccp/144x72x49/monthly_mean'
   ret = run_list( 'K.200406.N12.gl09.L38.b '_varid' -cdir 'cdir )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
@@ -520,12 +520,24 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 = 1 )
+if( 1 != 1 )
 *  cdir = 'sl/144x72/monthly_mean'
 *  cdir = 'sl/288x145/monthly_mean'
 *  cdir = 'sl/2560x1280/monthly_mean'
   cdir = 'isccp/144x72x49/monthly_mean'
   ret = run_list( 'K.200406.N12.gl09.L38.b.002 '_varid' -cdir 'cdir )
+  _run.f = subwrd( ret, 2 )
+  _var.f = subwrd( ret, 4 )
+  if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
+endif
+
+***************************************************************
+if( 1 = 1 )
+  cdir = 'sl/144x72/monthly_mean'
+*  cdir = 'sl/288x145/monthly_mean'
+*  cdir = 'sl/2560x1280/monthly_mean'
+*  cdir = 'isccp/144x72x49/monthly_mean'
+  ret = run_list( 'K.200406.N12.gl09.L38.b.003 '_varid' -cdir 'cdir )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
   if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
