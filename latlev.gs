@@ -29,8 +29,10 @@ if( sw != 'cnf' )
   _cbar       = 'hor'
   _cbar.1     = '1'
   _cbar.2     = ''
-  _cont       = 'off'
   _shade      = 'on'
+  _cont       = 'off'
+*  _vec        = 'off'
+  _vec        = 'on'
   _time_start = ''
   _time_end   = ''
   _year       = 2004
@@ -48,8 +50,9 @@ if( sw != 'cnf' )
   i = 1
   while( i <= 6 )
     _disp.i  = ''
-    _cont.i  = ''
     _shade.i = ''
+    _cont.i  = ''
+    _vec.i   = ''
     _over.i  = ''
     i = i + 1
   endwhile
@@ -88,8 +91,9 @@ if( sw != 'cnf' )
 * set default and/or necessary values necessary after loading cnf
   i = 1
   while( i <= 6 )
-    if( _cont.i  = '' ) ; _cont.i  = _cont  ; endif
     if( _shade.i = '' ) ; _shade.i = _shade ; endif
+    if( _cont.i  = '' ) ; _cont.i  = _cont  ; endif
+    if( _vec.i   = '' ) ; _vec.i   = _vec   ; endif
     i = i + 1
   endwhile
 
@@ -312,11 +316,12 @@ line = sublin( result, 4 )
 ymin = subwrd( line, 4 )
 ymax = subwrd( line, 6 )
 yw = ymax - ymin
+* in [km]
 latw = ( _latmax - _latmin ) * 111
 if( _vert = 'pressure' )
   levw = ( 16 * math_log10(_levmin/_levmax) )
 else
-  levw = ( _levmax - _levmin )
+  levw = ( _levmax - _levmin ) / 1000
 endif
 ratio = (yw / levw) / (xw / latw)
 my = 1
@@ -541,17 +546,23 @@ while( f <= _fmax )
   if( _time_start.f != '' & _time_end.f != '' )
     prex( 'v'f' = ave( '_var.f', time='_time_start.f', time='_time_end.f' )' )
 
-    if( _varid = 'mim_divf' | _varid = 'tem_divf' )
-      prex( 'epy'f' = ave( epy.'f', time='_time_start.f', time='_time_end.f' )' )
-      prex( 'epz'f' = ave( epz.'f', time='_time_start.f', time='_time_end.f' )' )
+    if( _vary.f != '' & _vary.f != '_vary.'f )
+      prex( 'vy'f' = ave( '_vary.f', time='_time_start.f', time='_time_end.f' )' )
+    endif
+    if( _varz.f != '' & _varz.f != '_varz.'f )
+      prex( 'vz'f' = ave( '_varz.f', time='_time_start.f', time='_time_end.f' )' )
     endif
   endif
 
   if( _clim_arg.f != '' )
     prex( 'clave '_var.f' '_clim_arg.f' v'f )
-    if( _varid = 'mim_divf' | _varid = 'tem_divf' )
-      prex( 'clave epy '_clim_arg.f' epy.'f )
-      prex( 'clave epz '_clim_arg.f' epz.'f )
+
+    if( _vary.f != '' & _vary.f != '_vary.'f )
+      prex( 'clave '_vary.f' '_clim_arg.f' vy'f )
+    endif
+
+    if( _varz.f != '' & _varz.f != '_varz.'f )
+      prex( 'clave '_varz.f' '_clim_arg.f' vz'f )
     endif
   endif
 
@@ -591,44 +602,9 @@ while( d <= 6 )
     'set t 1'
 
     if( _shade.d = 'on' )
-   
-      if( _varid = 'mim_divf' | _varid = 'tem_divf' )
-        'color '_color.f1
-        'd v'f1
 
-*      'set arrowhead 0.05'
-*      'set arrlab off'
-*      base=5e+4
-*      'set arrscl 1 'base ; 'set cthick 4'; 'set ccolor 3'
-*      'd skip( maskout(epy'f1'/(lev*100),-(lev-1000)*(lev-500.1))*'my', 5, 2); epz'f1'/(lev*100) * 'mz
-*      'set arrscl 1 'base ; 'set cthick 4'; 'set ccolor 3'
-*      'd skip( maskout(epy'f1'/(lev*100),-(lev-500)*(lev-100.1))*'my', 5, 1); epz'f1'/(lev*100) * 'mz
-*      'set arrscl 1 'base ; 'set cthick 4'; 'set ccolor 3'
-*      'd skip( maskout(epy'f1'/(lev*100),-(lev-100)*(lev-0))*'my', 5, 1); epz'f1'/(lev*100) * 'mz
-
-        'set arrowhead 0.05'
-        'set arrlab off'
-        'vy = epy'f1'*'my
-        'vz = epz'f1'*'mz
-*        'vm = sqrt(epy'f1'*epy'f1'+epz'f1'*epz'f1')'
-        'vm = sqrt(vy*vy+vz*vz)'
-
-        base = 3e+8
-        'set arrscl 0.5 'base ; 'set cthick 1'; 'set ccolor 14'
-        'd skip( maskout( maskout( vy, (vm-3e+7) ),-(lev-1000)*(lev-0)), 'sy.f1', 'sz.f1'); vz'
-
-        base = 3e+7
-        'set arrscl 0.5 'base ; 'set cthick 6'; 'set ccolor 1'
-        'd skip( maskout( maskout( vy, -(vm-3e+6)*(vm-3e+7) ),-(lev-1000)*(lev-0)), 'sy.f1', 'sz.f1'); vz'
-
-        base = 3e+6
-        'set arrscl 0.51 'base ; 'set cthick 1'; 'set ccolor 1'
-        'd skip( maskout( maskout( vy, -(vm-3e+6) ),-(lev-1000)*(lev-0)), 'sy.f1', 'sz.f1'); vz'
-
-      else
-        'color -kind '_color.f1' '_min.f1' '_max.f1' '_int.f1
-        'd v'f1
-      endif
+      'color '_color.f1
+      'd v'f1
 
 *   for calculating minimum value of mass streamfunction
 *    'set x 1'
@@ -684,14 +660,65 @@ while( d <= 6 )
 
     endif
 
-    'setfont small'
 
+    if( _vec.d = 'on' )
+
+      if( _varid = 'mim_divf' | _varid = 'tem_divf' )
+*      density on/off
+*      'set arrowhead 0.05'
+*      'set arrlab off'
+*      base=5e+4
+*      'set arrscl 1 'base ; 'set cthick 4'; 'set ccolor 3'
+*      'd skip( maskout(epy'f1'/(lev*100),-(lev-1000)*(lev-500.1))*'my', 5, 2); epz'f1'/(lev*100) * 'mz
+*      'set arrscl 1 'base ; 'set cthick 4'; 'set ccolor 3'
+*      'd skip( maskout(epy'f1'/(lev*100),-(lev-500)*(lev-100.1))*'my', 5, 1); epz'f1'/(lev*100) * 'mz
+*      'set arrscl 1 'base ; 'set cthick 4'; 'set ccolor 3'
+*      'd skip( maskout(epy'f1'/(lev*100),-(lev-100)*(lev-0))*'my', 5, 1); epz'f1'/(lev*100) * 'mz
+
+        'set arrowhead 0.05'
+        'set arrlab off'
+        'vy = vy'f1'*'my
+        'vz = vz'f1'*'mz
+        'vm = sqrt(vy*vy+vz*vz)'
+
+        base = 3e+8
+**        'set arrscl 0.5 'base ; 'set cthick 1'; 'set ccolor 14'
+        'set arrscl 0.5 'base ; 'set cthick 6'; 'set ccolor 15'
+*        'set arrscl 0.5 'base ; 'set cthick 10'; 'set ccolor 1'
+*        'd skip( maskout( maskout( vy, (vm-3e+7) ),-(lev-'_levmin')*(lev-'_levmax')), '_sy.f1', '_sz.f1'); vz'
+        'd skip( maskout( maskout( vy, -(vm-3e+7)*(vm-3e+8) ),-(lev-10000)*(lev-'_levmax')), '_sy.f1', '_sz.f1'); vz'
+        if( d = 1 )
+          'set line 15 1 6' ; 'arrow 0.6 0.2 1.1 0.2'
+          'set string 1 l' ;  'draw string 1.15 0.2 'base
+        endif
+
+        base = 3e+7
+        'set arrscl 0.5 'base ; 'set cthick 6'; 'set ccolor 1'
+*        'd skip( maskout( maskout( vy, -(vm-3e+6)*(vm-3e+7) ),-(lev-'_levmin')*(lev-'_levmax')), '_sy.f1', '_sz.f1'); vz'
+        'd skip( maskout( maskout( vy, -(vm-3e+6)*(vm-3e+7) ),-(lev-10000)*(lev-'_levmax')), '_sy.f1', '_sz.f1'); vz'
+        if( d = 1 )
+          'set line 1 1 6' ; 'arrow 1.6 0.2 2.1 0.2'
+          'set string 1 l' ;  'draw string 2.15 0.2 'base
+        endif
+
+        base = 3e+6
+        'set arrscl 0.51 'base ; 'set cthick 2'; 'set ccolor 1'
+*        'd skip( maskout( maskout( vy, -(vm-3e+6) ),-(lev-'_levmin')*(lev-'_levmax')), '_sy.f1', '_sz.f1'); vz'
+        'd skip( maskout( maskout( vy, -(vm-3e+6) ),-(lev-10000)*(lev-'_levmax')), '_sy.f1', '_sz.f1'); vz'
+        if( d = 1 )
+          'set line 1 1 2' ; 'arrow 2.6 0.2 3.1 0.2'
+          'set string 1 l' ;  'draw string 3.15 0.2 'base
+        endif
+
+      endif
+    endif
+
+    'setfont small'
     if( _title.f1 = '' | _title.f1 =  '_title.'f1 )
       'draws ('_run.f1')'
     else
       'draws ('_title.f1')'
     endif
-
 
 
 ***** diff data *****
@@ -702,9 +729,12 @@ while( d <= 6 )
     'set lon 0'
     'set t 1'
 
+    diff( 'v'f2, f2, 'v'f1, f1, 'd' )
+
     if( _shade.d = 'on' )
-      diff( 'v'f2, f2, 'v'f1, f1, 'd' )
-      'color '_dmin.f1' '_dmax.f1' '_dint.f1' -kind '_dcolor.f1
+*      'color '_dmin.f1' '_dmax.f1' '_dint.f1' -kind '_dcolor.f1
+*      'color '_dmin.f1' '_dmax.f1' '_dint.f1' -kind '_dcolor.f1
+      'color '_dcolor.f1
       'd d'
 
       xpos = 3.5 * i - 2.7
@@ -717,6 +747,48 @@ while( d <= 6 )
       'set gxout contour'; 'set cint '_dint.f1;  'set cthick 6'; 'set ccolor 1'
       'd d'
     endif
+
+    if( _vec.d = 'on' )
+      diff( 'vy'f2, f2, 'vy'f1, f1, 'dy' )
+      diff( 'vz'f2, f2, 'vz'f1, f1, 'dz' )
+
+      if( _varid = 'mim_divf' | _varid = 'tem_divf' )
+
+        'set arrowhead 0.05'
+        'set arrlab off'
+        'dvy = dy*'my
+        'dvz = dz*'mz
+        'dvm = sqrt(dvy*dvy+dvz*dvz)'
+
+        base = 1e+8
+        'set arrscl 0.5 'base ; 'set cthick 6'; 'set ccolor 15'
+        'd skip( maskout( maskout( dvy, -(dvm-1e+7)*(dvm-1e+8) ),-(lev-10000)*(lev-'_levmax')), '_sy.f2', '_sz.f2'); dvz'
+        if( d = 5 )
+          'set line 15 1 6' ; 'arrow 0.6 0.1 1.1 0.1'
+          'set string 1 l' ;  'draw string 1.15 0.1 'base
+        endif
+
+        base = 1e+7
+        'set arrscl 0.5 'base ; 'set cthick 6'; 'set ccolor 1'
+        'd skip( maskout( maskout( dvy, -(dvm-1e+6)*(dvm-1e+7) ),-(lev-10000)*(lev-'_levmax')), '_sy.f2', '_sz.f2'); dvz'
+        if( d = 5 )
+          'set line 1 1 6' ; 'arrow 1.6 0.1 2.1 0.1'
+          'set string 1 l' ;  'draw string 2.15 0.1 'base
+        endif
+
+        base = 1e+6
+        'set arrscl 0.51 'base ; 'set cthick 2'; 'set ccolor 1'
+        'd skip( maskout( maskout( dvy, -(dvm-1e+6) ),-(lev-10000)*(lev-'_levmax')), '_sy.f2', '_sz.f2'); dvz'
+        if( d = 5 )
+          'set line 1 1 2' ; 'arrow 2.6 0.1 3.1 0.1'
+          'set string 1 l' ;  'draw string 3.15 0.1 'base
+        endif
+
+      endif
+
+    endif
+
+
 
     'setfont small'
     'draws ('_run.f1') - ('_run.f2')'
@@ -958,10 +1030,9 @@ function get_varcnf( f, varid, varcnfid )
     if( varid = 'mim_divf' ) ; name = 'MIM EP Flux / Divergence' ; endif
     if( varid = 'tem_divf' ) ; name = 'TEM EP Flux / Divergence' ; endif
     unit = 'm/(s day)'
-    color = '-levs -20 -10 -4 -2 -1 0 1 2 4 10 20 -kind bluered'
-*    color = 'purple->blue->aqua->lime->yellow->red->maroon'
-*    color = 'purple->bluered->maroon'
-*    dcolor = 'bluered'
+*    color = '-levs -20 -10 -4 -2 -1 0 1 2 4 10 20 -kind bluered'
+    color = '-levs -100 -50 -20 -10 -4 -2 -1 0 1 2 4 10 20 50 100 -kind purple->bluered->maroon'
+    dcolor = '-levs -50 -25 -10 -5 -2 -1 -0.5 0 0.5 1 2 5 10 25 50 -kind purple->bluered->maroon'
 endif
 
 

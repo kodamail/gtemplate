@@ -41,8 +41,10 @@ say 'args: ' % args
     endif
   endwhile
 
-  run = ''
-  var = ''
+  run  = ''
+  var  = ''
+  vary = ''
+  varz = ''
 
 ***************************************************************
 * varid -> varid_base, varid_lev
@@ -1414,7 +1416,9 @@ if(1 != 1)
       dir = '/cwork5/kodama/nicam_analysis/TEM/TEM-0.10r3/strat/N12/v003/'runid_gl'/type02_'runid_lev'_'runid_dz'_'runid_top'/'runid_case
       tail = 'tem.ctl'
       fv   = dtopen( dir, tail )
-      var = '60*60*24*divf.'fv
+      var  = '60*60*24*divf.'fv
+      vary = 'epy.'fv
+      varz = 'epz.'fv
       flag = -1
     endif
 
@@ -1796,9 +1800,11 @@ endif
 ***************************************************************
 
 
-  ret = ""
-  if( run != '' ) ; ret = ret % '-run ' % run % ' ' ; endif
-  if( var != '' ) ; ret = ret % '-var ' % var % ' ' ; endif
+  ret = ''
+  if( run  != '' ) ; ret = ret % '-run '  % run % ' ' ; endif
+  if( var  != '' ) ; ret = ret % '-var '  % var % ' ' ; endif
+  if( vary != '' ) ; ret = ret % '-vary ' % vary % ' ' ; endif
+  if( varz != '' ) ; ret = ret % '-varz ' % varz % ' ' ; endif
 return ret
 
 
