@@ -42,6 +42,7 @@ if( sw != 'cnf' )
   _vert       = 'pressure'
   _levmin     = 1000
   _levmax     = 10
+  _xcbar_arg  = '-line on -fstep 2 -foffset 1 -fwidth 0.08 -fheight 0.08'
   _fmax       = 0
   _save       = ''
   i = 1
@@ -312,7 +313,11 @@ ymin = subwrd( line, 4 )
 ymax = subwrd( line, 6 )
 yw = ymax - ymin
 latw = ( _latmax - _latmin ) * 111
-levw = ( 16 * math_log10(_levmin/_levmax) )
+if( _vert = 'pressure' )
+  levw = ( 16 * math_log10(_levmin/_levmax) )
+else
+  levw = ( _levmax - _levmin )
+endif
 ratio = (yw / levw) / (xw / latw)
 my = 1
 mz = ratio
@@ -536,7 +541,7 @@ while( f <= _fmax )
   if( _time_start.f != '' & _time_end.f != '' )
     prex( 'v'f' = ave( '_var.f', time='_time_start.f', time='_time_end.f' )' )
 
-    if( _varid = 'mim_divf' )
+    if( _varid = 'mim_divf' | _varid = 'tem_divf' )
       prex( 'epy'f' = ave( epy.'f', time='_time_start.f', time='_time_end.f' )' )
       prex( 'epz'f' = ave( epz.'f', time='_time_start.f', time='_time_end.f' )' )
     endif
@@ -544,7 +549,7 @@ while( f <= _fmax )
 
   if( _clim_arg.f != '' )
     prex( 'clave '_var.f' '_clim_arg.f' v'f )
-    if( _varid = 'mim_divf' )
+    if( _varid = 'mim_divf' | _varid = 'tem_divf' )
       prex( 'clave epy '_clim_arg.f' epy.'f )
       prex( 'clave epz '_clim_arg.f' epz.'f )
     endif
@@ -587,8 +592,8 @@ while( d <= 6 )
 
     if( _shade.d = 'on' )
    
-      if( _varid = 'mim_divf' )
-        'color 'color
+      if( _varid = 'mim_divf' | _varid = 'tem_divf' )
+        'color '_color.f1
         'd v'f1
 
 *      'set arrowhead 0.05'
@@ -649,7 +654,8 @@ while( d <= 6 )
 
       xpos = 3.5 * i - 2.7
       ypos = 4.0 * j - 3.5
-      'xcbar 'xpos' 'xpos+3.0' 'ypos' 'ypos+0.15' -line on -fstep 2 -foffset 1 -fwidth 0.08 -fheight 0.08'
+*      'xcbar 'xpos' 'xpos+3.0' 'ypos' 'ypos+0.15' -line on -fstep 2 -foffset 1 -fwidth 0.08 -fheight 0.08'
+      'xcbar 'xpos' 'xpos+3.0' 'ypos' 'ypos+0.15' '_xcbar_arg
     endif
 
     if( _cont.d = 'on' )
@@ -703,7 +709,8 @@ while( d <= 6 )
 
       xpos = 3.5 * i - 2.7
       ypos = 4.0 * j - 3.5
-      'xcbar 'xpos' 'xpos+3.0' 'ypos' 'ypos+0.15' -line on -fstep 2 -foffset 1 -fwidth 0.08 -fheight 0.08'
+*      'xcbar 'xpos' 'xpos+3.0' 'ypos' 'ypos+0.15' -line on -fstep 2 -foffset 1 -fwidth 0.08 -fheight 0.08'
+      'xcbar 'xpos' 'xpos+3.0' 'ypos' 'ypos+0.15' '_xcbar_arg
     endif
 
     if( _cont.d = 'on' )
@@ -947,8 +954,9 @@ function get_varcnf( f, varid, varcnfid )
     dcolor = 'bluered'
   endif
 
-  if( varid = 'mim_divf' )
-    name = 'MIM EP Flux / Divergence'
+  if( varid = 'mim_divf' | varid = 'tem_divf' )
+    if( varid = 'mim_divf' ) ; name = 'MIM EP Flux / Divergence' ; endif
+    if( varid = 'tem_divf' ) ; name = 'TEM EP Flux / Divergence' ; endif
     unit = 'm/(s day)'
     color = '-levs -20 -10 -4 -2 -1 0 1 2 4 10 20 -kind bluered'
 *    color = 'purple->blue->aqua->lime->yellow->red->maroon'

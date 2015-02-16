@@ -1409,6 +1409,15 @@ if(1 != 1)
     runid_case = rgnwrd(runid,9,9,'.') ; case = strrep(runid_case,'case00','c') ; case = strrep(case,'case0','c') ; case = strrep(case,'case','c')
     run = 'strat.N12.v3.' % gl % '.' % lev % '.' % top % '.' % case
     dir = '/cwork5/kodama/nicam_product/strat/N12/v003_copy/'runid_gl'/type02_'runid_lev'_'runid_dz'_'runid_top'/'runid_case'/data_conv/' % cdir
+
+    if( varid = 'tem_divf' )
+      dir = '/cwork5/kodama/nicam_analysis/TEM/TEM-0.10r3/strat/N12/v003/'runid_gl'/type02_'runid_lev'_'runid_dz'_'runid_top'/'runid_case
+      tail = 'tem.ctl'
+      fv   = dtopen( dir, tail )
+      var = '60*60*24*divf.'fv
+      flag = -1
+    endif
+
   endif
 
 
