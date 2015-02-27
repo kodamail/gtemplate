@@ -10,10 +10,10 @@ function cnf_latlev()
 *
 * _varid: unique id for each variable
 *
-*_varid = 'u'
+_varid = 'u'
 *_varid = 'v'
 ***_varid = 'w'
-*_varid = 't'
+_varid = 't'
 *_varid = 'rh'
 *_varid = 'qv'
 ***_varid = 'qc'
@@ -27,7 +27,7 @@ function cnf_latlev()
 *_varid = 'mim_st'
 *_varid = 'mim_divf'
 
-_varid = 'tem_divf'
+*_varid = 'tem_divf'
 
 
 *----- Display style
@@ -59,13 +59,15 @@ _xcbar_arg = '-line on -fwidth 0.08 -fheight 0.08'
 *   Tips: comment out _disp.3 and _disp.6 if you need
 *         2 raw figs. and 1 diff. figs.
 *
-if( 1 != 1 )
-  _disp.1 = '1'   ; _cont.1 = 'on'
-  _disp.2 = '2'   ; _cont.2 = 'on'
-  _disp.3 = '3'   ; _cont.3 = 'on'
-  _disp.5 = '2 1' ; _cont.5 = 'on'
-  _disp.6 = '3 1' ; _cont.6 = 'on'
-*  _disp.4 = '3 2'  ; _cont.4 = 'on'
+if( 1 = 1 )
+  _vec = 'off'
+  _cont = 'on'
+  _disp.1 = '1'
+  _disp.2 = '2'
+  _disp.3 = '3'
+  _disp.5 = '2 1'
+  _disp.6 = '3 1'
+  _disp.4 = '3 2'
 endif
 if( 1 != 1 )
   _disp.1 = '1'   ; _cont.1 = 'on'
@@ -76,7 +78,7 @@ if( 1 != 1 )
 *
   _disp.4 = '3 2'  ; _cont.4 = 'on' ; _over.4 = '1'
 endif
-if( 1 = 1 )
+if( 1 != 1 )
   _vec = 'on'
   _cont = off
   _disp.1 = '1'
@@ -121,14 +123,14 @@ endif
 *
 *_time_start = '06z01jun2004' ; _time_endpp = '00z01jul2004'
 *_time_start = 'jun2004' ; _time_endpp = 'jun2005'
-_time_start = '06z11jun2004' ; _time_endpp = '00z01jul2004'
+*_time_start = '06z11jun2004' ; _time_endpp = '00z01jul2004'
 *_time_start = '06z11jun2004' ; _time_endpp = '00z01sep2004'
 
 *
 * 2. monthly or seasonal mean
 *
-*_year = 2004
-*_month = 6
+_year = 2004
+_month = 6
 *_month = 678
 *_month = 901
 *_month = 212
@@ -180,11 +182,11 @@ _time_start = '06z11jun2004' ; _time_endpp = '00z01jul2004'
 *
 *----- Space to draw
 *
-*_vert = 'pressure'
-*_levmin = 1000
+_vert = 'pressure'
+_levmin = 1000
 *_levmin = 100
 *_levmax = 100
-*_levmax = 10
+_levmax = 10
 *_levmax = 1
 *_levmax = 0.01
 
@@ -192,11 +194,11 @@ _time_start = '06z11jun2004' ; _time_endpp = '00z01jul2004'
 *_levmin = 80.841
 *_levmax = 20000
 
-_vert = 'altitude'
-_levmin = 0
-_levmax = 80000
+*_vert = 'altitude'
+*_levmin = 0
+*_levmax = 80000
 
-_latmin = -90 ; _latmax = 90
+*_latmin = -90 ; _latmax = 90
 *_latmin = -45 ; _latmax = 45
 
 
@@ -234,7 +236,7 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 != 1 )
+if( 1 = 1 )
   ret = run_list( 'JRA55 '_varid' -cdir ctl_monthly')
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
@@ -324,7 +326,7 @@ endif
 ***************************************************************
 *-gl07
 *
-if( 1 = 1 )
+if( 1 != 1 )
 *  cdir = 'ml_plev/zmean_72x33/monthly_mean'
 *  cdir = 'advanced/MIM-0.36r2/zmean_320x33/tstep/sta_tra'
   _sy.f = 16 ; _sz.f = 2
@@ -350,7 +352,7 @@ if( 1 != 1 )
   if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
 endif
 
-if( 1 = 1 )
+if( 1 != 1 )
 *  cdir = 'ml_plev/zmean_72x33/monthly_mean'
 *  cdir = 'advanced/MIM-0.36r2/zmean_320x33/tstep/sta_tra'
   _sy.f = 16 ; _sz.f = 8
@@ -408,7 +410,7 @@ if( 1 != 1 )
 endif
 
 
-if( 1 != 1 )
+if( 1 = 1 )
   cdir = 'ml_plev/zmean_72x37/monthly_mean'
 *  cdir = 'ml_plev/zmean_145x37/monthly_mean'
   sy.f = 8 ; sz.f = 1
@@ -429,8 +431,8 @@ if( 1 != 1 )
 endif
 
 if( 1 != 1 )
-*  cdir = 'ml_plev/zmean_72x37/monthly_mean'
-  cdir = 'ml_plev/zmean_145x37/monthly_mean'
+  cdir = 'ml_plev/zmean_72x37/monthly_mean'
+*  cdir = 'ml_plev/zmean_145x37/monthly_mean'
   sy.f = 8 ; sz.f = 1
   ret = run_list( 'K.200406.N12.gl09.L38.b.002 '_varid' -cdir 'cdir )
   _run.f = subwrd( ret, 2 )
@@ -448,7 +450,7 @@ if( 1 != 1 )
   if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
 endif
 
-if( 1 != 1 )
+if( 1 = 1 )
   cdir = 'ml_plev/zmean_72x37/monthly_mean'
 *  cdir = 'ml_plev/zmean_145x37/monthly_mean'
   sy.f = 8 ; sz.f = 1
@@ -741,8 +743,8 @@ while( _run.r != '' & _run.r != '_run.'r & r <= 5 )
 endwhile
 '!mkdir -p 'dir
 *
-*_save = dir'/latlev_' % _varid % '_' % _year % '_' % month2
-_save = dir'/latlev_' % _varid % '_' % _time_start % '_' % _time_endpp
+_save = dir'/latlev_' % _varid % '_' % _year % '_' % month2
+*_save = dir'/latlev_' % _varid % '_' % _time_start % '_' % _time_endpp
 *_save = ''
 
 

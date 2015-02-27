@@ -99,16 +99,18 @@ if( sw != 'cnf' )
 
   f = 1
   while( f <= _fmax )
-    if( (   _name != '' &   _name !=   '_name' ) & (   _name.f = '' |   _name.f =   '_name.'f ) ) ;   _name.f =   _name ; endif
-    if( (   _unit != '' &   _unit !=   '_unit' ) & (   _unit.f = '' |   _unit.f =   '_unit.'f ) ) ;   _unit.f =   _unit ; endif
-    if( (    _min != '' &    _min !=    '_min' ) & (    _min.f = '' |    _min.f =    '_min.'f ) ) ;    _min.f =    _min ; endif
-    if( (    _int != '' &    _int !=    '_int' ) & (    _int.f = '' |    _int.f =    '_int.'f ) ) ;    _int.f =    _int ; endif
-    if( (    _max != '' &    _max !=    '_max' ) & (    _max.f = '' |    _max.f =    '_max.'f ) ) ;    _max.f =    _max ; endif
-    if( (   _dmin != '' &   _dmin !=   '_dmin' ) & (   _dmin.f = '' |   _dmin.f =   '_dmin.'f ) ) ;   _dmin.f =   _dmin ; endif
-    if( (   _dint != '' &   _dint !=   '_dint' ) & (   _dint.f = '' |   _dint.f =   '_dint.'f ) ) ;   _dint.f =   _dint ; endif
-    if( (   _dmax != '' &   _dmax !=   '_dmax' ) & (   _dmax.f = '' |   _dmax.f =   '_dmax.'f ) ) ;   _dmax.f =   _dmax ; endif
-    if( (  _color != '' &  _color !=  '_color' ) & (  _color.f = '' |  _color.f =  '_color.'f ) ) ;  _color.f =  _color ; endif
-    if( ( _dcolor != '' & _dcolor != '_dcolor' ) & ( _dcolor.f = '' | _dcolor.f = '_dcolor.'f ) ) ; _dcolor.f = _dcolor ; endif
+    if( (    _name != '' &    _name !=    '_name' ) & (    _name.f = '' |    _name.f =    '_name.'f ) ) ;    _name.f =    _name ; endif
+    if( (    _unit != '' &    _unit !=    '_unit' ) & (    _unit.f = '' |    _unit.f =    '_unit.'f ) ) ;    _unit.f =    _unit ; endif
+    if( (     _min != '' &     _min !=     '_min' ) & (     _min.f = '' |     _min.f =     '_min.'f ) ) ;     _min.f =     _min ; endif
+    if( (     _int != '' &     _int !=     '_int' ) & (     _int.f = '' |     _int.f =     '_int.'f ) ) ;     _int.f =     _int ; endif
+    if( (     _max != '' &     _max !=     '_max' ) & (     _max.f = '' |     _max.f =     '_max.'f ) ) ;     _max.f =     _max ; endif
+    if( (    _dmin != '' &    _dmin !=    '_dmin' ) & (    _dmin.f = '' |    _dmin.f =    '_dmin.'f ) ) ;    _dmin.f =    _dmin ; endif
+    if( (    _dint != '' &    _dint !=    '_dint' ) & (    _dint.f = '' |    _dint.f =    '_dint.'f ) ) ;    _dint.f =    _dint ; endif
+    if( (    _dmax != '' &    _dmax !=    '_dmax' ) & (    _dmax.f = '' |    _dmax.f =    '_dmax.'f ) ) ;    _dmax.f =    _dmax ; endif
+    if( (   _color != '' &   _color !=   '_color' ) & (   _color.f = '' |   _color.f =   '_color.'f ) ) ;   _color.f =   _color ; endif
+    if( (  _dcolor != '' &  _dcolor !=  '_dcolor' ) & (  _dcolor.f = '' |  _dcolor.f =  '_dcolor.'f ) ) ;  _dcolor.f =  _dcolor ; endif
+    if( (  _colork != '' &  _colork !=  '_colork' ) & (  _colork.f = '' |  _colork.f =  '_colork.'f ) ) ;  _colork.f =  _colork ; endif
+    if( ( _dcolork != '' & _dcolork != '_dcolork' ) & ( _dcolork.f = '' | _dcolork.f = '_dcolork.'f ) ) ; _dcolork.f = _dcolork ; endif
 
     f = f + 1
   endwhile
@@ -328,6 +330,7 @@ my = 1
 mz = ratio
 
 
+
 ***************************************************************
 * Automatic Time Setting
 ***************************************************************
@@ -463,7 +466,6 @@ endwhile
 say ''
 
 if( _year = '%y' ) ; _year = _year_start % '_' _year_end  ; endif
-
 
 ***************************************************************
 * Automatic Variable Setting
@@ -602,8 +604,10 @@ while( d <= 6 )
     'set t 1'
 
     if( _shade.d = 'on' )
+*      'color '_color.f1
 
-      'color '_color.f1
+* TODO: color or colork
+      'color '_min.f1' '_max.f1' '_int.f1' -kind '_colork.f1
       'd v'f1
 
 *   for calculating minimum value of mass streamfunction
@@ -720,7 +724,6 @@ while( d <= 6 )
       'draws ('_title.f1')'
     endif
 
-
 ***** diff data *****
   else
     'set dfile 'f2
@@ -733,8 +736,9 @@ while( d <= 6 )
 
     if( _shade.d = 'on' )
 *      'color '_dmin.f1' '_dmax.f1' '_dint.f1' -kind '_dcolor.f1
-*      'color '_dmin.f1' '_dmax.f1' '_dint.f1' -kind '_dcolor.f1
-      'color '_dcolor.f1
+
+      'color '_dmin.f1' '_dmax.f1' '_dint.f1' -kind '_dcolork.f1
+*      'color '_dcolor.f1
       'd d'
 
       xpos = 3.5 * i - 2.7
@@ -812,6 +816,7 @@ while( d <= 6 )
 
   d = d + 1
 endwhile
+
 
 *m2 = _month
 *if( _month < 10 ) ; m2 = '0' % m2 ; endif
@@ -912,8 +917,8 @@ function get_varcnf( f, varid, varcnfid )
     unit = 'm/s'
     min  = -50  ; int = 10 ; max = 50
     dmin = -25 ; dint = 5 ; dmax = 25
-    color = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
+    colork = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolork = 'bluered'
     if( varcnfid = '2' )
       dmin = -10 ; dint = 2 ; dmax = 10
     endif
@@ -942,9 +947,9 @@ function get_varcnf( f, varid, varcnfid )
     unit = 'K'
     min  = 190 ; int  = 10 ; max  = 290
     dmin = -10 ; dint = 1  ; dmax = 10
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'purple->bluered->maroon'
-*    dcolor = 'bluered'
+    colork  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolork = 'purple->bluered->maroon'
+*    dcolork = 'bluered'
   endif
 
   if( varid = 'qv' )
@@ -1037,14 +1042,16 @@ endif
 
 
 * set default varcnf to global varcnf 
-  if(   _name.f =   '_name.'f ) ;   _name.f =   name ; endif
-  if(   _unit.f =   '_unit.'f ) ;   _unit.f =   unit ; endif
-  if(    _min.f =    '_min.'f ) ;    _min.f =    min ; endif
-  if(    _int.f =    '_int.'f ) ;    _int.f =    int ; endif
-  if(    _max.f =    '_max.'f ) ;    _max.f =    max ; endif
-  if(   _dmin.f =   '_dmin.'f ) ;   _dmin.f =   dmin ; endif
-  if(   _dint.f =   '_dint.'f ) ;   _dint.f =   dint ; endif
-  if(   _dmax.f =   '_dmax.'f ) ;   _dmax.f =   dmax ; endif
-  if(  _color.f =  '_color.'f ) ;  _color.f =  color ; endif
-  if( _dcolor.f = '_dcolor.'f ) ; _dcolor.f = dcolor ; endif
+  if(    _name.f =    '_name.'f ) ;    _name.f =    name ; endif
+  if(    _unit.f =    '_unit.'f ) ;    _unit.f =    unit ; endif
+  if(     _min.f =     '_min.'f ) ;     _min.f =     min ; endif
+  if(     _int.f =     '_int.'f ) ;     _int.f =     int ; endif
+  if(     _max.f =     '_max.'f ) ;     _max.f =     max ; endif
+  if(    _dmin.f =    '_dmin.'f ) ;    _dmin.f =    dmin ; endif
+  if(    _dint.f =    '_dint.'f ) ;    _dint.f =    dint ; endif
+  if(    _dmax.f =    '_dmax.'f ) ;    _dmax.f =    dmax ; endif
+  if(   _color.f =   '_color.'f ) ;   _color.f =   color ; endif
+  if(  _dcolor.f =  '_dcolor.'f ) ;  _dcolor.f =  dcolor ; endif
+  if(  _colork.f =  '_colork.'f ) ;  _colork.f =  colork ; endif
+  if( _dcolork.f = '_dcolork.'f ) ; _dcolork.f = dcolork ; endif
 return

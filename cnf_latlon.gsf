@@ -10,9 +10,9 @@ function cnf_latlon()
 *
 * _varid: unique id for each variable
 *
-*_varid = 't2m'
+_varid = 't2m'
 *_varid = 'qv2m'
-_varid = 'precip'
+*_varid = 'precip'
 *_varid = 'mslp'
 *_varid = 'sst'
 
@@ -102,6 +102,7 @@ if( 1 = 1 )
   _disp.1 = '1'
   _disp.2 = '2'
   _disp.3 = '3'
+  _disp.4 = '3 2'
   _disp.5 = '2 1'
   _disp.6 = '3 1'
 endif
@@ -257,7 +258,7 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 != 1 )
+if( 1 = 1 )
   cdir = 'ctl_monthly'
   ret = run_list( 'JRA55 '_varid' -cdir 'cdir )
   _run.f = subwrd( ret, 2 )
@@ -364,7 +365,7 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 = 1 )
+if( 1 != 1 )
   ret = run_list( 'GPCP '_varid  )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
@@ -497,8 +498,8 @@ endif
 
 ***************************************************************
 if( 1 = 1 )
-  cdir = 'sl/144x72/monthly_mean'
-*  cdir = 'sl/288x145/monthly_mean'
+*  cdir = 'sl/144x72/monthly_mean'
+  cdir = 'sl/288x145/monthly_mean'
 *  cdir = 'sl/2560x1280/monthly_mean'
 *  cdir = 'isccp/144x72x49/monthly_mean'
   ret = run_list( 'K.200406.N12.gl09.L38.b '_varid' -cdir 'cdir )
@@ -533,8 +534,8 @@ endif
 
 ***************************************************************
 if( 1 != 1 )
-  cdir = 'sl/144x72/monthly_mean'
-*  cdir = 'sl/288x145/monthly_mean'
+*  cdir = 'sl/144x72/monthly_mean'
+  cdir = 'sl/288x145/monthly_mean'
 *  cdir = 'sl/2560x1280/monthly_mean'
 *  cdir = 'isccp/144x72x49/monthly_mean'
   ret = run_list( 'K.200406.N12.gl09.L38.b.003 '_varid' -cdir 'cdir )
@@ -545,8 +546,8 @@ endif
 
 ***************************************************************
 if( 1 = 1 )
-  cdir = 'sl/144x72/monthly_mean'
-*  cdir = 'sl/288x145/monthly_mean'
+*  cdir = 'sl/144x72/monthly_mean'
+  cdir = 'sl/288x145/monthly_mean'
 *  cdir = 'sl/2560x1280/monthly_mean'
 *  cdir = 'isccp/144x72x49/monthly_mean'
   ret = run_list( 'K.200406.N12.gl09.L38.b.004 '_varid' -cdir 'cdir )
