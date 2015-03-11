@@ -31,8 +31,8 @@ if( sw != 'cnf' )
   _cbar.2     = ''
   _shade      = 'on'
   _cont       = 'off'
-*  _vec        = 'off'
-  _vec        = 'on'
+  _vec        = 'off'
+*  _vec        = 'on'
   _time_start = ''
   _time_end   = ''
   _year       = 2004
@@ -545,6 +545,7 @@ while( f <= _fmax )
   'set x 1'
   'set y 1 'ydef
   'set z 1 'zdef
+
   if( _time_start.f != '' & _time_end.f != '' )
     prex( 'v'f' = ave( '_var.f', time='_time_start.f', time='_time_end.f' )' )
 
@@ -570,6 +571,7 @@ while( f <= _fmax )
 
   f = f + 1
 endwhile
+
 
 ***************************************************************
 * Draw
@@ -753,6 +755,7 @@ while( d <= 6 )
     endif
 
     if( _vec.d = 'on' )
+
       diff( 'vy'f2, f2, 'vy'f1, f1, 'dy' )
       diff( 'vz'f2, f2, 'vz'f1, f1, 'dz' )
 
@@ -791,7 +794,6 @@ while( d <= 6 )
       endif
 
     endif
-
 
 
     'setfont small'
@@ -842,7 +844,8 @@ function diff( v1, df1, v2, df2, d )
 *say z1max
 *say z2max
   'set z 1 'z1max
-  d' = const( 'v1', 0, -a )'
+*  'd = const( 'v1', 0, -a )'
+  'd = const( 'v1', 0 )'
   z1 = 1
 
   while( z1 <= z1max )
