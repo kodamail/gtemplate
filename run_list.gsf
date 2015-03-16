@@ -343,7 +343,7 @@ say 'args: ' % args
 
 ***************************************************************
   if( runid = 'CIRA86' )
-    run = 'CIRA86'
+    run = 'CIRA86_CLIM'
     pdir = '/cwork5/kodama/dataset_copy/CIRA86/raw_data'
     tail = 'cira.ctl'
     if( varid = 'u' )

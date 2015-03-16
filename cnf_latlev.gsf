@@ -59,7 +59,7 @@ _xcbar_arg = '-line on -fwidth 0.08 -fheight 0.08'
 *   Tips: comment out _disp.3 and _disp.6 if you need
 *         2 raw figs. and 1 diff. figs.
 *
-if( 1 = 1 )
+if( 1 != 1 )
   _vec = 'off'
   _cont = 'on'
   _disp.1 = '1'
@@ -76,7 +76,13 @@ if( 1 != 1 )
   _disp.5 = '2 1' ; _cont.5 = 'off' ; _over.5 = '1'
   _disp.6 = '3 1' ; _cont.6 = 'off' ; _over.6 = '1'
 *
-  _disp.4 = '3 2'  ; _cont.4 = 'on' ; _over.4 = '1'
+*  _disp.4 = '3 2'  ; _cont.4 = 'on' ; _over.4 = '1'
+endif
+if( 1 = 1 )
+  _cont = 'off'
+  _disp.1 = '1'   ; _cont.1 = 'on'
+  _disp.2 = '2 1' ; _over.2 = '2'
+  _disp.3 = '3 1' ; _over.3 = '3'
 endif
 if( 1 != 1 )
   _vec = 'on'
@@ -183,12 +189,12 @@ _month = 6
 *----- Space to draw
 *
 _vert = 'pressure'
-_levmin = 1000
+*_levmin = 1000
 *_levmin = 100
 *_levmax = 100
-_levmax = 10
+*_levmax = 10
 *_levmax = 1
-*_levmax = 0.01
+_levmax = 0.01
 
 *_vert = 'altitude'
 *_levmin = 80.841
@@ -269,10 +275,27 @@ if( 1 != 1 )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
 
-*  time_start.f = cmonth( month,   3 ) % '1968'
-*  time_endpp.f = cmonth( month+1, 3 ) % '1968'
+*  if( _month >= 1 & _month <= 12 ) ; then
+*    _time_start.f = cmonth( _month,   3 ) % '1968'
+*    _time_endpp.f = cmonth( _month+1, 3 ) % '1968'
+*    if( _month = 12 ) ; then
+*      _time_endpp.f = 'jan1969'
+*    endif
+*  endif
+*  if( _month = 345 )
+*    _time_start.f = 'mar1968' ; _time_endpp.f = 'jun1968'
+*  endif
+*  if( _month = 678 )
+*    _time_start.f = 'jun1968' ; _time_endpp.f = 'sep1968'
+*  endif
+*  if( _month = 901 )
+*    _time_start.f = 'sep1968' ; _time_endpp.f = 'dec1968'
+*  endif
+*  if( _month = 212 )
+*    _time_start.f = 'dec1968' ; _time_endpp.f = 'mar1969'
+*  endif
 
-  time_start.f = 'jun1968' ; time_endpp.f = 'sep1968'
+  _climvar.f = 1
 
   if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
 endif
@@ -327,11 +350,11 @@ endif
 *-gl07
 *
 if( 1 != 1 )
-*  cdir = 'ml_plev/zmean_72x33/monthly_mean'
+  cdir = 'ml_plev/zmean_72x33/monthly_mean'
 *  cdir = 'advanced/MIM-0.36r2/zmean_320x33/tstep/sta_tra'
   _sy.f = 16 ; _sz.f = 2
-*  ret = run_list( 'strat.N12.v003.gl07.type02.L0061.dz2000m.top080km.case005 '_varid' -cdir 'cdir )
-  ret = run_list( 'strat.N12.v003.gl07.type02.L0061.dz2000m.top080km.case005 '_varid )
+  ret = run_list( 'strat.N12.v003.gl07.type02.L0061.dz2000m.top080km.case005 '_varid' -cdir 'cdir )
+*  ret = run_list( 'strat.N12.v003.gl07.type02.L0061.dz2000m.top080km.case005 '_varid )
   _run.f  = comarg( ret, 'run'  )
   _var.f  = comarg( ret, 'var'  )
   _vary.f = comarg( ret, 'vary' )
@@ -340,11 +363,11 @@ if( 1 != 1 )
 endif
 
 if( 1 != 1 )
-*  cdir = 'ml_plev/zmean_72x33/monthly_mean'
+  cdir = 'ml_plev/zmean_72x33/monthly_mean'
 *  cdir = 'advanced/MIM-0.36r2/zmean_320x33/tstep/sta_tra'
   _sy.f = 16 ; _sz.f = 4
-*  ret = run_list( 'strat.N12.v003.gl07.type02.L0091.dz1000m.top080km.case005 '_varid' -cdir 'cdir )
-  ret = run_list( 'strat.N12.v003.gl07.type02.L0091.dz1000m.top080km.case005 '_varid )
+  ret = run_list( 'strat.N12.v003.gl07.type02.L0091.dz1000m.top080km.case005 '_varid' -cdir 'cdir )
+*  ret = run_list( 'strat.N12.v003.gl07.type02.L0091.dz1000m.top080km.case005 '_varid )
   _run.f  = comarg( ret, 'run'  )
   _var.f  = comarg( ret, 'var'  )
   _vary.f = comarg( ret, 'vary' )
@@ -353,11 +376,11 @@ if( 1 != 1 )
 endif
 
 if( 1 != 1 )
-*  cdir = 'ml_plev/zmean_72x33/monthly_mean'
+  cdir = 'ml_plev/zmean_72x33/monthly_mean'
 *  cdir = 'advanced/MIM-0.36r2/zmean_320x33/tstep/sta_tra'
   _sy.f = 16 ; _sz.f = 8
-*  ret = run_list( 'strat.N12.v003.gl07.type02.L0162.dz0500m.top080km.case003 '_varid' -cdir 'cdir )
-  ret = run_list( 'strat.N12.v003.gl07.type02.L0162.dz0500m.top080km.case003 '_varid )
+  ret = run_list( 'strat.N12.v003.gl07.type02.L0162.dz0500m.top080km.case003 '_varid' -cdir 'cdir )
+*  ret = run_list( 'strat.N12.v003.gl07.type02.L0162.dz0500m.top080km.case003 '_varid )
   _run.f  = comarg( ret, 'run'  )
   _var.f  = comarg( ret, 'var'  )
   _vary.f = comarg( ret, 'vary' )
@@ -366,11 +389,11 @@ if( 1 != 1 )
 endif
 
 if( 1 != 1 )
-*  cdir = 'ml_plev/zmean_72x33/monthly_mean'
+  cdir = 'ml_plev/zmean_72x33/monthly_mean'
 *  cdir = 'advanced/MIM-0.36r2/zmean_320x33/tstep/sta_tra'
   _sy.f = 16 ; _sz.f = 13
-*  ret = run_list( 'strat.N12.v003.gl07.type02.L0261.dz0300m.top080km.case004 '_varid' -cdir 'cdir )
-  ret = run_list( 'strat.N12.v003.gl07.type02.L0261.dz0300m.top080km.case004 '_varid )
+  ret = run_list( 'strat.N12.v003.gl07.type02.L0261.dz0300m.top080km.case004 '_varid' -cdir 'cdir )
+*  ret = run_list( 'strat.N12.v003.gl07.type02.L0261.dz0300m.top080km.case004 '_varid )
   _run.f  = comarg( ret, 'run'  )
   _var.f  = comarg( ret, 'var'  )
   _vary.f = comarg( ret, 'vary' )
@@ -382,35 +405,35 @@ endif
 ***************************************************************
 *-gl09
 *
-if( 1 != 1 )
+if( 1 = 1 )
 * 2004/06-09
-*  cdir = 'ml_plev/zmean_72x33/monthly_mean'
+  cdir = 'ml_plev/zmean_72x33/monthly_mean'
 *  cdir = 'advanced/MIM-0.36r2/zmean_320x33/tstep/sta_tra'
-  _sy.f = 64 ; _sz.f = 2
-*  ret = run_list( 'strat.N12.v003.gl09.type02.L0061.dz2000m.top080km.case005 '_varid' -cdir 'cdir )
-  ret = run_list( 'strat.N12.v003.gl09.type02.L0061.dz2000m.top080km.case005 '_varid )
+*  _sy.f = 64 ; _sz.f = 2
+  ret = run_list( 'strat.N12.v003.gl09.type02.L0061.dz2000m.top080km.case005 '_varid' -cdir 'cdir )
+*  ret = run_list( 'strat.N12.v003.gl09.type02.L0061.dz2000m.top080km.case005 '_varid )
   _run.f  = comarg( ret, 'run'  )
   _var.f  = comarg( ret, 'var'  )
   _vary.f = comarg( ret, 'vary' )
   _varz.f = comarg( ret, 'varz' )
   if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
 endif
-
-if( 1 != 1 )
-* 2004/06-06
-*  cdir = 'ml_plev/zmean_72x33/monthly_mean'
-  _sy.f = 64 ; _sz.f = 4
-*  ret = run_list( 'strat.N12.v003.gl09.type02.L0162.dz0500m.top080km.case001 '_varid' -cdir 'cdir )
-  ret = run_list( 'strat.N12.v003.gl09.type02.L0162.dz0500m.top080km.case001 '_varid )
-  _run.f  = comarg( ret, 'run'  )
-  _var.f  = comarg( ret, 'var'  )
-  _vary.f = comarg( ret, 'vary' )
-  _varz.f = comarg( ret, 'varz' )
-  if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
-endif
-
 
 if( 1 = 1 )
+* 2004/06-06
+  cdir = 'ml_plev/zmean_72x33/monthly_mean'
+  _sy.f = 64 ; _sz.f = 4
+  ret = run_list( 'strat.N12.v003.gl09.type02.L0162.dz0500m.top080km.case001 '_varid' -cdir 'cdir )
+*  ret = run_list( 'strat.N12.v003.gl09.type02.L0162.dz0500m.top080km.case001 '_varid )
+  _run.f  = comarg( ret, 'run'  )
+  _var.f  = comarg( ret, 'var'  )
+  _vary.f = comarg( ret, 'vary' )
+  _varz.f = comarg( ret, 'varz' )
+  if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
+endif
+
+
+if( 1 != 1 )
   cdir = 'ml_plev/zmean_72x37/monthly_mean'
 *  cdir = 'ml_plev/zmean_145x37/monthly_mean'
   sy.f = 8 ; sz.f = 1
@@ -450,7 +473,7 @@ if( 1 != 1 )
   if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
 endif
 
-if( 1 = 1 )
+if( 1 != 1 )
   cdir = 'ml_plev/zmean_72x37/monthly_mean'
 *  cdir = 'ml_plev/zmean_145x37/monthly_mean'
   sy.f = 8 ; sz.f = 1

@@ -536,16 +536,30 @@ while( f <= _fmax )
   xdef = qctlinfo( f, 'xdef', 1 )
   ydef = qctlinfo( f, 'ydef', 1 )
   zdef = qctlinfo( f, 'zdef', 1 )
+  tdef = qctlinfo( f, 'tdef', 1 )
 
   say 'xdef='xdef
   if( xdef > 1 )
     _var.f = 'ave(' % _var.f % ',x=1,x=' % xdef % ')'
   endif
 
+* data is climatology
+  if( _climvar.f = 1 )
+    say 'f = ' % f % ' data is climatological'
+    'set x 1 'xdef
+    'set y 1 'ydef
+    'set z 1 'zdef
+    'set t 1 'tdef
+    'v'f'tmp = '_var.f
+    _var.f = 'v'f'tmp'
+    'modify v'f'tmp seasonal'
+  endif
+
+
   'set x 1'
   'set y 1 'ydef
   'set z 1 'zdef
-
+  'set t 1'
   if( _time_start.f != '' & _time_end.f != '' )
     prex( 'v'f' = ave( '_var.f', time='_time_start.f', time='_time_end.f' )' )
 
