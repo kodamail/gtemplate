@@ -23,8 +23,8 @@ if( sw != 'cnf' )
 * set default values
   _varid      = ''
   _cbar       = 'hor'
-  _cbar.1     = '1'
-  _cbar.2     = ''
+*  _cbar.1     = '2'
+*  _cbar.2     = ''
   _mpdraw     = 'on'
   _cont       = 'off'
   _time_start = ''
@@ -39,6 +39,7 @@ if( sw != 'cnf' )
   while( i <= 6 )
     _disp.i = ''
     _cont.i = ''
+    _cbar.i = ''
     i = i + 1
   endwhile
 
@@ -529,14 +530,26 @@ while( d <= 6 )
   endif
 
   'd v'
-  if( _cbar.i = d )
-    xposmin = 5.0 * i - 3.6
+*  if( _cbar.i = d )
+*    xposmin = 5.0 * i - 3.6
+*    xposmax = xposmin + 4.3
+*    'q shades'
+*    if( sublin(result,1) != 'None' )
+*      'xcbar 'xposmin' 'xposmax' 0.4 0.6 -edge triangle -line on -fstep 2'
+*    endif
+*  endif
+  if( _cbar.d = 'hor' )
+    if( d <= 3 ) ; xposmin = 1.4
+    else         ; xposmin = 6.4 ; endif
     xposmax = xposmin + 4.3
+    yposmin = 0.4 + (j-1) * 2.5
+    yposmax = yposmin + 0.2
     'q shades'
     if( sublin(result,1) != 'None' )
-      'xcbar 'xposmin' 'xposmax' 0.4 0.6 -edge triangle -line on -fstep 2'
+      'xcbar 'xposmin' 'xposmax' 'yposmin' 'yposmax' -edge triangle -line on -fstep 2'
     endif
   endif
+
 
   if( _cont.d = 'on' )
       'set gxout contour'; 'set cthick 6'; 'set ccolor 1'
@@ -821,6 +834,17 @@ function get_varcnf( f, varid, varcnfid )
       min1d  = 180 ; int1d  = 30 ; max1d  = 260
       dmin1d = -6  ; dint1d = 3  ; dmax1d = 6
     endif
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'u10m' )
+    name = '10m Zonal Wind'
+    unit = 'm/s'
+    min2d  = -10 ; int2d  = 2 ; max2d  = 10
+    dmin2d = -5 ; dint2d = 1  ; dmax2d = 5
+    min1d  = -10 ; int1d  = 5 ; max1d  = 10
+    dmin1d = -4  ; dint1d = 2  ; dmax1d = 4
     color  = 'purple->blue->aqua->lime->yellow->red->maroon'
     dcolor = 'bluered'
   endif
