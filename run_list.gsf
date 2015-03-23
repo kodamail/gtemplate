@@ -136,15 +136,40 @@ say 'args: ' % args
       fv   = dtopen( dir, tail )
       var = 'UGRDprs.'fv
     endif
+    if( varid_base = 'u' & valnum(varid_lev) != 0 )
+      tail = 'anl_p_ugrd.monthly.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'UGRDprs.'fv'(lev='varid_lev')'
+    endif
     if( varid = 't' & cdir = 'ctl_monthly' )
       tail = 'anl_p_tmp.monthly.ctl'
       fv   = dtopen( dir, tail )
       var = 'TMPprs.'fv
     endif
+    if( varid_base = 'u' & valnum(varid_lev) != 0 )
+      tail = 'anl_p_tmp.monthly.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'TMPprs.'fv'(lev='varid_lev')'
+    endif
     if( varid = 't2m' & cdir = 'ctl_monthly' )
       tail = 'anl_surf125.monthly.ctl'
       fv   = dtopen( dir, tail )
       var = 'TMP2m.'fv
+    endif
+    if( varid = 'qv2m' & cdir = 'ctl_monthly' )
+      tail = 'anl_surf125.monthly.ctl'
+      fv   = dtopen( dir, tail )
+      var = '1000*SPFH2m.'fv
+    endif
+    if( varid = 'u10m' & cdir = 'ctl_monthly' )
+      tail = 'anl_surf125.monthly.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'UGRD10m.'fv
+    endif
+    if( varid = 'v10m' & cdir = 'ctl_monthly' )
+      tail = 'anl_surf125.monthly.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'VGRD10m.'fv
     endif
   endif
 
@@ -2304,6 +2329,30 @@ function nicam2( varid, dir, dir2, sepdir )
       if( sepdir != 'no' ) ; tail = 'sl_t2m/' % tail ; endif
       fv   = dtopen( dir, tail )
       if( fv > 0 ) ; var  = 'sl_t2m.'fv ; endif
+    endif    
+  endif
+  if( varid = 'u10m' )
+    tail = 'sa_u10m.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_u10m/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sa_u10m.'fv ; endif
+    if( fv <= 0 )
+      tail = 'sl_u10m.ctl'
+      if( sepdir != 'no' ) ; tail = 'sl_u10m/' % tail ; endif
+      fv   = dtopen( dir, tail )
+      if( fv > 0 ) ; var  = 'sl_u10m.'fv ; endif
+    endif    
+  endif
+  if( varid = 'v10m' )
+    tail = 'sa_v10m.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_v10m/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sa_v10m.'fv ; endif
+    if( fv <= 0 )
+      tail = 'sl_v10m.ctl'
+      if( sepdir != 'no' ) ; tail = 'sl_v10m/' % tail ; endif
+      fv   = dtopen( dir, tail )
+      if( fv > 0 ) ; var  = 'sl_v10m.'fv ; endif
     endif    
   endif
   if( varid = 'mslp' )
