@@ -842,9 +842,42 @@ function get_varcnf( f, varid, varcnfid )
     name = '10m Zonal Wind'
     unit = 'm/s'
     min2d  = -10 ; int2d  = 2 ; max2d  = 10
-    dmin2d = -5 ; dint2d = 1  ; dmax2d = 5
+    dmin2d = -5  ; dint2d = 1 ; dmax2d = 5
     min1d  = -10 ; int1d  = 5 ; max1d  = 10
-    dmin1d = -4  ; dint1d = 2  ; dmax1d = 4
+    dmin1d = -4  ; dint1d = 2 ; dmax1d = 4
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid_base = 'u' & valnum(varid_lev) != 0 )
+    name = 'Zonal Wind @ 'varid_lev'hPa'
+    unit = 'm/s'
+    min2d  = -30 ; int2d  = 5  ; max2d  = 30
+    dmin2d = -10 ; dint2d = 2  ; dmax2d = 10
+    min1d  = -30 ; int1d  = 15 ; max1d  = 30
+    dmin1d = -10 ; dint1d = 5  ; dmax1d = 10
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'v10m' )
+    name = '10m Meridional Wind'
+    unit = 'm/s'
+    min2d  = -10 ; int2d  = 2 ; max2d  = 10
+    dmin2d = -5  ; dint2d = 1 ; dmax2d = 5
+    min1d  = -10 ; int1d  = 5 ; max1d  = 10
+    dmin1d = -4  ; dint1d = 2 ; dmax1d = 4
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid_base = 'v' & valnum(varid_lev) != 0 )
+    name = 'Meridional Wind @ 'varid_lev'hPa'
+    unit = 'm/s'
+    min2d  = -5   ; int2d  = 1   ; max2d  = 5
+    dmin2d = -2.5 ; dint2d = 0.5 ; dmax2d = 2.5
+    min1d  = -5   ; int1d  = 2.5 ; max1d  = 5
+    dmin1d = -2   ; dint1d = 1   ; dmax1d = 2
     color  = 'purple->blue->aqua->lime->yellow->red->maroon'
     dcolor = 'bluered'
   endif
@@ -890,17 +923,6 @@ function get_varcnf( f, varid, varcnfid )
     dmin2d = -100 ; dint2d = 10  ; dmax2d = 100
     min1d  = 0    ; int1d  = 500 ; max1d  = 2000
     dmin1d = -500 ; dint1d = 100 ; dmax1d = 500
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
-  endif
-
-  if( varid_base = 'u' & valnum(varid_lev) != 0 )
-    name = 'Zonal Wind @ 'varid_lev'hPa'
-    unit = 'm/s'
-    min2d  = -30 ; int2d  = 5  ; max2d  = 30
-    dmin2d = -10 ; dint2d = 2  ; dmax2d = 10
-    min1d  = -30 ; int1d  = 15 ; max1d  = 30
-    dmin1d = -10 ; dint1d = 5  ; dmax1d = 10
     color  = 'purple->blue->aqua->lime->yellow->red->maroon'
     dcolor = 'bluered'
   endif
