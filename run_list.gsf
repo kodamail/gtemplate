@@ -141,15 +141,56 @@ say 'args: ' % args
       fv   = dtopen( dir, tail )
       var = 'UGRDprs.'fv'(lev='varid_lev')'
     endif
+    if( varid = 'v' & cdir = 'ctl_monthly' )
+      tail = 'anl_p_vgrd.monthly.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'VGRDprs.'fv
+    endif
+    if( varid_base = 'v' & valnum(varid_lev) != 0 )
+      tail = 'anl_p_vgrd.monthly.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'VGRDprs.'fv'(lev='varid_lev')'
+    endif
     if( varid = 't' & cdir = 'ctl_monthly' )
       tail = 'anl_p_tmp.monthly.ctl'
       fv   = dtopen( dir, tail )
       var = 'TMPprs.'fv
     endif
-    if( varid_base = 'u' & valnum(varid_lev) != 0 )
+    if( varid_base = 't' & valnum(varid_lev) != 0 )
       tail = 'anl_p_tmp.monthly.ctl'
       fv   = dtopen( dir, tail )
       var = 'TMPprs.'fv'(lev='varid_lev')'
+    endif
+    if( varid = 'qv' & cdir = 'ctl_monthly' )
+      tail = 'anl_p_spfh.monthly.ctl'
+      fv   = dtopen( dir, tail )
+      var = '1000*SPFHprs.'fv
+    endif
+    if( varid_base = 'qv' & valnum(varid_lev) != 0 )
+      tail = 'anl_p_spfh.monthly.ctl'
+      fv   = dtopen( dir, tail )
+      var = '1000*SPFHprs.'fv'(lev='varid_lev')'
+    endif
+    if( varid = 'rh' & cdir = 'ctl_monthly' )
+      tail = 'anl_p_rh.monthly.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'RHprs.'fv
+    endif
+    if( varid_base = 'rh' & valnum(varid_lev) != 0 )
+      tail = 'anl_p_rh.monthly.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'RHprs.'fv'(lev='varid_lev')'
+    endif
+*
+    if( varid = 'u10m' & cdir = 'ctl_monthly' )
+      tail = 'anl_surf125.monthly.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'UGRD10m.'fv
+    endif
+    if( varid = 'v10m' & cdir = 'ctl_monthly' )
+      tail = 'anl_surf125.monthly.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'VGRD10m.'fv
     endif
     if( varid = 't2m' & cdir = 'ctl_monthly' )
       tail = 'anl_surf125.monthly.ctl'
@@ -161,15 +202,10 @@ say 'args: ' % args
       fv   = dtopen( dir, tail )
       var = '1000*SPFH2m.'fv
     endif
-    if( varid = 'u10m' & cdir = 'ctl_monthly' )
+    if( varid = 'rh2m' & cdir = 'ctl_monthly' )
       tail = 'anl_surf125.monthly.ctl'
       fv   = dtopen( dir, tail )
-      var = 'UGRD10m.'fv
-    endif
-    if( varid = 'v10m' & cdir = 'ctl_monthly' )
-      tail = 'anl_surf125.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'VGRD10m.'fv
+      var = 'RH2m.'fv
     endif
   endif
 
@@ -773,12 +809,12 @@ if(1 != 1)
       fv   = dtopen( dir, tail )
       var = 'solar_mon.'fv'(z=1)'
     endif
-  endif
-
     if( varid = 'aw_net_toa' )
       fv   = dtopen( dir, tail )
       var = '-toa_lw_all_mon.'fv'(z=1)-toa_sw_all_mon.'fv'(z=1)+solar_mon.'fv'(z=1)'
     endif
+  endif
+
 
 
 
