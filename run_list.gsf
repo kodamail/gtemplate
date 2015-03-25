@@ -1021,6 +1021,39 @@ if(1 != 1)
 
 
 ***************************************************************
+* JMIP
+***************************************************************
+
+  if( runid = 'AFES_T239L48')
+    run = 'AFES_T239L48'
+    dir = '/cwork5/kodama/dataset/jmip/data_conv/amip/afes/T239L48/'cdir
+    if( varid = 'precip' )
+      tail = 'PRCP/PRCP.ctl'
+      fv   = dtopen( dir, tail )
+      var = '60*60*24*PRCP.'fv'(z=1)'
+    endif
+  endif
+  if( runid = 'MIROC5_AGCM6_T85L40')
+    run = 'MIROC5_AGCM6_T85L40'
+    dir = '/cwork5/kodama/dataset/jmip/data_conv/amip/miroc/MIROC5_2010_MIROC-AGCM6_T85L40/'cdir
+    if( varid = 'precip' )
+      tail = 'pr/pr.ctl'
+      fv   = dtopen( dir, tail )
+      var = '60*60*24*pr.'fv'(z=1)'
+    endif
+  endif
+  if( runid = 'SINTEX_F1SFE1')
+    run = 'SINTEX_F1SFE1'
+    dir = '/cwork5/kodama/dataset/jmip/data_conv/amip/sintex/F1sfe1/ctl/'cdir
+    if( varid = 'precip' )
+      tail = 'APRL/APRL.ctl'
+      fv   = dtopen( dir, tail )
+      var = '1000*60*60*24*APRL.'fv'(z=1)'
+    endif
+  endif
+
+
+***************************************************************
   head_cmp.1 = 'MIROC_cmip5_mAmO_20C_run'
   head_len.1 = math_strlen( head_cmp.1 )
   head.1     = substr( runid, 1, head_len.1 )
@@ -1367,6 +1400,12 @@ if(1 != 1)
     flag = 2
     run = 'K.200406.N12.gl09.b.004'
     dir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.004/data_conv/'cdir
+  endif
+
+  if( runid = 'K.200406.N12.gl09.b.005' )
+    flag = 2
+    run = 'K.200406.N12.gl09.b.005'
+    dir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.005/data_conv/'cdir
   endif
 
 

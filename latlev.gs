@@ -946,8 +946,8 @@ function get_varcnf( f, varid, varcnfid )
     unit = 'm/s'
     min  = -5  ; int = 1   ; max = 5
     dmin = -1 ; dint = 0.2 ; dmax = 1
-    color = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
+    colork = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolork = 'bluered'
   endif
 
   if( varid = 'w' )
@@ -955,8 +955,8 @@ function get_varcnf( f, varid, varcnfid )
     unit = 'mm/s'
     min  = -10  ; int = 1 ; max = 10
     dmin = -5 ; dint = 0.5 ; dmax = 5
-    color = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
+    colork = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolork = 'bluered'
   endif
 
   if( varid = 't' )
@@ -974,10 +974,10 @@ function get_varcnf( f, varid, varcnfid )
     unit = 'g/kg'
     min  = 2  ; int  = 2   ; max  = 20
     dmin = -2 ; dint = 0.4 ; dmax = 2
-    color = 'white-(0)->grainbow'
-    dcolor = 'blue->aqua->white->red->maroon'
-*    color = 'white->aqua->blue->purple'
-*    dcolor = 'maroon->red->white->aqua->blue'
+    colork = 'white-(0)->grainbow'
+    dcolork = 'blue->aqua->white->red->maroon'
+*    colork = 'white->aqua->blue->purple'
+*    dcolork = 'maroon->red->white->aqua->blue'
   endif
 
   if( varid = 'rh' )
@@ -985,10 +985,10 @@ function get_varcnf( f, varid, varcnfid )
     unit = '%'
     min  = 10  ; int  = 10 ; max  = 100
     dmin = -20 ; dint = 4  ; dmax = 20
-    color  = 'white-(0)->grainbow'
-    dcolor = 'blue->aqua->white->red->maroon'
-*    color  = 'white->aqua->blue->purple'
-*    dcolor = 'maroon->red->white->aqua->blue'
+    colork  = 'white-(0)->grainbow'
+    dcolork = 'blue->aqua->white->red->maroon'
+*    colork  = 'white->aqua->blue->purple'
+*    dcolork = 'maroon->red->white->aqua->blue'
   endif
 
   if( varid = 'qc' | varid = 'qi' | varid = 'qr' | varid = 'qs' | varid = 'qg' )
@@ -1000,9 +1000,9 @@ function get_varcnf( f, varid, varcnfid )
     unit = '10`a-6`n kg/kg'
     min  = 3   ; int  = 3 ; max  = 18
     dmin = -10 ; dint = 2 ; dmax = 10
-    color = 'white-(0)->grainbow'
-    dcolor = 'maroon->red->white->aqua->blue'
-*  color = 'white->aqua->blue->purple'
+    colork = 'white-(0)->grainbow'
+    dcolork = 'maroon->red->white->aqua->blue'
+*  colork = 'white->aqua->blue->purple'
   endif
 
   if( varid = 'temp' )
@@ -1010,8 +1010,8 @@ function get_varcnf( f, varid, varcnfid )
     unit = 'm/s'
     min  = 0.05 ; int  = 0.05 ; max  = 0.5
     dmin = -10  ; dint = 2    ; dmax = 10
-    color  = 'white->aqua->blue->purple'
-    dcolor = 'maroon->red->white->aqua->blue'
+    colork  = 'white->aqua->blue->purple'
+    dcolork = 'maroon->red->white->aqua->blue'
   endif
 
   if( varid = 'n2' )
@@ -1019,8 +1019,8 @@ function get_varcnf( f, varid, varcnfid )
     unit = '10`a-4`n /s`a2`n'
     min  = 1    ; int  = 5   ; max  = 0.5
     dmin = -0.5 ; dint = 0.1 ; dmax = 0.5
-    color  = 'white->aqua->blue->purple'
-    dcolor = 'maroon->red->white->aqua->blue'
+    colork  = 'white->aqua->blue->purple'
+    dcolork = 'maroon->red->white->aqua->blue'
   endif
 
   if( varid = 'mim_u' )
@@ -1028,8 +1028,8 @@ function get_varcnf( f, varid, varcnfid )
     unit = 'm/s'
     min  = -50 ; int  = 10 ; max  = 50
     dmin = -10 ; dint = 2  ; dmax = 10
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
+    colork  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolork = 'bluered'
   endif
 
   if( varid = 'mim_st' )
@@ -1043,18 +1043,18 @@ function get_varcnf( f, varid, varcnfid )
       min  = -2.4 ; int  = 0.4 ; max  = 2.4
       dmin = -0.5 ; dint = 0.1 ; dmax = 0.5
     endif
-*    color = 'purple->blue->aqua->lime->yellow->red->maroon'
-    color  = 'purple->bluered->maroon'
-    dcolor = 'bluered'
+*    colork = 'purple->blue->aqua->lime->yellow->red->maroon'
+    colork  = 'purple->bluered->maroon'
+    dcolork = 'bluered'
   endif
 
   if( varid = 'mim_divf' | varid = 'tem_divf' )
     if( varid = 'mim_divf' ) ; name = 'MIM EP Flux / Divergence' ; endif
     if( varid = 'tem_divf' ) ; name = 'TEM EP Flux / Divergence' ; endif
     unit = 'm/(s day)'
-*    color = '-levs -20 -10 -4 -2 -1 0 1 2 4 10 20 -kind bluered'
-    color = '-levs -100 -50 -20 -10 -4 -2 -1 0 1 2 4 10 20 50 100 -kind purple->bluered->maroon'
-    dcolor = '-levs -50 -25 -10 -5 -2 -1 -0.5 0 0.5 1 2 5 10 25 50 -kind purple->bluered->maroon'
+*    colork = '-levs -20 -10 -4 -2 -1 0 1 2 4 10 20 -kind bluered'
+    colork = '-levs -100 -50 -20 -10 -4 -2 -1 0 1 2 4 10 20 50 100 -kind purple->bluered->maroon'
+    dcolork = '-levs -50 -25 -10 -5 -2 -1 -0.5 0 0.5 1 2 5 10 25 50 -kind purple->bluered->maroon'
 endif
 
 
