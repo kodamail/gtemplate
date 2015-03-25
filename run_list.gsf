@@ -862,7 +862,7 @@ if(1 != 1)
 
 ***************************************************************
   if( runid = 'GSMaP_TMI' & varid = 'precip' )
-    run = 'GSMaP_TMI'
+    run = 'TRMM_GSMaP_TMI'
 *    dir = '/cwork5/kodama/dataset_ngatm/GSMaP/'cdir
     dir = '/mwork0/ngatm/JAXA/GSMsP/GSMaP/monthly'
     tail = 'GSMaP_TMI.monthly.ctl'
