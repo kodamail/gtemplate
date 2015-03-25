@@ -575,27 +575,35 @@ while( d <= 6 )
 *  endif
 
 *** zonal mean ***
+  if( _region = '' | _region = 'global' | _region = '_region' )
+    ypos = 2.5 * j - 1.6
+    if( i = 1 ) ; 'set parea 4.8 5.8 'ypos' 'ypos+2.0 ; endif
+    if( i = 2 ) ; 'set parea 9.8 10.8 'ypos' 'ypos+2.0 ; endif
 
-  ypos = 2.5 * j - 1.6
-  if( i = 1 ) ; 'set parea 4.8 5.8 'ypos' 'ypos+2.0 ; endif
-  if( i = 2 ) ; 'set parea 9.8 10.8 'ypos' 'ypos+2.0 ; endif
-
-  'set xyrev on'
+    'set xyrev on'
 *  if( f2 = '' ) ; 'set vrange '_min1d' '_max1d ; 'set xlint '_int1d
-  if( f2 = '' ) ; 'set vrange '_min1d.f1' '_max1d.f1 ; 'set xlint '_int1d.f1
+    if( f2 = '' ) ; 'set vrange '_min1d.f1' '_max1d.f1 ; 'set xlint '_int1d.f1
 *  else ; 'set vrange '_dmin1d' '_dmax1d ; 'set xlint '_dint1d ; endif
-  else ; 'set vrange '_dmin1d.f1' '_dmax1d.f1 ; 'set xlint '_dint1d.f1 ; endif
-  'set ylab off'
-  'set cmark 0' ; 'set cthick 6' ; 'set ccolor 1'
-  'zm = ave( v, lon='lonmin', lon='lonmax', -b )'
-  'd zm'
-  'set ylab on'
+    else ; 'set vrange '_dmin1d.f1' '_dmax1d.f1 ; 'set xlint '_dint1d.f1 ; endif
+    'set ylab off'
+    'set cmark 0' ; 'set cthick 6' ; 'set ccolor 1'
+    'zm = ave( v, lon='lonmin', lon='lonmax', -b )'
+    'd zm'
+    'set ylab on'
+  endif
 
-  'setfont normal -angle 270'
+*** global mean ***
   'gm = aave( v, lon='lonmin', lon='lonmax', lat='latmin', lat='latmax' )'
   gm = v2s( 'gm' )
-  'draws -pos tr -base tl -xoffset -0.1 -yoffset -0.5 -color 1 'math_format('%.2f',gm)
-  'setfont normal -angle 0'
+  if( _region = '' | _region = 'global' | _region = '_region' )
+    'setfont normal -angle 270'
+    'draws -pos tr -base tl -xoffset -0.1 -yoffset -0.5 -color 1 'math_format('%.2f',gm)
+    'setfont normal -angle 0'
+  else
+    'draws -pos tr -color 1 'math_format('%.2f',gm)
+  endif
+
+
 
   d = d + 1
 endwhile
