@@ -4,8 +4,9 @@
 function run_list( args )
   runid = subwrd( args, 1 )
   varid = subwrd( args, 2 )
+  rc = gsfpath( 'run_list' )
 
-say 'args: ' % args
+*say 'args: ' % args
   lon   = 'native'
   lat   = 'native'
   lev   = 'altitude'
@@ -127,86 +128,9 @@ say 'args: ' % args
   endif
 
   if( runid = 'JRA55' )
-    run = 'JRA55'
-    pdir = '/mwork0/ngatm/JMA/JRA55'
-    dir = pdir % '/' % cdir
-
-    if( varid = 'u' & cdir = 'ctl_monthly' )
-      tail = 'anl_p_ugrd.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'UGRDprs.'fv
-    endif
-    if( varid_base = 'u' & valnum(varid_lev) != 0 )
-      tail = 'anl_p_ugrd.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'UGRDprs.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 'v' & cdir = 'ctl_monthly' )
-      tail = 'anl_p_vgrd.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'VGRDprs.'fv
-    endif
-    if( varid_base = 'v' & valnum(varid_lev) != 0 )
-      tail = 'anl_p_vgrd.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'VGRDprs.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 't' & cdir = 'ctl_monthly' )
-      tail = 'anl_p_tmp.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'TMPprs.'fv
-    endif
-    if( varid_base = 't' & valnum(varid_lev) != 0 )
-      tail = 'anl_p_tmp.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'TMPprs.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 'qv' & cdir = 'ctl_monthly' )
-      tail = 'anl_p_spfh.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = '1000*SPFHprs.'fv
-    endif
-    if( varid_base = 'qv' & valnum(varid_lev) != 0 )
-      tail = 'anl_p_spfh.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = '1000*SPFHprs.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 'rh' & cdir = 'ctl_monthly' )
-      tail = 'anl_p_rh.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'RHprs.'fv
-    endif
-    if( varid_base = 'rh' & valnum(varid_lev) != 0 )
-      tail = 'anl_p_rh.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'RHprs.'fv'(lev='varid_lev')'
-    endif
-*
-    if( varid = 'u10m' & cdir = 'ctl_monthly' )
-      tail = 'anl_surf125.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'UGRD10m.'fv
-    endif
-    if( varid = 'v10m' & cdir = 'ctl_monthly' )
-      tail = 'anl_surf125.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'VGRD10m.'fv
-    endif
-    if( varid = 't2m' & cdir = 'ctl_monthly' )
-      tail = 'anl_surf125.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'TMP2m.'fv
-    endif
-    if( varid = 'qv2m' & cdir = 'ctl_monthly' )
-      tail = 'anl_surf125.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = '1000*SPFH2m.'fv
-    endif
-    if( varid = 'rh2m' & cdir = 'ctl_monthly' )
-      tail = 'anl_surf125.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'RH2m.'fv
-    endif
+    run = rl_jra55( cdir, varid, 'run' )
+    var = rl_jra55( cdir, varid, 'var' )
+    fv = last()
   endif
 
 ***************************************************************
@@ -1032,6 +956,46 @@ if(1 != 1)
       fv   = dtopen( dir, tail )
       var = '60*60*24*PRCP.'fv'(z=1)'
     endif
+    if( varid = 't' )
+      tail = 'T/T.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'T.'fv
+    endif
+    if( varid = 't2m' )
+      tail = 'T2/T2.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'T2.'fv'(z=1)'
+    endif
+    if( varid = 'u' )
+      tail = 'U/U.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'U.'fv
+    endif
+    if( varid = 'u10m' )
+      tail = 'U10/U10.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'U10.'fv
+    endif
+    if( varid = 'v' )
+      tail = 'V/V.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'V.'fv
+    endif
+    if( varid = 'v10m' )
+      tail = 'V10/V10.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'V10.'fv
+    endif
+    if( varid = 'qv' )
+      tail = 'Q/Q.ctl'
+      fv   = dtopen( dir, tail )
+      var = '1e+3*Q.'fv
+    endif
+    if( varid = 'qv2m' )
+      tail = 'Q2/Q2.ctl'
+      fv   = dtopen( dir, tail )
+      var = '1e+3*Q2.'fv
+    endif
   endif
   if( runid = 'MIROC5_AGCM6_T85L40')
     run = 'MIROC5_AGCM6_T85L40'
@@ -1041,14 +1005,56 @@ if(1 != 1)
       fv   = dtopen( dir, tail )
       var = '60*60*24*pr.'fv'(z=1)'
     endif
+    if( varid = 't' )
+      tail = 'ta/ta.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'ta.'fv
+    endif
+    if( varid = 't2m' )
+      tail = 'tas/tas.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'tas.'fv'(z=1)'
+    endif
+    if( varid = 'u' )
+      tail = 'ua/ua.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'ua.'fv
+    endif
+    if( varid = 'v' )
+      tail = 'va/va.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'va.'fv
+    endif
   endif
   if( runid = 'SINTEX_F1SFE1')
     run = 'SINTEX_F1SFE1'
     dir = '/cwork5/kodama/dataset/jmip/data_conv/amip/sintex/F1sfe1/ctl/'cdir
     if( varid = 'precip' )
-      tail = 'APRL/APRL.ctl'
+      tail1 = 'APRL/APRL.ctl'
+      fv1   = dtopen( dir, tail1 )
+      tail2 = 'APRC/APRC.ctl'
+      fv2   = dtopen( dir, tail2 )
+      if( fv1 > 0 & fv2 > 0 ) ; var = '1000*60*60*24*(APRL.'fv1'(z=1)+APRC.'fv2'(z=1))' ; endif
+    endif
+    if( varid = 't' )
+      tail = 'STP/STP.ctl'
       fv   = dtopen( dir, tail )
-      var = '1000*60*60*24*APRL.'fv'(z=1)'
+      var = 'STP.'fv
+    endif
+    if( varid = 't2m' )
+      tail = 'TEMP2/TEMP2.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'TEMP2.'fv'(z=1)'
+    endif
+    if( varid = 'u' )
+      tail = 'U/U.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'U.'fv
+    endif
+    if( varid = 'v' )
+      tail = 'V/V.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'V.'fv
     endif
   endif
 
