@@ -610,7 +610,8 @@ endwhile
 
 
 if( _save != '_save' & _save != '' )
-  'save '_save
+*  'save '_save
+  'gxprint '_save'.eps white'
 endif
 
 cmd_fin
