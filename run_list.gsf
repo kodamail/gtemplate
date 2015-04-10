@@ -949,113 +949,23 @@ if(1 != 1)
 ***************************************************************
 
   if( runid = 'AFES_T239L48')
-    run = 'AFES_T239L48'
-    dir = '/cwork5/kodama/dataset/jmip/data_conv/amip/afes/T239L48/'cdir
-    if( varid = 'precip' )
-      tail = 'PRCP/PRCP.ctl'
-      fv   = dtopen( dir, tail )
-      var = '60*60*24*PRCP.'fv'(z=1)'
-    endif
-    if( varid = 't' )
-      tail = 'T/T.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'T.'fv
-    endif
-    if( varid = 't2m' )
-      tail = 'T2/T2.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'T2.'fv'(z=1)'
-    endif
-    if( varid = 'u' )
-      tail = 'U/U.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'U.'fv
-    endif
-    if( varid = 'u10m' )
-      tail = 'U10/U10.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'U10.'fv
-    endif
-    if( varid = 'v' )
-      tail = 'V/V.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'V.'fv
-    endif
-    if( varid = 'v10m' )
-      tail = 'V10/V10.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'V10.'fv
-    endif
-    if( varid = 'qv' )
-      tail = 'Q/Q.ctl'
-      fv   = dtopen( dir, tail )
-      var = '1e+3*Q.'fv
-    endif
-    if( varid = 'qv2m' )
-      tail = 'Q2/Q2.ctl'
-      fv   = dtopen( dir, tail )
-      var = '1e+3*Q2.'fv
-    endif
+    run = rl_afes( runid, cdir, varid, 'run' )
+    var = rl_afes( runid, cdir, varid, 'var' )
+    fv = last()
   endif
+
   if( runid = 'MIROC5_AGCM6_T85L40')
-    run = 'MIROC5_AGCM6_T85L40'
-    dir = '/cwork5/kodama/dataset/jmip/data_conv/amip/miroc/MIROC5_2010_MIROC-AGCM6_T85L40/'cdir
-    if( varid = 'precip' )
-      tail = 'pr/pr.ctl'
-      fv   = dtopen( dir, tail )
-      var = '60*60*24*pr.'fv'(z=1)'
-    endif
-    if( varid = 't' )
-      tail = 'ta/ta.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ta.'fv
-    endif
-    if( varid = 't2m' )
-      tail = 'tas/tas.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'tas.'fv'(z=1)'
-    endif
-    if( varid = 'u' )
-      tail = 'ua/ua.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ua.'fv
-    endif
-    if( varid = 'v' )
-      tail = 'va/va.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'va.'fv
-    endif
+    run = rl_miroc( runid, cdir, varid, 'run' )
+    var = rl_miroc( runid, cdir, varid, 'var' )
+    fv = last()
   endif
+
+
+
   if( runid = 'SINTEX_F1SFE1')
-    run = 'SINTEX_F1SFE1'
-    dir = '/cwork5/kodama/dataset/jmip/data_conv/amip/sintex/F1sfe1/ctl/'cdir
-    if( varid = 'precip' )
-      tail1 = 'APRL/APRL.ctl'
-      fv1   = dtopen( dir, tail1 )
-      tail2 = 'APRC/APRC.ctl'
-      fv2   = dtopen( dir, tail2 )
-      if( fv1 > 0 & fv2 > 0 ) ; var = '1000*60*60*24*(APRL.'fv1'(z=1)+APRC.'fv2'(z=1))' ; endif
-    endif
-    if( varid = 't' )
-      tail = 'STP/STP.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'STP.'fv
-    endif
-    if( varid = 't2m' )
-      tail = 'TEMP2/TEMP2.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'TEMP2.'fv'(z=1)'
-    endif
-    if( varid = 'u' )
-      tail = 'U/U.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'U.'fv
-    endif
-    if( varid = 'v' )
-      tail = 'V/V.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'V.'fv
-    endif
+    run = rl_sintex( runid, cdir, varid, 'run' )
+    var = rl_sintex( runid, cdir, varid, 'var' )
+    fv = last()
   endif
 
 
