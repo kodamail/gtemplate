@@ -467,15 +467,119 @@ function get_varcnf( f, varid, varcnfid )
     dmin = -40 ; dint = 20 ; dmax = 40
   endif
 
-  if( varid.f = 'lwp' )
+  if( varid = 'lwp' )
     name = 'Liquid Water Path'
     unit = 'kg/m^2'
     min  = 0   ; int  = 50 ; max  = 200
     dmin = -40 ; dint = 20 ; dmax = 40
-*    min.f  = 0    ; int.f  = 100 ; max.f  = 500
-*    dmin.f = -120 ; dint.f = 60  ; dmax.f = 120
   endif
 
+  if( varid = 'lw_up_toa' | varid = 'lw_up_clr_toa' )
+    name = 'Upward Longwave Radiation @ TOA'
+    if( varid = 'lw_up_clr_toa' ) ; name = name % ' (Clear Sky)' ; endif
+    unit = 'W/m^2'
+    min  = 100 ; int  = 50  ; max  = 300
+    dmin = -50 ; dint = 25  ; dmax = 50
+  endif
+
+  if( varid = 'lw_crf_toa' )
+    name = 'Longwave Cloud Radiative Forcing @ TOA'
+    unit = 'W/m^2'
+    min  = -100 ; int  = 50  ; max  = 100
+    dmin = -50  ; dint = 25  ; dmax = 50
+  endif
+
+  if( varid = 'lw_up_sfc' )
+    name = 'Upward Longwave Radiation @ Surface'
+    unit = 'W/m^2'
+    min  = 100 ; int  = 200 ; max  = 500
+    dmin = -50 ; dint = 25  ; dmax = 50
+  endif
+
+  if( varid = 'lw_down_sfc' )
+    name = 'Downward Longwave Radiation @ Surface'
+    unit = 'W/m^2'
+    min  = 100 ; int  = 200 ; max  = 500
+    dmin = -50 ; dint = 25  ; dmax = 50
+  endif
+
+  if( varid = 'sw_up_toa' | varid = 'sw_up_clr_toa' )
+    name = 'Upward Shortwave Radiation @ TOA'
+    if( varid = 'sw_up_clr_toa' ) ; name = name % ' (Clear Sky)' ; endif
+    unit = 'W/m^2'
+    min  = 0   ; int  = 100 ; max  = 300
+    dmin = -50 ; dint = 25  ; dmax = 50
+  endif
+
+  if( varid = 'sw_crf_toa' )
+    name = 'Shortwave Cloud Radiative Forcing @ TOA'
+    unit = 'W/m^2'
+    min  = -100 ; int  = 50  ; max  = 100
+    dmin = -50  ; dint = 25  ; dmax = 50
+  endif
+
+  if( varid = 'sw_up_sfc' )
+    name = 'Upward Shortwave Radiation @ Surface'
+    unit = 'W/m^2'
+    min  = 0   ; int  = 100 ; max  = 200
+    dmin = -50 ; dint = 25  ; dmax = 50
+  endif
+
+  if( varid = 'sw_down_toa' )
+    name = 'Downward Shortwave Radiation @ TOA'
+    unit = 'W/m^2'
+    min  = 0   ; int  = 250 ; max  = 500
+    dmin = -50 ; dint = 25  ; dmax = 50
+  endif
+
+  if( varid = 'sw_down_sfc' )
+    name = 'Downward Shortwave Radiation @ Surface'
+    unit = 'W/m^2'
+    min  = 0   ; int  = 100 ; max  = 400
+    dmin = -50 ; dint = 25  ; dmax = 50
+  endif
+
+  if( varid = 'sw_net_toa' )
+    name = 'Down-Upward Shortwave Radiation @ TOA'
+    unit = 'W/m^2'
+    min  = 0   ; int  = 100 ; max  = 400
+    dmin = -50 ; dint = 25  ; dmax = 50
+  endif
+
+  if( varid = 'lw_net_sfc' )
+    name = 'Down-Upward Longwave Radiation @ Surface'
+    unit = 'W/m^2'
+    min  = -100 ; int  = 50 ; max  = 0
+    dmin = -50  ; dint = 25 ; dmax = 50
+  endif
+
+  if( varid = 'sw_net_sfc' )
+    name = 'Down-Upward Shortwave Radiation @ Surface'
+    unit = 'W/m^2'
+    min  = 0   ; int  = 100 ; max  = 300
+    dmin = -50 ; dint = 25  ; dmax = 50
+  endif
+
+  if( varid = 'aw_net_toa' )
+    name = 'Down-Upward Long+Shortwave Radiation @ TOA'
+    unit = 'W/m^2'
+    min  = -200 ; int  = 100 ; max  = 200
+    dmin = -50  ; dint = 25  ; dmax = 50
+  endif
+
+  if( varid = 'aw_crf_toa' )
+    name = 'Long+Shortwave Cloud Radiative Forcing @ TOA'
+    unit = 'W/m^2'
+    min  = -100 ; int  = 50  ; max  = 100
+    dmin = -50  ; dint = 25  ; dmax = 50
+  endif
+
+  if( varid = 'aw_net_sfc' )
+    name = 'Down-Upward Long+Shortwave Radiation @ Surface'
+    unit = 'W/m^2'
+    min  = -200 ; int  = 100 ; max  = 200
+    dmin = -50  ; dint = 25  ; dmax = 50
+  endif
 
 * set default varcnf to global varcnf 
   if( _name.f = '_name.'f ) ; _name.f = name ; endif
