@@ -1287,7 +1287,6 @@ if(1 != 1)
     run = 'K.200406.N12.gl09.L38.a.005'
     dir = '/cwork5/kodama/nicam_product/product_k/200406/N12/gl09/L38/a.005/data_conv/'cdir
   endif
-
   if( runid = 'K.200406.N12.gl09.b' )
     flag = 2
     run = 'K.200406.N12.gl09.b'

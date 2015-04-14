@@ -525,13 +525,11 @@ endwhile
 f = 1
 while( f <= _fmax )
   say 'Processing #'f
-*  'set dfile 'f
   'set dfile '_f2df.f
-  'set lev '_levmin' '_levmax
+  'set x 1'
   'set lat '_latmin' '_latmax
-  'set lon 0'
+  'set lev '_levmin' '_levmax
   'set t 1'
-*  'clave '_var.1' 'jrac' a'
 
   xdef = qctlinfo( f, 'xdef', 1 )
   ydef = qctlinfo( f, 'ydef', 1 )
