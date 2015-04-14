@@ -7,8 +7,8 @@ function latlon( args )
 ret = read( 'pwd.tmp' )
 pwd = sublin( ret, 2 )
 '!rm -f pwd.tmp'
-gs = pwd'/lat_lon_with_zm.gs'
-rc = gsfallow("on")
+gs = pwd'/latlon.gs'
+rc = gsfallow( 'on' )
 
 'set line 0'
 'draw rec 0 0 11 8.5'
