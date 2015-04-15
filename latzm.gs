@@ -460,6 +460,13 @@ function get_varcnf( f, varid, varcnfid )
     dmin = -5 ; dint = 1 ; dmax = 5
   endif
 
+  if( varid = 'qv2m' )
+    name = '2m Specif Humidity'
+    unit = 'g/kg'
+    min  = 0  ; int  = 5   ; max  = 20
+    dmin = -2 ; dint = 1   ; dmax = 2
+  endif
+
   if( varid = 'iwp' )
     name = 'Ice Water Path'
     unit = 'kg/m^2'
@@ -472,6 +479,27 @@ function get_varcnf( f, varid, varcnfid )
     unit = 'kg/m^2'
     min  = 0   ; int  = 50 ; max  = 200
     dmin = -40 ; dint = 20 ; dmax = 40
+  endif
+
+  if( varid = 't2m' )
+    name = '2m Temperature'
+    unit = 'K'
+    min  = 220 ; int  = 30 ; max  = 310
+    dmin = -6  ; dint = 3  ; dmax = 6
+  endif
+
+  if( varid = 'u10m' )
+    name = '10m Zonal Wind'
+    unit = 'm/s'
+    min  = -10 ; int  = 5 ; max  = 10
+    dmin = -4  ; dint = 2 ; dmax = 4
+  endif
+
+  if( varid = 'v10m' )
+    name = '10m Meridional Wind'
+    unit = 'm/s'
+    min  = -10 ; int  = 5 ; max  = 10
+    dmin = -4  ; dint = 2 ; dmax = 4
   endif
 
   if( varid = 'lw_up_toa' | varid = 'lw_up_clr_toa' )
