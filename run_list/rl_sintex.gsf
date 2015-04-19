@@ -16,67 +16,172 @@ function rl_sintex( runid, cdir, varid, target )
 
     dir = '/cwork5/kodama/dataset/jmip/data_conv/amip/sintex/F1sfe1/ctl/'cdir
 
+    if( varid = 'aw_net_sfc' )
+      tail.1 = 'TRADS/TRADS.ctl'
+      tail.2 = 'SRADS/SRADS.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      fv.2   = dtopen( dir, tail.2 )
+      if( fv.1 > 0 & fv.2 > 0 )
+        var = 'TRADS.'fv.1'(z=1)+SRADS.'fv.2'(z=1)'
+      endif
+    endif
+
+    if( varid = 'aw_net_toa' )
+      tail.1 = 'TRAD0/TRAD0.ctl'
+      tail.2 = 'SRAD0/SRAD0.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      fv.2   = dtopen( dir, tail.2 )
+      if( fv.1 > 0 & fv.2 > 0 )
+        var = 'TRAD0.'fv.1'(z=1)+SRAD0.'fv.2'(z=1)'
+      endif
+    endif
+
     if( varid = 'lh_sfc' )
-      tail = 'AHFL/AHFL.ctl'
-      fv   = dtopen( dir, tail )
-      var = '-AHFL.'fv'(z=1)'
+      tail.1 = 'AHFL/AHFL.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      if( fv.1 > 0 ) ; var = '-AHFL.'fv.1'(z=1)' ; endif
     endif
+
+    if( varid = 'lw_down_sfc' )
+      tail.1 = 'TRADSU/TRADSU.ctl'
+      tail.2 = 'TRADS/TRADS.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      fv.2   = dtopen( dir, tail.2 )
+      if( fv.1 > 0 & fv.2 > 0 )
+        var = '-TRADSU.'fv.1'(z=1)+TRADS.'fv.2'(z=1)'
+      endif
+    endif
+
+    if( varid = 'lw_net_sfc' )
+      tail.1 = 'TRADS/TRADS.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      if( fv.1 > 0 ) ; var = 'TRADS.'fv.1'(z=1)' ; endif
+    endif
+
+    if( varid = 'lw_up_sfc' )
+      tail.1 = 'TRADSU/TRADSU.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      if( fv.1 > 0 ) ; var = '-TRADSU.'fv.1'(z=1)' ; endif
+    endif
+
+    if( varid = 'lw_up_toa' )
+      tail.1 = 'TRAD0/TRAD0.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      if( fv.1 > 0 ) ; var = '-TRAD0.'fv.1'(z=1)' ; endif
+    endif
+
     if( varid = 'precip' )
-      tail1 = 'APRL/APRL.ctl'
-      fv1   = dtopen( dir, tail1 )
-      tail2 = 'APRC/APRC.ctl'
-      fv2   = dtopen( dir, tail2 )
-      if( fv1 > 0 & fv2 > 0 ) ; var = '1000*60*60*24*(APRL.'fv1'(z=1)+APRC.'fv2'(z=1))' ; endif
+      tail.1 = 'APRL/APRL.ctl'
+      tail.2 = 'APRC/APRC.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      fv.2   = dtopen( dir, tail.2 )
+      if( fv.1 > 0 & fv.2 > 0 )
+        var = '1000*60*60*24*(APRL.'fv.1'(z=1)+APRC.'fv.2'(z=1))'
+      endif
     endif
+
     if( varid = 'sh_sfc' )
-      tail = 'AHFS/AHFS.ctl'
-      fv   = dtopen( dir, tail )
-      var = '-AHFS.'fv'(z=1)'
+      tail.1 = 'AHFS/AHFS.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      if( fv.1 > 0 ) ; var = '-AHFS.'fv.1'(z=1)' ; endif
     endif
+
+    if( varid = 'sw_down_sfc' )
+      tail.1 = 'SRADSU/SRADSU.ctl'
+      tail.2 = 'SRADS/SRADS.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      fv.2   = dtopen( dir, tail.2 )
+      if( fv.1 > 0 & fv.2 > 0 )
+        var = '-SRADSU.'fv.1'(z=1)+SRADS.'fv.2'(z=1)'
+      endif
+    endif
+
+    if( varid = 'sw_down_toa' )
+      tail.1 = 'SRAD0U/SRAD0U.ctl'
+      tail.2 = 'SRAD0/SRAD0.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      fv.2   = dtopen( dir, tail.2 )
+      if( fv.1 > 0 & fv.2 > 0 )
+        var = '-SRAD0U.'fv.1'(z=1)+SRAD0.'fv.2'(z=1)'
+      endif
+    endif
+
+    if( varid = 'sw_net_sfc' )
+      tail.1 = 'SRADS/SRADS.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      if( fv.1 > 0 ) ; var = 'SRADS.'fv.1'(z=1)' ; endif
+    endif
+
+    if( varid = 'sw_net_toa' )
+      tail.1 = 'SRAD0/SRAD0.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      if( fv.1 > 0 ) ; var = 'SRAD0.'fv.1'(z=1)' ; endif
+    endif
+
+    if( varid = 'sw_up_sfc' )
+      tail.1 = 'SRADSU/SRADSU.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      if( fv.1 > 0 ) ; var = '-SRADSU.'fv.1'(z=1)' ; endif
+    endif
+
+    if( varid = 'sw_up_toa' )
+      tail.1 = 'SRAD0U/SRAD0U.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      if( fv.1 > 0 ) ; var = '-SRAD0U.'fv.1'(z=1)' ; endif
+    endif
+
     if( varid = 't' )
-      tail = 'STP/STP.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'STP.'fv
+      tail.1 = 'STP/STP.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      if( fv.1 > 0 ) ; var = 'STP.'fv.1 ; endif
     endif
+
     if( varid_base = 't' & valnum(varid_lev) != 0 )
-      tail = 'STP/STP.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'STP.'fv'(lev='varid_lev')'
+      tail.1 = 'STP/STP.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      if( fv.1 > 0 ) ; var = 'STP.'fv.1'(lev='varid_lev')' ; endif
     endif
+
     if( varid = 't2m' )
-      tail = 'TEMP2/TEMP2.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'TEMP2.'fv'(z=1)'
+      tail.1 = 'TEMP2/TEMP2.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      if( fv.1 > 0 ) ; var = 'TEMP2.'fv.1'(z=1)' ; endif
     endif
+
     if( varid = 'u' )
-      tail = 'U/U.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'U.'fv
+      tail.1 = 'U/U.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      if( fv.1 > 0 ) ; var = 'U.'fv.1 ; endif
     endif
+
     if( varid_base = 'u' & valnum(varid_lev) != 0 )
-      tail = 'U/U.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'U.'fv'(lev='varid_lev')'
+      tail.1 = 'U/U.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      if( fv.1 > 0 ) ; var = 'U.'fv.1'(lev='varid_lev')' ; endif
     endif
+
     if( varid = 'u10m' )
-      tail = 'U10/U10.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'U10.'fv'(z=1)'
+      tail.1 = 'U10/U10.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      if( fv.1 > 0 ) ; var = 'U10.'fv.1'(z=1)' ; endif
     endif
+
     if( varid = 'v' )
-      tail = 'V/V.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'V.'fv
+      tail.1 = 'V/V.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      if( fv.1 > 0 ) ; var = 'V.'fv.1 ; endif
     endif
+
     if( varid_base = 'v' & valnum(varid_lev) != 0 )
-      tail = 'V/V.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'V.'fv'(lev='varid_lev')'
+      tail.1 = 'V/V.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      if( fv.1 > 0 ) ; var = 'V.'fv.1'(lev='varid_lev')' ; endif
     endif
+
     if( varid = 'v10m' )
-      tail = 'V10/V10.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'V10.'fv'(z=1)'
+      tail.1 = 'V10/V10.ctl'
+      fv.1   = dtopen( dir, tail.1 )
+      if( fv.1 > 0 ) ; var = 'V10.'fv.1'(z=1)' ; endif
     endif
   endif
 
