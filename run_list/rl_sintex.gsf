@@ -1,0 +1,84 @@
+*
+* for runid = 'SINTEX_*'
+*
+function rl_sintex( runid, cdir, varid, target )
+  var = ''
+  fv = last()
+
+* varid -> varid_base, varid_lev
+  tmp = varid_sep( varid )
+  varid_base = subwrd( tmp, 1 )
+  varid_lev  = subwrd( tmp, 2 )
+
+  if( runid = 'SINTEX_F1SFE1')
+    run = 'SINTEX_F1SFE1'
+    if( target = 'run' ) ; return run ; endif
+
+    dir = '/cwork5/kodama/dataset/jmip/data_conv/amip/sintex/F1sfe1/ctl/'cdir
+
+    if( varid = 'lh_sfc' )
+      tail = 'AHFL/AHFL.ctl'
+      fv   = dtopen( dir, tail )
+      var = '-AHFL.'fv'(z=1)'
+    endif
+    if( varid = 'precip' )
+      tail1 = 'APRL/APRL.ctl'
+      fv1   = dtopen( dir, tail1 )
+      tail2 = 'APRC/APRC.ctl'
+      fv2   = dtopen( dir, tail2 )
+      if( fv1 > 0 & fv2 > 0 ) ; var = '1000*60*60*24*(APRL.'fv1'(z=1)+APRC.'fv2'(z=1))' ; endif
+    endif
+    if( varid = 'sh_sfc' )
+      tail = 'AHFS/AHFS.ctl'
+      fv   = dtopen( dir, tail )
+      var = '-AHFS.'fv'(z=1)'
+    endif
+    if( varid = 't' )
+      tail = 'STP/STP.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'STP.'fv
+    endif
+    if( varid_base = 't' & valnum(varid_lev) != 0 )
+      tail = 'STP/STP.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'STP.'fv'(lev='varid_lev')'
+    endif
+    if( varid = 't2m' )
+      tail = 'TEMP2/TEMP2.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'TEMP2.'fv'(z=1)'
+    endif
+    if( varid = 'u' )
+      tail = 'U/U.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'U.'fv
+    endif
+    if( varid_base = 'u' & valnum(varid_lev) != 0 )
+      tail = 'U/U.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'U.'fv'(lev='varid_lev')'
+    endif
+    if( varid = 'u10m' )
+      tail = 'U10/U10.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'U10.'fv'(z=1)'
+    endif
+    if( varid = 'v' )
+      tail = 'V/V.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'V.'fv
+    endif
+    if( varid_base = 'v' & valnum(varid_lev) != 0 )
+      tail = 'V/V.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'V.'fv'(lev='varid_lev')'
+    endif
+    if( varid = 'v10m' )
+      tail = 'V10/V10.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'V10.'fv'(z=1)'
+    endif
+  endif
+
+  if( target = 'var' ) ; return var ; endif
+return

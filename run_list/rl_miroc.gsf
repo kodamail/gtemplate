@@ -1,0 +1,86 @@
+*
+* for runid = 'MIROC_*'
+*
+function rl_miroc( runid, cdir, varid, target )
+  var = ''
+  fv = last()
+
+* varid -> varid_base, varid_lev
+  tmp = varid_sep( varid )
+  varid_base = subwrd( tmp, 1 )
+  varid_lev  = subwrd( tmp, 2 )
+
+  if( runid = 'MIROC5_AGCM6_T85L40')
+    run = 'MIROC5_AGCM6_T85L40'
+    if( target = 'run' ) ; return run ; endif
+
+    dir = '/cwork5/kodama/dataset/jmip/data_conv/amip/miroc/MIROC5_2010_MIROC-AGCM6_T85L40/'cdir
+
+    if( varid = 'lh_sfc' )
+      tail = 'hfls/hfls.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'hfls.'fv'(z=1)'
+    endif
+    if( varid = 'precip' )
+      tail = 'pr/pr.ctl'
+      fv   = dtopen( dir, tail )
+      var = '60*60*24*pr.'fv'(z=1)'
+    endif
+    if( varid = 'rh' )
+      tail = 'hur/hur.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'hur.'fv
+    endif
+    if( varid_base = 'rh' & valnum(varid_lev) != 0 )
+      tail = 'hur/hur.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'hur.'fv'(lev='varid_lev')'
+    endif
+    if( varid = 'sh_sfc' )
+      tail = 'hfss/hfss.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'hfss.'fv'(z=1)'
+    endif
+    if( varid = 't' )
+      tail = 'ta/ta.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'ta.'fv
+    endif
+    if( varid_base = 't' & valnum(varid_lev) != 0 )
+      tail = 'ta/ta.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'ta.'fv'(lev='varid_lev')'
+    endif
+    if( varid = 't2m' )
+      tail = 'tas/tas.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'tas.'fv'(z=1)'
+    endif
+    if( varid = 'u' )
+      tail = 'ua/ua.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'ua.'fv
+    endif
+    if( varid_base = 'u' & valnum(varid_lev) != 0 )
+      tail = 'ua/ua.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'ua.'fv'(lev='varid_lev')'
+    endif
+    if( varid = 'v' )
+      tail = 'va/va.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'va.'fv
+    endif
+    if( varid_base = 'v' & valnum(varid_lev) != 0 )
+      tail = 'va/va.ctl'
+      fv   = dtopen( dir, tail )
+      var = 'va.'fv'(lev='varid_lev')'
+    endif
+  endif
+
+
+
+
+
+  if( target = 'var' ) ; return var ; endif
+return
