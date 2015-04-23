@@ -705,6 +705,50 @@ function get_varcnf( f, varid, varcnfid )
     tar = tar + 1
   endwhile
 
+  if( varid = 'aw_crf_toa' )
+    name = 'Long+Shortwave Cloud Radiative Forcing @ TOA'
+    unit = 'W/m^2'
+    min2d  = -100 ; int2d  = 20  ; max2d  = 100
+    dmin2d = -50  ; dint2d = 10  ; dmax2d = 50
+    min1d  = -100 ; int1d  = 50  ; max1d  = 100
+    dmin1d = -50  ; dint1d = 25  ; dmax1d = 50
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'aw_net_sfc' )
+    name = 'Down-Upward Long+Shortwave Radiation @ Surface'
+    unit = 'W/m^2'
+    min2d  = -200; int2d  = 40  ; max2d  = 200
+    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
+    min1d  = -200; int1d  = 100 ; max1d  = 200
+    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'aw_net_toa' )
+    name = 'Down-Upward Long+Shortwave Radiation @ TOA'
+    unit = 'W/m^2'
+    min2d  = -200; int2d  = 40  ; max2d  = 200
+    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
+    min1d  = -200; int1d  = 100 ; max1d  = 200
+    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'energy_net_sfc' )
+    name = 'Net Downward Surface Energy Flux'
+    unit = 'W/m^2'
+    min2d  = -200 ; int2d  = 40  ; max2d  = 200
+    dmin2d = -100 ; dint2d = 20  ; dmax2d = 100
+    min1d  = -200 ; int1d  = 100 ; max1d  = 200
+    dmin1d = -50  ; dint1d = 25  ; dmax1d = 50
+    color  = 'purple->bluered->maroon'
+    dcolor = 'purple->bluered->maroon'
+  endif
+
   if( varid = 'evap' )
     name = 'Evaporation'
     unit = 'mm/day'
@@ -713,6 +757,28 @@ function get_varcnf( f, varid, varcnfid )
     min1d  = 0   ; int1d  = 2 ; max1d  = 8
     dmin1d = -2  ; dint1d = 1 ; dmax1d = 2
     color  = 'white-(0)->grainbow'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'ice' )
+    name = 'Sea Ice Mass'
+    unit = 'kg/m`a2`n'
+    min2d  = 200  ; int2d  = 200 ; max2d  = 2000
+    dmin2d = -100 ; dint2d = 10  ; dmax2d = 100
+    min1d  = 0    ; int1d  = 500 ; max1d  = 2000
+    dmin1d = -500 ; dint1d = 100 ; dmax1d = 500
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'icr' )
+    name = 'Sea Ice Fraction'
+    unit = '%'
+    min2d  = 10  ; int2d  = 10 ; max2d  = 90
+    dmin2d = -25 ; dint2d = 5  ; dmax2d = 25
+    min1d  = 0   ; int1d  = 25 ; max1d  = 100
+    dmin1d = -50 ; dint1d = 25 ; dmax1d = 50
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
     dcolor = 'bluered'
   endif
 
@@ -731,6 +797,121 @@ function get_varcnf( f, varid, varcnfid )
     endif
   endif
 
+  if( varid = 'land_wg_z1' | varid = 'land_wg_z2' | varid = 'land_wg_z3' | varid = 'land_wg_z4' | varid = 'land_wg_z5' )
+    if( varid = 'land_wg_z1' ) ; name = 'Soil Water @ z=1' ; endif
+    if( varid = 'land_wg_z2' ) ; name = 'Soil Water @ z=2' ; endif
+    if( varid = 'land_wg_z3' ) ; name = 'Soil Water @ z=3' ; endif
+    if( varid = 'land_wg_z4' ) ; name = 'Soil Water @ z=4' ; endif
+    if( varid = 'land_wg_z5' ) ; name = 'Soil Water @ z=5' ; endif
+    unit = '0-1'
+    min2d  = 0    ; int2d  = 0.1 ; max2d  = 1
+    dmin2d = -0.5 ; dint2d = 0.1 ; dmax2d = 0.5
+    min1d  = 0    ; int1d  = 0.5 ; max1d  = 1
+    dmin1d = -0.5 ; dint1d = 0.1 ; dmax1d = 0.5
+    color  = 'grainbow'
+    dcolor = 'purple->bluered->maroon'
+  endif
+
+  tmp = substr( varid, 1, 5 )
+  if( tmp = 'isccp' )
+    if( varid = 'isccp_ctp_all' | varid = 'isccp_ctp_all_vis' )
+      name = 'Cloud Top Pressure by ISCCP'
+      tmp = substr( varid, 7, 20 )
+      sname.f = ', ' % tmp
+      unit = '%'
+      min2d  = 100 ; int2d  = 100 ; max2d  = 900
+      dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
+      min1d  = 100 ; int1d  = 200 ; max1d  = 900
+      dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
+      color  = 'white-(0)->grainbow'
+      dcolor = 'purple->blue->white->red->brown'
+    else ; if( varid = 'isccp_od_all' | varid = 'isccp_od_all_vis' )
+      name = 'log(Cloud Optical Depth) by ISCCP'
+      tmp = substr( varid, 7, 20 )
+      sname.f = ', ' % tmp
+      unit = '%'
+      min2d  = -1   ; int2d  = 0.5 ; max2d  = 4
+      dmin2d = -0.5 ; dint2d = 0.1 ; dmax2d = 0.5
+      min1d  = -1   ; int1d  = 1   ; max1d  = 4
+      dmin1d = -0.5 ; dint1d = 0.5 ; dmax1d = 0.5
+      color  = 'white-(0)->grainbow'
+      dcolor = 'purple->blue->white->red->brown'
+    else
+      name = 'ISCCP Cloud Fraction'
+      tmp = substr( varid, 7, 20 )
+      sname.f = ', ' % tmp
+      unit = '%'
+      min2d  = 10  ; int2d  = 10 ; max2d  = 90
+      dmin2d = -50 ; dint2d = 10 ; dmax2d = 50
+*      dmin2d = -10 ; dint2d = 2  ; dmax2d = 10
+      min1d  = 0   ; int1d  = 25 ; max1d  = 100
+      dmin1d = -20 ; dint1d = 10 ; dmax1d = 20
+*      dmin1d = -10 ; dint1d = 5  ; dmax1d = 10
+      color  = 'white-(0)->grainbow'
+      dcolor = 'purple->blue->white->red->brown'
+*      dcolor = 'white->white->gray'
+    endif ; endif
+  endif
+
+  if( varid = 'lh_sfc' | varid = 'sh_sfc' )
+    if( varid = 'sh_sfc' ) ; name = 'Surface Sensible Heat Flux' ; endif
+    if( varid = 'lh_sfc' ) ; name = 'Surface Latent Heat Flux'   ; endif
+    unit = 'W/m^2'
+    min2d  = -200 ; int2d  = 40  ; max2d  = 200
+    dmin2d = -100 ; dint2d = 20  ; dmax2d = 100
+    min1d  = -200 ; int1d  = 100 ; max1d  = 200
+    dmin1d = -50  ; dint1d = 25  ; dmax1d = 50
+*    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    color  = 'purple->bluered->maroon'
+*    dcolor = 'bluered'
+    dcolor = 'purple->bluered->maroon'
+  endif
+
+  if( varid = 'lw_up_toa' | varid = 'lw_up_clr_toa' )
+    name = 'Upward Longwave Radiation @ TOA'
+    if( varid = 'lw_up_clr_toa' ) ; name = name % ' (Clear Sky)' ; endif
+    unit = 'W/m^2'
+    min2d  = 100 ; int2d  = 20  ; max2d  = 340
+    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
+    min1d  = 100 ; int1d  = 50  ; max1d  = 300
+    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'lw_crf_toa' )
+    name = 'Longwave Cloud Radiative Forcing @ TOA'
+    unit = 'W/m^2'
+    min2d  = -100 ; int2d  = 20  ; max2d  = 100
+    dmin2d = -50  ; dint2d = 10  ; dmax2d = 50
+    min1d  = -100 ; int1d  = 50  ; max1d  = 100
+    dmin1d = -50  ; dint1d = 25  ; dmax1d = 50
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'lw_up_sfc' )
+    name = 'Upward Longwave Radiation @ Surface'
+    unit = 'W/m^2'
+    min2d  = 100 ; int2d  = 30  ; max2d  = 480
+    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
+    min1d  = 100 ; int1d  = 200 ; max1d  = 500
+    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'lw_down_sfc' )
+    name = 'Downward Longwave Radiation @ Surface'
+    unit = 'W/m^2'
+    min2d  = 100 ; int2d  = 30  ; max2d  = 480
+    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
+    min1d  = 100 ; int1d  = 200 ; max1d  = 500
+    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
   if( varid = 'lwp' )
     name = 'Liquid Water Path'
     unit = 'g/m^2'
@@ -744,6 +925,30 @@ function get_varcnf( f, varid, varcnfid )
       min2d  = 0    ; int2d  = 40 ; max2d  = 400
       dmin2d = -200 ; dint2d = 40 ; dmax2d = 200
     endif
+  endif
+
+  if( varid = 'mslp' )
+    name = 'MSLP'
+    unit = 'hPa'
+    min2d  = 1000 ; int2d  = 2 ; max2d  = 1030
+*    dmin2d = -10  ; dint2d = 2 ; dmax2d = 10
+    dmin2d = -5   ; dint2d = 1 ; dmax2d = 5
+    min1d  = 1005 ; int1d  = 5 ; max1d  = 1025
+    dmin1d = -10  ; dint1d = 5 ; dmax1d = 10
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'precip' )
+    name = 'Precipitation'
+    unit = 'mm/day'
+    min2d  = 1   ; int2d  = 1 ; max2d  = 20
+    dmin2d = -10 ; dint2d = 1 ; dmax2d = 10
+    min1d  = 0   ; int1d  = 3 ; max1d  = 15
+    dmin1d = -6  ; dint1d = 2 ; dmax1d = 6
+*    color = 'purple->blue->aqua->lime->yellow->red->maroon'
+    color  = 'white-(0)->grainbow'
+    dcolor = 'bluered'
   endif
 
   if( varid = 'pt_700_minus_925' )
@@ -765,18 +970,6 @@ function get_varcnf( f, varid, varcnfid )
     min1d  = 10 ; int1d  = 5   ; max1d  = 30
     dmin1d = -5 ; dint1d = 2.5 ; dmax1d = 5
     color  = 'grainbow'
-    dcolor = 'bluered'
-  endif
-
-  if( varid = 'precip' )
-    name = 'Precipitation'
-    unit = 'mm/day'
-    min2d  = 1   ; int2d  = 1 ; max2d  = 20
-    dmin2d = -10 ; dint2d = 1 ; dmax2d = 10
-    min1d  = 0   ; int1d  = 3 ; max1d  = 15
-    dmin1d = -6  ; dint1d = 2 ; dmax1d = 6
-*    color = 'purple->blue->aqua->lime->yellow->red->maroon'
-    color  = 'white-(0)->grainbow'
     dcolor = 'bluered'
   endif
 
@@ -821,6 +1014,86 @@ function get_varcnf( f, varid, varcnfid )
     dmin2d = -50 ; dint2d = 10 ; dmax2d = 50
     min1d  = 0   ; int1d  = 25 ; max1d  = 100
     dmin1d = -20 ; dint1d = 10 ; dmax1d = 20
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'sst' )
+    name = 'Sea Surface Temperature'
+    unit = 'K'
+    min2d  = 273 ; int2d  = 3   ; max2d  = 306
+    dmin2d = -3  ; dint2d = 0.5 ; dmax2d = 3
+    min1d  = 270 ; int1d  = 10  ; max1d  = 306
+    dmin1d = -3  ; dint1d = 1.5 ; dmax1d = 3
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'sw_up_toa' | varid = 'sw_up_clr_toa' )
+    name = 'Upward Shortwave Radiation @ TOA'
+    if( varid = 'sw_up_clr_toa' ) ; name = name % ' (Clear Sky)' ; endif
+    unit = 'W/m^2'
+    min2d  = 0   ; int2d  = 40  ; max2d  = 400
+    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
+    min1d  = 0   ; int1d  = 100 ; max1d  = 300
+    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'sw_crf_toa' )
+    name = 'Shortwave Cloud Radiative Forcing @ TOA'
+    unit = 'W/m^2'
+    min2d  = -100 ; int2d  = 20  ; max2d  = 100
+    dmin2d = -50  ; dint2d = 10  ; dmax2d = 50
+    min1d  = -100 ; int1d  = 50  ; max1d  = 100
+    dmin1d = -50  ; dint1d = 25  ; dmax1d = 50
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'sw_up_sfc' )
+    name = 'Upward Shortwave Radiation @ Surface'
+    unit = 'W/m^2'
+    min2d  = 0   ; int2d  = 20  ; max2d  = 200
+    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
+    min1d  = 0   ; int1d  = 100 ; max1d  = 200
+    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'sw_down_toa' )
+    name = 'Downward Shortwave Radiation @ TOA'
+    unit = 'W/m^2'
+    min2d  = 0   ; int2d  = 50  ; max2d  = 500
+    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
+    min1d  = 0   ; int1d  = 250 ; max1d  = 500
+    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+*    color  = 'grainbow'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'sw_down_sfc' )
+    name = 'Downward Shortwave Radiation @ Surface'
+    unit = 'W/m^2'
+    min2d  = 0   ; int2d  = 40  ; max2d  = 400
+    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
+    min1d  = 0   ; int1d  = 100 ; max1d  = 400
+    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+*    color  = 'grainbow'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'sw_net_toa' )
+    name = 'Down-Upward Shortwave Radiation @ TOA'
+    unit = 'W/m^2'
+    min2d  = 0   ; int2d  = 40  ; max2d  = 400
+    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
+    min1d  = 0   ; int1d  = 100 ; max1d  = 300
+    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
     color  = 'purple->blue->aqua->lime->yellow->red->maroon'
     dcolor = 'bluered'
   endif
@@ -903,165 +1176,6 @@ function get_varcnf( f, varid, varcnfid )
     dcolor = 'bluered'
   endif
 
-  if( varid = 'sst' )
-    name = 'Sea Surface Temperature'
-    unit = 'K'
-    min2d  = 273 ; int2d  = 3   ; max2d  = 306
-    dmin2d = -3  ; dint2d = 0.5 ; dmax2d = 3
-    min1d  = 270 ; int1d  = 10  ; max1d  = 306
-    dmin1d = -3  ; dint1d = 1.5 ; dmax1d = 3
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
-  endif
-
-  if( varid = 'mslp' )
-    name = 'MSLP'
-    unit = 'hPa'
-    min2d  = 1000 ; int2d  = 2 ; max2d  = 1030
-*    dmin2d = -10  ; dint2d = 2 ; dmax2d = 10
-    dmin2d = -5   ; dint2d = 1 ; dmax2d = 5
-    min1d  = 1005 ; int1d  = 5 ; max1d  = 1025
-    dmin1d = -10  ; dint1d = 5 ; dmax1d = 10
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
-  endif
-
-  if( varid = 'icr' )
-    name = 'Sea Ice Fraction'
-    unit = '%'
-    min2d  = 10  ; int2d  = 10 ; max2d  = 90
-    dmin2d = -25 ; dint2d = 5  ; dmax2d = 25
-    min1d  = 0   ; int1d  = 25 ; max1d  = 100
-    dmin1d = -50 ; dint1d = 25 ; dmax1d = 50
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
-  endif
-
-  if( varid = 'ice' )
-    name = 'Sea Ice Mass'
-    unit = 'kg/m`a2`n'
-    min2d  = 200  ; int2d  = 200 ; max2d  = 2000
-    dmin2d = -100 ; dint2d = 10  ; dmax2d = 100
-    min1d  = 0    ; int1d  = 500 ; max1d  = 2000
-    dmin1d = -500 ; dint1d = 100 ; dmax1d = 500
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
-  endif
-
-  if( varid = 'lw_up_toa' | varid = 'lw_up_clr_toa' )
-    name = 'Upward Longwave Radiation @ TOA'
-    if( varid = 'lw_up_clr_toa' ) ; name = name % ' (Clear Sky)' ; endif
-    unit = 'W/m^2'
-    min2d  = 100 ; int2d  = 20  ; max2d  = 340
-    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-    min1d  = 100 ; int1d  = 50  ; max1d  = 300
-    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
-  endif
-
-  if( varid = 'lw_crf_toa' )
-    name = 'Longwave Cloud Radiative Forcing @ TOA'
-    unit = 'W/m^2'
-    min2d  = -100 ; int2d  = 20  ; max2d  = 100
-    dmin2d = -50  ; dint2d = 10  ; dmax2d = 50
-    min1d  = -100 ; int1d  = 50  ; max1d  = 100
-    dmin1d = -50  ; dint1d = 25  ; dmax1d = 50
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
-  endif
-
-  if( varid = 'lw_up_sfc' )
-    name = 'Upward Longwave Radiation @ Surface'
-    unit = 'W/m^2'
-    min2d  = 100 ; int2d  = 30  ; max2d  = 480
-    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-    min1d  = 100 ; int1d  = 200 ; max1d  = 500
-    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
-  endif
-
-  if( varid = 'lw_down_sfc' )
-    name = 'Downward Longwave Radiation @ Surface'
-    unit = 'W/m^2'
-    min2d  = 100 ; int2d  = 30  ; max2d  = 480
-    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-    min1d  = 100 ; int1d  = 200 ; max1d  = 500
-    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
-  endif
-
-  if( varid = 'sw_up_toa' | varid = 'sw_up_clr_toa' )
-    name = 'Upward Shortwave Radiation @ TOA'
-    if( varid = 'sw_up_clr_toa' ) ; name = name % ' (Clear Sky)' ; endif
-    unit = 'W/m^2'
-    min2d  = 0   ; int2d  = 40  ; max2d  = 400
-    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-    min1d  = 0   ; int1d  = 100 ; max1d  = 300
-    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
-  endif
-
-  if( varid = 'sw_crf_toa' )
-    name = 'Shortwave Cloud Radiative Forcing @ TOA'
-    unit = 'W/m^2'
-    min2d  = -100 ; int2d  = 20  ; max2d  = 100
-    dmin2d = -50  ; dint2d = 10  ; dmax2d = 50
-    min1d  = -100 ; int1d  = 50  ; max1d  = 100
-    dmin1d = -50  ; dint1d = 25  ; dmax1d = 50
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
-  endif
-
-  if( varid = 'sw_up_sfc' )
-    name = 'Upward Shortwave Radiation @ Surface'
-    unit = 'W/m^2'
-    min2d  = 0   ; int2d  = 20  ; max2d  = 200
-    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-    min1d  = 0   ; int1d  = 100 ; max1d  = 200
-    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
-  endif
-
-  if( varid = 'sw_down_toa' )
-    name = 'Downward Shortwave Radiation @ TOA'
-    unit = 'W/m^2'
-    min2d  = 0   ; int2d  = 50  ; max2d  = 500
-    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-    min1d  = 0   ; int1d  = 250 ; max1d  = 500
-    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-*    color  = 'grainbow'
-    dcolor = 'bluered'
-  endif
-
-  if( varid = 'sw_down_sfc' )
-    name = 'Downward Shortwave Radiation @ Surface'
-    unit = 'W/m^2'
-    min2d  = 0   ; int2d  = 40  ; max2d  = 400
-    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-    min1d  = 0   ; int1d  = 100 ; max1d  = 400
-    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-*    color  = 'grainbow'
-    dcolor = 'bluered'
-  endif
-
-  if( varid = 'sw_net_toa' )
-    name = 'Down-Upward Shortwave Radiation @ TOA'
-    unit = 'W/m^2'
-    min2d  = 0   ; int2d  = 40  ; max2d  = 400
-    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-    min1d  = 0   ; int1d  = 100 ; max1d  = 300
-    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
-  endif
-
   if( varid = 'lw_net_sfc' )
     name = 'Down-Upward Longwave Radiation @ Surface'
     unit = 'W/m^2'
@@ -1084,119 +1198,6 @@ function get_varcnf( f, varid, varcnfid )
     dcolor = 'bluered'
   endif
 
-  if( varid = 'aw_net_toa' )
-    name = 'Down-Upward Long+Shortwave Radiation @ TOA'
-    unit = 'W/m^2'
-    min2d  = -200; int2d  = 40  ; max2d  = 200
-    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-    min1d  = -200; int1d  = 100 ; max1d  = 200
-    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
-  endif
-
-  if( varid = 'aw_crf_toa' )
-    name = 'Long+Shortwave Cloud Radiative Forcing @ TOA'
-    unit = 'W/m^2'
-    min2d  = -100 ; int2d  = 20  ; max2d  = 100
-    dmin2d = -50  ; dint2d = 10  ; dmax2d = 50
-    min1d  = -100 ; int1d  = 50  ; max1d  = 100
-    dmin1d = -50  ; dint1d = 25  ; dmax1d = 50
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
-  endif
-
-  if( varid = 'aw_net_sfc' )
-    name = 'Down-Upward Long+Shortwave Radiation @ Surface'
-    unit = 'W/m^2'
-    min2d  = -200; int2d  = 40  ; max2d  = 200
-    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-    min1d  = -200; int1d  = 100 ; max1d  = 200
-    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
-  endif
-
-  if( varid = 'sh_sfc' | varid = 'lh_sfc' )
-    if( varid = 'sh_sfc' ) ; name = 'Surface Sensible Heat Flux' ; endif
-    if( varid = 'lh_sfc' ) ; name = 'Surface Latent Heat Flux'   ; endif
-    unit = 'W/m^2'
-    min2d  = -200 ; int2d  = 40  ; max2d  = 200
-    dmin2d = -100 ; dint2d = 20  ; dmax2d = 100
-    min1d  = -200 ; int1d  = 100 ; max1d  = 200
-    dmin1d = -50  ; dint1d = 25  ; dmax1d = 50
-*    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    color  = 'purple->bluered->maroon'
-*    dcolor = 'bluered'
-    dcolor = 'purple->bluered->maroon'
-  endif
-
-  if( varid = 'energy_net_sfc' )
-    name = 'Net Downward Surface Energy Flux'
-    unit = 'W/m^2'
-    min2d  = -200 ; int2d  = 40  ; max2d  = 200
-    dmin2d = -100 ; dint2d = 20  ; dmax2d = 100
-    min1d  = -200 ; int1d  = 100 ; max1d  = 200
-    dmin1d = -50  ; dint1d = 25  ; dmax1d = 50
-    color  = 'purple->bluered->maroon'
-    dcolor = 'purple->bluered->maroon'
-  endif
-
-  if( varid = 'land_wg_z1' | varid = 'land_wg_z2' | varid = 'land_wg_z3' | varid = 'land_wg_z4' | varid = 'land_wg_z5' )
-    if( varid = 'land_wg_z1' ) ; name = 'Soil Water @ z=1' ; endif
-    if( varid = 'land_wg_z2' ) ; name = 'Soil Water @ z=2' ; endif
-    if( varid = 'land_wg_z3' ) ; name = 'Soil Water @ z=3' ; endif
-    if( varid = 'land_wg_z4' ) ; name = 'Soil Water @ z=4' ; endif
-    if( varid = 'land_wg_z5' ) ; name = 'Soil Water @ z=5' ; endif
-    unit = '0-1'
-    min2d  = 0    ; int2d  = 0.1 ; max2d  = 1
-    dmin2d = -0.5 ; dint2d = 0.1 ; dmax2d = 0.5
-    min1d  = 0    ; int1d  = 0.5 ; max1d  = 1
-    dmin1d = -0.5 ; dint1d = 0.1 ; dmax1d = 0.5
-    color  = 'grainbow'
-    dcolor = 'purple->bluered->maroon'
-  endif
-
-  tmp = substr( varid, 1, 5 )
-  if( tmp = 'isccp' )
-    if( varid = 'isccp_ctp_all' | varid = 'isccp_ctp_all_vis' )
-      name = 'Cloud Top Pressure by ISCCP'
-      tmp = substr( varid, 7, 20 )
-      sname.f = ', ' % tmp
-      unit = '%'
-      min2d  = 100 ; int2d  = 100 ; max2d  = 900
-      dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
-      min1d  = 100 ; int1d  = 200 ; max1d  = 900
-      dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
-      color  = 'white-(0)->grainbow'
-      dcolor = 'purple->blue->white->red->brown'
-    else ; if( varid = 'isccp_od_all' | varid = 'isccp_od_all_vis' )
-      name = 'log(Cloud Optical Depth) by ISCCP'
-      tmp = substr( varid, 7, 20 )
-      sname.f = ', ' % tmp
-      unit = '%'
-      min2d  = -1   ; int2d  = 0.5 ; max2d  = 4
-      dmin2d = -0.5 ; dint2d = 0.1 ; dmax2d = 0.5
-      min1d  = -1   ; int1d  = 1   ; max1d  = 4
-      dmin1d = -0.5 ; dint1d = 0.5 ; dmax1d = 0.5
-      color  = 'white-(0)->grainbow'
-      dcolor = 'purple->blue->white->red->brown'
-    else
-      name = 'ISCCP Cloud Fraction'
-      tmp = substr( varid, 7, 20 )
-      sname.f = ', ' % tmp
-      unit = '%'
-      min2d  = 10  ; int2d  = 10 ; max2d  = 90
-      dmin2d = -50 ; dint2d = 10 ; dmax2d = 50
-*      dmin2d = -10 ; dint2d = 2  ; dmax2d = 10
-      min1d  = 0   ; int1d  = 25 ; max1d  = 100
-      dmin1d = -20 ; dint1d = 10 ; dmax1d = 20
-*      dmin1d = -10 ; dint1d = 5  ; dmax1d = 10
-      color  = 'white-(0)->grainbow'
-      dcolor = 'purple->blue->white->red->brown'
-*      dcolor = 'white->white->gray'
-    endif ; endif
-  endif
 
 * set default varcnf to global varcnf 
   if(   _name.f =   '_name.'f ) ;   _name.f =   name ; endif
