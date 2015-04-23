@@ -282,7 +282,7 @@ while( f <= _fmax )
   endif
 
   if( _clim_arg.f != '' )
-    'prex( clave '_var.f' '_clim_arg.f' v'f )
+    prex( 'clave '_var.f' '_clim_arg.f' v'f )
   endif
 
   f = f + 1
@@ -453,20 +453,6 @@ function get_varcnf( f, varid, varcnfid )
     tar = tar + 1
   endwhile
 
-  if( varid = 'precip' )
-    name = 'Precipitation'
-    unit = 'mm/day'
-    min  = 0  ; int  = 2 ; max  = 14
-    dmin = -5 ; dint = 1 ; dmax = 5
-  endif
-
-  if( varid = 'qv2m' )
-    name = '2m Specif Humidity'
-    unit = 'g/kg'
-    min  = 0  ; int  = 5   ; max  = 20
-    dmin = -2 ; dint = 1   ; dmax = 2
-  endif
-
   if( varid = 'iwp' )
     name = 'Ice Water Path'
     unit = 'kg/m^2'
@@ -481,11 +467,55 @@ function get_varcnf( f, varid, varcnfid )
     dmin = -40 ; dint = 20 ; dmax = 40
   endif
 
+  if( varid = 'lh_sfc' | varid = 'sh_sfc' )
+    if( varid = 'sh_sfc' ) ; name = 'Surface Sensible Heat Flux' ; endif
+    if( varid = 'lh_sfc' ) ; name = 'Surface Latent Heat Flux'   ; endif
+    unit = 'W/m^2'
+    min  = -200 ; int  = 100 ; max  = 200
+    dmin = -50  ; dint = 25  ; dmax = 50
+  endif
+
+  if( varid = 'precip' )
+    name = 'Precipitation'
+    unit = 'mm/day'
+    min  = 0  ; int  = 2 ; max  = 14
+    dmin = -5 ; dint = 1 ; dmax = 5
+  endif
+
+  if( varid = 'qv2m' )
+    name = '2m Specif Humidity'
+    unit = 'g/kg'
+    min  = 0  ; int  = 5   ; max  = 20
+    dmin = -2 ; dint = 1   ; dmax = 2
+  endif
+
+  if( varid_base = 'rh' & valnum(varid_lev) != 0 )
+    name = 'Relative Humidity @ 'varid_lev'hPa'
+    unit = '%'
+    min  = 0   ; int  = 25 ; max  = 100
+    dmin = -20 ; dint = 10 ; dmax = 20
+  endif
+
   if( varid = 't2m' )
     name = '2m Temperature'
     unit = 'K'
     min  = 220 ; int  = 30 ; max  = 310
     dmin = -6  ; dint = 3  ; dmax = 6
+  endif
+
+  if( varid_base = 't' & valnum(varid_lev) != 0 )
+    name = 'Temperature @ 'varid_lev'hPa'
+    unit = '%'
+    min  = 220 ; int  = 30 ; max  = 300
+    dmin = -6  ; dint = 3  ; dmax = 6
+    if( varid_lev <= 500 )
+      min  = 200 ; int  = 30 ; max  = 280
+      dmin = -6  ; dint = 3  ; dmax = 6
+    endif
+    if( varid_lev <= 300 )
+      min  = 180 ; int  = 30 ; max  = 260
+      dmin = -6  ; dint = 3  ; dmax = 6
+    endif
   endif
 
   if( varid = 'u10m' )
@@ -495,11 +525,25 @@ function get_varcnf( f, varid, varcnfid )
     dmin = -4  ; dint = 2 ; dmax = 4
   endif
 
+  if( varid_base = 'u' & valnum(varid_lev) != 0 )
+    name = 'Zonal Wind @ 'varid_lev'hPa'
+    unit = 'm/s'
+    min  = -30 ; int  = 15 ; max  = 30
+    dmin = -10 ; dint = 5  ; dmax = 10
+  endif
+
   if( varid = 'v10m' )
     name = '10m Meridional Wind'
     unit = 'm/s'
     min  = -10 ; int  = 5 ; max  = 10
     dmin = -4  ; dint = 2 ; dmax = 4
+  endif
+
+  if( varid_base = 'v' & valnum(varid_lev) != 0 )
+    name = 'Meridional Wind @ 'varid_lev'hPa'
+    unit = 'm/s'
+    min  = -5   ; int  = 2.5 ; max  = 5
+    dmin = -2   ; dint = 1   ; dmax = 2
   endif
 
   if( varid = 'lw_up_toa' | varid = 'lw_up_clr_toa' )
