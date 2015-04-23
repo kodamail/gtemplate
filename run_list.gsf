@@ -2256,6 +2256,17 @@ function nicam2( varid, dir, dir2, sepdir )
 *  endif
 
 ***** 2D *****
+  if( varid = 'evap' )
+    fv = 0
+    i = 1
+    while( i <= 3 & fv <= 0 )
+      tail = 's'sa.i'_evap.ctl'
+      if( sepdir != 'no' ) ; tail = 's'sa.i'_evap/' % tail ; endif
+      fv   = dtopen( dir, tail )
+      if( fv > 0 ) ; var  = '24*60*60*s'sa.i'_evap.'fv ; endif
+      i = i + 1
+    endwhile
+  endif
   if( varid = 'iwp' )
     tail = 'sa_cldi.ctl'
     if( sepdir != 'no' ) ; tail = 'sa_cldi/' % tail ; endif
