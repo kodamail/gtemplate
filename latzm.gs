@@ -453,6 +453,13 @@ function get_varcnf( f, varid, varcnfid )
     tar = tar + 1
   endwhile
 
+  if( varid = 'evap' )
+    name = 'Evaporation'
+    unit = 'mm/day'
+    min  = 0   ; int  = 2 ; max  = 8
+    dmin = -2  ; dint = 1 ; dmax = 2
+  endif
+
   if( varid = 'iwp' )
     name = 'Ice Water Path'
     unit = 'kg/m^2'
