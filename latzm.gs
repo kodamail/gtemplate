@@ -560,6 +560,21 @@ function get_varcnf( f, varid, varcnfid )
     dmin = -2 ; dint = 1   ; dmax = 2
   endif
 
+  if( varid_base = 'qv' & valnum(varid_lev) != 0 )
+    name = 'Specif Humidity @ 'varid_lev'hPa'
+    unit = 'g/kg'
+    min  = 0  ; int  = 5   ; max  = 20
+    dmin = -5 ; dint = 1   ; dmax = 5
+    if( varid_lev <= 500 )
+      min  = 0    ; int  = 2.5 ; max  = 10
+      dmin = -2   ; dint = 1   ; dmax = 2
+    endif
+    if( varid_lev <= 300 )
+      min  = 0    ; int  = 0.5  ; max  = 2.0
+      dmin = -0.5 ; dint = 0.25 ; dmax = 0.5
+    endif
+  endif
+
   if( varid_base = 'rh' & valnum(varid_lev) != 0 )
     name = 'Relative Humidity @ 'varid_lev'hPa'
     unit = '%'
