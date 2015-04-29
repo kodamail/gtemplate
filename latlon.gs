@@ -299,38 +299,54 @@ if( _time_start = '_time_start' | _time_start = '' )
       if( _year = '%y' ) ; _yearpp = '%ypp'
       else               ; _yearpp = _yearpp + 1 ; endif
     endif
-    term = cmonth( _month )
+*    term = cmonth( _month )
+    term = cmonth( _month ) % ' ' % _year
     _time_start = '01'cm''_year
     _time_endpp = '01'cmpp''_yearpp
   endif
   if( _month = 345 )
-    term = 'MAM'
+*    term = 'MAM'
+    term = 'MAM '_year
     _time_start = '01mar'_year
     _time_endpp = '01jun'_year
   endif
   if( _month = 678 )
-    term = 'JJA'
+*    term = 'JJA'
+    term = 'JJA '_year
     _time_start = '01jun'_year
     _time_endpp = '01sep'_year
   endif
   if( _month = 901 )
-    term = 'SON'
+*    term = 'SON'
+    term = 'SON '_year
     _time_start = '01sep'_year
     _time_endpp = '01dec'_year
   endif
   if( _month = 212 )
-    term = 'DJF'
+*    term = 'DJF'
+    term = 'DJF '_year
     if( _year = '%y' ) ; _yearpp = '%ypp'
     else               ; _yearpp = _year + 1 ; endif
     _time_start = '01dec'_year
     _time_endpp = '01mar'_yearpp
   endif
   if( _month = 999 )
-    term = 'ANU'
+*    term = 'ANU'
+    term = 'ANU '_year
     if( _year = '%y' ) ; _yearpp = '%ypp'
     else               ; _yearpp = _year + 1 ; endif
     _time_start = '01jan'_year
     _time_endpp = '01jan'_yearpp
+  endif
+  if( substr(_month,1,3) = 999 )
+    month = substr( _month, 4, 2 )
+    cm   = cmonth( month, 3 )
+*    term = 'ANU'
+    term = 'ANU (' % cm % _year % '-)'
+    if( _year = '%y' ) ; _yearpp = '%ypp'
+    else               ; _yearpp = _year + 1 ; endif
+    _time_start = '01'cm''_year
+    _time_endpp = '01'cm''_yearpp
   endif
 else
   term = _time_start' <= time < '_time_endpp
@@ -571,7 +587,8 @@ while( d <= 6 )
 *  if( d = 1 )
 *    'setfont normal'
     'setfont normal -base tl'
-    'draw string 1.4 8.4 '_name.f1' for 'term' '_year' ['_unit.f1']'
+*    'draw string 1.4 8.4 '_name.f1' for 'term' '_year' ['_unit.f1']'
+    'draw string 1.4 8.4 '_name.f1' for 'term' ['_unit.f1']'
 *  endif
 
 *** zonal mean ***
