@@ -495,6 +495,32 @@ function get_varcnf( f, varid, varcnfid )
     dmin = -40 ; dint = 20 ; dmax = 40
   endif
 
+  tmp = substr( varid, 1, 5 )
+  if( tmp = 'isccp' )
+    if( varid = 'isccp_ctp_all' | varid = 'isccp_ctp_all_vis' )
+      name = 'Cloud Top Pressure by ISCCP'
+      tmp = substr( varid, 7, 20 )
+      sname.f = ', ' % tmp
+      unit = '%'
+      min  = 100 ; int  = 200 ; max  = 900
+      dmin = -50 ; dint = 25  ; dmax = 50
+    else ; if( varid = 'isccp_od_all' | varid = 'isccp_od_all_vis' )
+      name = 'log(Cloud Optical Depth) by ISCCP'
+      tmp = substr( varid, 7, 20 )
+      sname.f = ', ' % tmp
+      unit = '%'
+      min  = -1   ; int  = 1   ; max  = 4
+      dmin = -0.5 ; dint = 0.5 ; dmax = 0.5
+    else
+      name = chcase(varid,'upper') % ' Cloud Fraction'
+      tmp = substr( varid, 7, 20 )
+      sname.f = ', ' % tmp
+      unit = '%'
+      min  = 0   ; int  = 25 ; max  = 100
+      dmin = -20 ; dint = 10 ; dmax = 20
+    endif ; endif
+  endif
+
   if( varid = 'lh_sfc' | varid = 'sh_sfc' )
     if( varid = 'sh_sfc' ) ; name = 'Surface Sensible Heat Flux' ; endif
     if( varid = 'lh_sfc' ) ; name = 'Surface Latent Heat Flux'   ; endif
