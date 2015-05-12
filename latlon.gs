@@ -854,7 +854,8 @@ function get_varcnf( f, varid, varcnfid )
       color  = 'white-(0)->grainbow'
       dcolor = 'purple->blue->white->red->brown'
     else
-      name = 'ISCCP Cloud Fraction'
+*      name = 'ISCCP Cloud Fraction'
+      name = chcase(varid,'upper') % ' Cloud Fraction'
       tmp = substr( varid, 7, 20 )
       sname.f = ', ' % tmp
       unit = '%'
