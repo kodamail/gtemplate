@@ -11,6 +11,11 @@ function rl_jra55( cdir, varid, target )
     return run
   endif
 
+* varid -> varid_base, varid_lev
+  tmp = varid_sep( varid )
+  varid_base = subwrd( tmp, 1 )
+  varid_lev  = subwrd( tmp, 2 )
+
     pdir = '/mwork0/ngatm/JMA/JRA55'
     dir = pdir % '/' % cdir
 
