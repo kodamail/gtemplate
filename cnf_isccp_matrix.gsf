@@ -7,29 +7,15 @@ function cnf_isccp_matrix()
 
 
 *
-*----- Figure type
-*
-* raw
-_sw = 'raw'
-_f1 = 1
-_f2 = ''
-
-* diff: f2 - f1
-*_sw = 'diff'
-*_f1 = 1
-*_f2 = 2
-
-
-*
 *----- Display style
 *
 if( 1 = 1 )
   _disp.1 = '1'
-  _disp.2 = '1'
-  _disp.3 = '1'
-  _disp.4 = '1'
-  _disp.5 = '1'
-  _disp.6 = '1'
+  _disp.2 = '2'
+  _disp.3 = '3'
+  _disp.4 = '3 2'
+  _disp.5 = '2 1'
+  _disp.6 = '3 1'
 *  _disp.2 = '2'
 *  _disp.3 = '3'
 *  _disp.4 = '3 2'
@@ -176,26 +162,16 @@ f = 1
 
 
 ***************************************************************
-if( 1 != 1 )
-  ret = run_list( 'ISCCP_D1_OBS '_varid )
-  _run.f = subwrd( ret, 2 )
-  _var.f = subwrd( ret, 4 )
+if( 1 = 1 )
+*  ret = run_list( 'ISCCP_D1_OBS '_varid )
+  _type.f = 'satellite'
+  _run.f = 'ISCCP_D1_OBS'
+  'open /cwork5/kodama/dataset/isccp/D1nat/monthly/isccp_d1.ctl'
+  _var.f = ''
+  _f2df.f = last()
+  _var_pres.f = ''
 
-*  cm   = cmonth( _month, 3 )
-*  if( _month = 345 )
-*    _clim_arg.f = 'mar%y may%y 1995 2008'
-*  endif
-*  if( _month = 678 )
-*   _clim_arg.f = 'jun%y aug%y 1995 2007'
-*  endif
-*  if( _month = 901 )
-*    _clim_arg.f = 'sep%y nov%y 1995 2007'
-*  endif
-*  if( _month = 212 )
-*    _clim_arg.f = 'dec%y feb%ypp 1995 2007'
-*  endif
-
-  if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
+  f = f + 1
 endif
 
 

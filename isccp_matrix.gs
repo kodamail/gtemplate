@@ -16,9 +16,9 @@ endif
 
 * set default values
 
-_sw = 'raw'
-_f1 = 1
-_f2 = ''
+*_sw = 'raw'
+*_f1 = 1
+*_f2 = ''
 _type = '7x7'
 i = 1
 while( i <= 6 )
@@ -82,20 +82,16 @@ ret = inc_isccp_matrix()
 
 
 
-if( _sw = 'raw' & _type = '7x7' )
+if( _type = '7x7' )
 *  _min = 0.2 ; _max = 10 ; _int = 0.2
   _min = 0.5 ; _max = 5 ; _int = 0.5
+  _dmin = -2.5 ; _dmax = 2.5 ; _dint = 0.5
 endif
-if( _sw = 'raw' & _type = '3x3' )
+if( _type = '3x3' )
 *  _min = 0.4 ; _max = 20 ; _int = 0.4
 *  _min = 1.0 ; _max = 10 ; _int = 1.0
   _min = 2 ; _max = 20 ; _int = 2.0
-endif
-if( _sw = 'diff' & _type = '7x7' )
-  _min = -2.5 ; _max = 2.5 ; _int = 0.5
-endif
-if( _sw = 'diff' & _type = '3x3' )
-  _min = -5.0 ; _max = 5.0 ; _int = 1.0
+  _dmin = -5.0 ; _dmax = 5.0 ; _dint = 1.0
 endif
 
 
@@ -337,30 +333,6 @@ endwhile
 
 
 
-if( _sw = 'raw' )
-  title1 = 'ISCCP Cloud Fraction [%] for 'term
-  title2 = '('_run._f1')'
-  kind = 'white-(0)->grainbow'
-*  kind = 'white->blue->purple'
-
-*  'color '_min' '_max' '_int' -kind white->blue->purple -xcbar 1 10 0.7 1.0 -fstep 4 -line on'
-*  'color '_min' '_max' '_int' -kind white->blue->purple -xcbar 1 10 0.7 1.0 -line on -fw 0.18 -fh 0.195 -ft 7.2 -fo 4 -fs 5'
-
-    'color '_min' '_max' '_int' -kind 'kind' -xcbar 1 10 0.7 1.0 -line on -fw 0.18 -fh 0.195 -ft 7.2 -edge triangle'
-
-endif
-
-if( _sw = 'diff' )
-  title1 = 'ISCCP Cloud Fraction Diff [%] for 'term
-  title2 = '('_run._f2') - ('_run._f1')'
-*  'color '_min' '_max' '_int' -kind brown->red->white->blue->purple -xcbar 1 10 0.7 1.0 -fstep 4 -line on'
-*  'color '_min' '_max' '_int' -kind brown->red->white->blue->purple -xcbar 1 10 0.7 1.0 -fs 5 -fo 1 -fw 0.18 -fh 0.195 -ft 7.2 -line on'
-
-  'color '_min' '_max' '_int' -kind brown->red->white->blue->purple -xcbar 1 10 0.7 1.0 -line on -fw 0.18 -fh 0.195 -ft 7.2 -edge triangle'
-
-endif
-
-
 
 ***************************************************************
 * Calculate cloud fraction
@@ -458,7 +430,6 @@ while( f <= _fmax )
           q = q + 1
         endwhile
 
-*        color.f.i.j = v2c( value.f.i.j )
         say f' 'i' 'j' 'value.f.i.j
 
         i = i + 1
@@ -561,6 +532,7 @@ while( f <= _fmax )
   f = f + 1
 endwhile
 
+
 ********************* draw *******************************
 if( _type = '7x7' )
   boxwidth  = 1.0
@@ -606,15 +578,27 @@ while( d <= dmax )
 *'set vpage 0 4.0 0 3.1'
     vxmin = 3.5 * (i-1)
     vxmax = vxmin + 4.0
-    vymin = 2.6 * (j-1)
+    vymin = 3.5 * (j-1)
     vymax = vymin + 3.5
     'set vpage 'vxmin' 'vxmax' 'vymin' 'vymax
   endif
 
   f1 = subwrd( _disp.d, 1 )
   f2 = subwrd( _disp.d, 2 )
-
   if( f1 = '' ) ; d = d + 1 ; continue ;  endif
+
+  title1 = 'ISCCP CF [%] for 'term', '_region
+  if( f2 = '' )
+    title2 = '('_run.f1')'
+    kind = 'white-(0)->grainbow'
+*  kind = 'white->blue->purple'
+    'color '_min' '_max' '_int' -kind 'kind' -xcbar 1.4 9.6 0.7 1.0 -line on -fw 0.18 -fh 0.195 -ft 7.2 -edge triangle'
+  else
+    title2 = '('_run.f1') - ('_run.f2')'
+*    kind = 'white-(0)->grainbow'
+    kind = 'purple->blue->white->red->maroon'
+    'color '_dmin' '_dmax' '_dint' -kind 'kind' -xcbar 1.4 9.6 0.7 1.0 -line on -fw 0.18 -fh 0.195 -ft 7.2 -edge triangle'
+  endif
 
   j = 1
   while( j <= jmax )
@@ -626,12 +610,14 @@ while( d <= dmax )
       if( f2 = '' )
         if( value.f1.i.j < 0 ) ; i = i + 1 ; continue ; endif
         value = value.f1.i.j
+        color = v2c( value, _min, _max, _int )
       else
         if( value.f1.i.j < 0 | value.f2.i.j < 0 ) ; i = i + 1 ; continue ; endif
-        value = value.f2.i.j - value.f1.i.j
+*        value = value.f2.i.j - value.f1.i.j
+        value = value.f1.i.j - value.f2.i.j
+        color = v2c( value, _dmin, _dmax, _dint )
       endif
       
-      color = v2c( value )
 
       'set line 'color
       'draw recf 'posx' 'posy-boxheight' 'posx+boxwidth' 'posy
@@ -639,183 +625,80 @@ while( d <= dmax )
       'setfont 'font1' -base c'
 *    'set string 3'
       'set string 1'
-      sign = '' ; if( value > 0 & sw = 'diff' ) ; sign = '+' ; endif
+*      sign = '' ; if( value > 0 & sw = 'diff' ) ; sign = '+' ; endif
+      sign = '' ; if( value > 0 & f2 != '' ) ; sign = '+' ; endif
       'draw string 'posx+boxwidth/2' 'posy-boxheight/2' 'sign%math_format('%.2f',value )
+
 
       i = i + 1
     endwhile
     j = j + 1
   endwhile
 
+* vertical
+  'set line 1'
+  if( _type = '7x7' ) ; 'draw line 2.0 1.6 2.0 'ymax ; endif
+  'draw line 3.0 1.6 3.0 'ymax
+  'draw line 5.0 1.6 5.0 'ymax
+  'draw line 7.0 1.6 7.0 'ymax
+  'draw line 9.0 1.6 9.0 'ymax
+
+* horizontal
+  'draw line 'xmin' 1.6 9.0 1.6'
+  'draw line 'xmin' 3.2 9.0 3.2'
+  'draw line 'xmin' 4.8 9.0 4.8'
+  'draw line 'xmin' 'ymax' 9.0 'ymax
+
+  'setfont 'font2
+  if( _type = '7x7' ) ; 'draw string 2.5 1.4 Invis' ; endif
+  'draw string 4.0 1.4 Thin'
+  'draw string 6.0 1.4 Medium'
+  'draw string 8.0 1.4 Thick'
+
+  'setfont 'font2' -angle 90 base bc'
+  'draw string 'xmin-0.2' 2.4 Low'
+  'draw string 'xmin-0.2' 4.0 Middle'
+  if( _type = '7x7' ) ; 'draw string 'xmin-0.2' 6.0 High' ; endif
+  if( _type = '3x3' ) ; 'draw string 'xmin-0.2' 5.6 High' ; endif
+
+  if( _type = '7x7' )
+    'setfont large'
+    'draw string 5.5 7.9 'title1
+    'setfont large'
+    'draw string 5.5 7.5 'title2
+    endif
+
+  if( _type = '3x3' )
+    'setfont large'
+    'draw string 6.0 7.1 'title1
+    'setfont large'
+    'draw string 6.0 6.7 'title2
+  endif
 
   d = d + 1
 endwhile
 
 
-
-
-
-* vertical
-'set line 1'
-if( type = '7x7' ) ; 'draw line 2.0 1.6 2.0 'ymax ; endif
-'draw line 3.0 1.6 3.0 'ymax
-'draw line 5.0 1.6 5.0 'ymax
-'draw line 7.0 1.6 7.0 'ymax
-'draw line 9.0 1.6 9.0 'ymax
-
-* horizontal
-'draw line 'xmin' 1.6 9.0 1.6'
-'draw line 'xmin' 3.2 9.0 3.2'
-'draw line 'xmin' 4.8 9.0 4.8'
-'draw line 'xmin' 'ymax' 9.0 'ymax
-
-
-'setfont 'font2
-if( _type = '7x7' ) ; 'draw string 2.5 1.4 Invis' ; endif
-'draw string 4.0 1.4 Thin'
-'draw string 6.0 1.4 Medium'
-'draw string 8.0 1.4 Thick'
-
-'setfont 'font2' -angle 90 base bc'
-'draw string 'xmin-0.2' 2.4 Low'
-'draw string 'xmin-0.2' 4.0 Middle'
-if( _type = '7x7' ) ; 'draw string 'xmin-0.2' 6.0 High' ; endif
-if( _type = '3x3' ) ; 'draw string 'xmin-0.2' 5.6 High' ; endif
-
-if( _type = '7x7' )
-  'setfont large'
-  'draw string 5.5 7.9 'title1
-  'setfont large'
-  'draw string 5.5 7.5 'title2
-endif
-
-if( _type = '3x3' )
-  'setfont large'
-  'draw string 6.0 7.1 'title1
-  'setfont large'
-  'draw string 6.0 6.7 'title2
-endif
-
-return
-
-* below old
-
-********************* draw *******************************
-if( _type = '7x7' )
-  boxwidth  = 1.0
-  boxheight = 0.8
-*  font1 = 'small'
-*  font2 = 'normal'
-  font1 = 'large'
-  font2 = 'large'
-  xmin = 2.0
-  ymax = 7.2
-endif
-if( _type = '3x3' )
-  boxwidth  = 2.0
-  boxheight = 1.6
-  font1 = 'large'
-  font2 = 'large'
-  xmin = 3.0
-  ymax = 6.4
-endif
-
-* draw
-j = 1
-while( j <= jmax )
-  i = 1
-  while( i <= imax )
-
-    posx = 1 + boxwidth * i
-    posy = 8 - boxheight * j
-    if( _sw = 'raw' )
-      if( value._f1.i.j < 0 ) ; i = i + 1 ; continue ; endif
-      value = value._f1.i.j
-    endif
-    if( _sw = 'diff' )
-      if( value._f1.i.j < 0 | value._f2.i.j < 0 ) ; i = i + 1 ; continue ; endif
-      value = value._f2.i.j - value._f1.i.j
-    endif
-    
-    color = v2c( value )
-
-    'set line 'color
-    'draw recf 'posx' 'posy-boxheight' 'posx+boxwidth' 'posy
-
-    'setfont 'font1' -base c'
-*    'set string 3'
-    'set string 1'
-    sign = '' ; if( value > 0 & sw = 'diff' ) ; sign = '+' ; endif
-    'draw string 'posx+boxwidth/2' 'posy-boxheight/2' 'sign%math_format('%.2f',value )
-
-    i = i + 1
-  endwhile
-  j = j + 1
-endwhile
-
-
-
-* vertical
-'set line 1'
-if( type = '7x7' ) ; 'draw line 2.0 1.6 2.0 'ymax ; endif
-'draw line 3.0 1.6 3.0 'ymax
-'draw line 5.0 1.6 5.0 'ymax
-'draw line 7.0 1.6 7.0 'ymax
-'draw line 9.0 1.6 9.0 'ymax
-
-* horizontal
-'draw line 'xmin' 1.6 9.0 1.6'
-'draw line 'xmin' 3.2 9.0 3.2'
-'draw line 'xmin' 4.8 9.0 4.8'
-'draw line 'xmin' 'ymax' 9.0 'ymax
-
-
-'setfont 'font2
-if( _type = '7x7' ) ; 'draw string 2.5 1.4 Invis' ; endif
-'draw string 4.0 1.4 Thin'
-'draw string 6.0 1.4 Medium'
-'draw string 8.0 1.4 Thick'
-
-'setfont 'font2' -angle 90 base bc'
-'draw string 'xmin-0.2' 2.4 Low'
-'draw string 'xmin-0.2' 4.0 Middle'
-if( _type = '7x7' ) ; 'draw string 'xmin-0.2' 6.0 High' ; endif
-if( _type = '3x3' ) ; 'draw string 'xmin-0.2' 5.6 High' ; endif
-
-if( _type = '7x7' )
-  'setfont large'
-  'draw string 5.5 7.9 'title1
-  'setfont large'
-  'draw string 5.5 7.5 'title2
-endif
-
-if( _type = '3x3' )
-  'setfont large'
-  'draw string 6.0 7.1 'title1
-  'setfont large'
-  'draw string 6.0 6.7 'title2
-endif
-
 return
 
 
 
-function v2c( value )
+function v2c( value, min, max, int )
   cn = -1
-  if( value < _min ) ; cn = 16; endif
-  curv = _min
+  if( value < min ) ; cn = 16; endif
+  curv = min
   curc = 17
   
-  while( curv + _int <= _max )
-    if( curv <= value & value < curv + _int )
+  while( curv + int <= max )
+    if( curv <= value & value < curv + int )
       cn = curc
       break
     endif
-    curv = curv + _int
+    curv = curv + int
     curc = curc + 1
   endwhile
 
-  if( value > _max ) ; cn = curc; endif
+  if( value > max ) ; cn = curc; endif
   
 return cn
 
