@@ -20,6 +20,11 @@ _sw = 'raw'
 _f1 = 1
 _f2 = ''
 _type = '7x7'
+i = 1
+while( i <= 6 )
+  _disp.i = ''
+  i = i + 1
+endwhile
 
 
 * check existence of cnf file
@@ -556,9 +561,144 @@ while( f <= _fmax )
   f = f + 1
 endwhile
 
+********************* draw *******************************
+if( _type = '7x7' )
+  boxwidth  = 1.0
+  boxheight = 0.8
+*  boxwidth  = 0.4
+*  boxheight = 0.3
+*  font1 = 'tiny'
+*  font2 = 'tiny'
+  font1 = 'large'
+  font2 = 'large'
+  xmin = 2.0
+  ymax = 7.2
+endif
+if( _type = '3x3' )
+  boxwidth  = 2.0
+  boxheight = 1.6
+  font1 = 'large'
+  font2 = 'large'
+  xmin = 3.0
+  ymax = 6.4
+endif
+
+dmax = 1
+d = 1
+while( d <= 6 )
+  if( _disp.d != '' ) ; dmax = d ; endif
+  d = d + 1
+endwhile
+
+d = 1
+while( d <= dmax )
+*  i = 1
+*  j = 4-d
+*  if( j <= 0 ) ; i = 2 ; j = j + 3 ; endif
+  i = d
+  j = 2
+  if( i >= 4 ) ; i = i-3 ; j = 1 ; endif
+
+  if( dmax = 1 )
+    'set vpage 0 11 0 8.5'
+  endif
+  if( dmax >= 5 )
+*'set vpage 0 4.0 0 3.1'
+    vxmin = 3.5 * (i-1)
+    vxmax = vxmin + 4.0
+    vymin = 2.6 * (j-1)
+    vymax = vymin + 3.5
+    'set vpage 'vxmin' 'vxmax' 'vymin' 'vymax
+  endif
+
+  f1 = subwrd( _disp.d, 1 )
+  f2 = subwrd( _disp.d, 2 )
+
+  if( f1 = '' ) ; d = d + 1 ; continue ;  endif
+
+  j = 1
+  while( j <= jmax )
+    i = 1
+    while( i <= imax )
+
+      posx = 1 + boxwidth * i
+      posy = 8 - boxheight * j
+      if( f2 = '' )
+        if( value.f1.i.j < 0 ) ; i = i + 1 ; continue ; endif
+        value = value.f1.i.j
+      else
+        if( value.f1.i.j < 0 | value.f2.i.j < 0 ) ; i = i + 1 ; continue ; endif
+        value = value.f2.i.j - value.f1.i.j
+      endif
+      
+      color = v2c( value )
+
+      'set line 'color
+      'draw recf 'posx' 'posy-boxheight' 'posx+boxwidth' 'posy
+
+      'setfont 'font1' -base c'
+*    'set string 3'
+      'set string 1'
+      sign = '' ; if( value > 0 & sw = 'diff' ) ; sign = '+' ; endif
+      'draw string 'posx+boxwidth/2' 'posy-boxheight/2' 'sign%math_format('%.2f',value )
+
+      i = i + 1
+    endwhile
+    j = j + 1
+  endwhile
+
+
+  d = d + 1
+endwhile
 
 
 
+
+
+* vertical
+'set line 1'
+if( type = '7x7' ) ; 'draw line 2.0 1.6 2.0 'ymax ; endif
+'draw line 3.0 1.6 3.0 'ymax
+'draw line 5.0 1.6 5.0 'ymax
+'draw line 7.0 1.6 7.0 'ymax
+'draw line 9.0 1.6 9.0 'ymax
+
+* horizontal
+'draw line 'xmin' 1.6 9.0 1.6'
+'draw line 'xmin' 3.2 9.0 3.2'
+'draw line 'xmin' 4.8 9.0 4.8'
+'draw line 'xmin' 'ymax' 9.0 'ymax
+
+
+'setfont 'font2
+if( _type = '7x7' ) ; 'draw string 2.5 1.4 Invis' ; endif
+'draw string 4.0 1.4 Thin'
+'draw string 6.0 1.4 Medium'
+'draw string 8.0 1.4 Thick'
+
+'setfont 'font2' -angle 90 base bc'
+'draw string 'xmin-0.2' 2.4 Low'
+'draw string 'xmin-0.2' 4.0 Middle'
+if( _type = '7x7' ) ; 'draw string 'xmin-0.2' 6.0 High' ; endif
+if( _type = '3x3' ) ; 'draw string 'xmin-0.2' 5.6 High' ; endif
+
+if( _type = '7x7' )
+  'setfont large'
+  'draw string 5.5 7.9 'title1
+  'setfont large'
+  'draw string 5.5 7.5 'title2
+endif
+
+if( _type = '3x3' )
+  'setfont large'
+  'draw string 6.0 7.1 'title1
+  'setfont large'
+  'draw string 6.0 6.7 'title2
+endif
+
+return
+
+* below old
 
 ********************* draw *******************************
 if( _type = '7x7' )

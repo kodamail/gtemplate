@@ -19,6 +19,25 @@ _f2 = ''
 *_f1 = 1
 *_f2 = 2
 
+
+*
+*----- Display style
+*
+if( 1 = 1 )
+  _disp.1 = '1'
+  _disp.2 = '1'
+  _disp.3 = '1'
+  _disp.4 = '1'
+  _disp.5 = '1'
+  _disp.6 = '1'
+*  _disp.2 = '2'
+*  _disp.3 = '3'
+*  _disp.4 = '3 2'
+*  _disp.5 = '2 1'
+*  _disp.6 = '3 1'
+endif
+
+
 *
 *----- matrix type
 *
