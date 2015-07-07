@@ -161,12 +161,15 @@ _region = 'global'
 f = 1
 
 
+
 ***************************************************************
 if( 1 = 1 )
 *  ret = run_list( 'ISCCP_D1_OBS '_varid )
   _type.f = 'satellite'
   _run.f = 'ISCCP_D1_OBS'
-  'open /cwork5/kodama/dataset/isccp/D1nat/monthly/isccp_d1.ctl'
+  dir = run_list( 'ISCCP_D1_OBS dummy -show-dir')
+*  'open /cwork5/kodama/dataset/isccp/D1nat/monthly/isccp_d1.ctl'
+  'open 'dir'/isccp_d1.ctl'
   _var.f = ''
   _f2df.f = last()
   _var_pres.f = ''
@@ -180,11 +183,12 @@ endif
 if( 1 = 1 )
   _type.f = 'nicam'
   _run.f = 'K.200406.N12.gl09.b'
-  'open /cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b/data_conv/isccp/144x72x49/monthly_mean/dfq_isccp2/dfq_isccp2.ctl'
+  dir = run_list( _run.f' dummy -show-dir')
+  'open 'dir'/isccp/144x72x49/monthly_mean/dfq_isccp2/dfq_isccp2.ctl'
 * 'open /cwork5/kodama/nicam_product/amip/N12/197806/gl09/control/run01/data_conv/isccp/144x72x49/monthly_mean/dfq_isccp2/dfq_isccp2.ctl'
   _var.f = 'dfq_isccp2.'f
   _f2df.f = last()
-  'open /cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b/data_conv/ml_zlev/144x72x38/monthly_mean/ms_pres/ms_pres.ctl'
+  'open 'dir'/ml_zlev/144x72x38/monthly_mean/ms_pres/ms_pres.ctl'
   _var_pres.f = 'ms_pres.'_f2df.f+1
   f = f + 1
 endif

@@ -14,6 +14,7 @@ function run_list( args )
   year  = ''
   cdir  = ''
   cdir2 = ''
+  flag_show_dir = 0
   i = 3
   while( i < 1000 )
     key = subwrd( args, i ) ; i = i + 1
@@ -39,8 +40,11 @@ function run_list( args )
     endif
     if( key = '-cdir2' )
       cdir2 = subwrd( args, i ) ; i = i + 1
-    endif
-  endwhile
+    endif 
+    if( key = '-show-dir' )
+      flag_show_dir = 1
+    endif 
+ endwhile
 
   run  = ''
   var  = ''
@@ -59,6 +63,7 @@ function run_list( args )
 
     pdir = '/cwork5/kodama/dataset/jra25/data_conv_v2'
     dir = pdir % '/' % cdir
+    if( flag_show_dir = 1 ) ; return dir ; endif
 
     if( varid = 'u' )
       tail = 'ms_u/ms_u.ctl'
@@ -138,6 +143,7 @@ function run_list( args )
     run = 'ERA_INTERIM'
     pdir = '/mwork0/ngatm/ECMWF/era_interim_v3'
     dir = pdir % '/' % cdir
+    if( flag_show_dir = 1 ) ; return dir ; endif
 
     if( varid = 't2m' )
       tail = '2T/2T.ctl'
@@ -222,6 +228,7 @@ function run_list( args )
     run = 'NCEP/NCAR'
     pdir = '/cwork5/kodama/dataset_copy/ncep1'
     dir = pdir % '/' % cdir
+    if( flag_show_dir = 1 ) ; return dir ; endif
     if( varid = 'u' | varid = 'v' | varid = 'omega' | varid = 't' | varid = 'rh' | varid = 't2m' )
       tail = varid % '/' % varid % '.ctl'
       fv   = dtopen( dir, tail )
@@ -257,6 +264,7 @@ function run_list( args )
     pdir = '/cwork5/kodama/dataset/ncep_fnl/by_yamada'
 
     dir = pdir % '/' % cdir
+    if( flag_show_dir = 1 ) ; return dir ; endif
 
     if( varid = 'u' )
       tail = 'ms_u.ctl'
@@ -330,6 +338,7 @@ function run_list( args )
   if( runid = 'CIRA86' )
     run = 'CIRA86_CLIM'
     pdir = '/cwork5/kodama/dataset_copy/CIRA86/raw_data'
+    if( flag_show_dir = 1 ) ; return pdir ; endif
     tail = 'cira.ctl'
     if( varid = 'u' )
       fv   = dtopen( pdir, tail, open )
@@ -347,6 +356,7 @@ function run_list( args )
     run = 'N09.Athena.200X0521.L40.gl10'
     pdir = '/cwork5/kodama/COLA/nc_data'
     dir = pdir % '/' % cdir
+    if( flag_show_dir = 1 ) ; return dir ; endif
 *    if( var = '' & time = 'monthly_mean' )
     if( varid = 'precip' )
       tail = 'sa_tppn.ctl'
@@ -496,6 +506,7 @@ if(1 != 1)
     run = 'COLA-IFS-T2047'
     pdir = '/cwork5/kodama/COLA/ifs/t2047/data_conv'
     dir = pdir % '/' % cdir
+    if( flag_show_dir = 1 ) ; return dir ; endif
     if( varid = 'precip' )
       tail = 'sa_tppn.ctl'
       fv   = dtopen( dir, tail )
@@ -510,6 +521,7 @@ if(1 != 1)
   if( runid = 'ERBE' )
     run = 'ERBE'
     dir = '/cwork5/kodama/dataset_ngatm/erbe'
+    if( flag_show_dir = 1 ) ; return dir ; endif
     tail = 'grads.ctl'
 ***** longwave, monthly-mean *****
     if( var = '' & time = 'monthly_mean' )
@@ -551,6 +563,7 @@ if(1 != 1)
   if( runid = 'SRB3.0' )
     run = 'SRB3.0'
     pdir = '/cwork5/kodama/dataset/from_Hara/SRB3.0/data_grd'
+    if( flag_show_dir = 1 ) ; return pdir ; endif
 
     tid = ''
     if( time = 'monthly_mean' )
@@ -703,6 +716,7 @@ if(1 != 1)
     run = 'CERES_EBAF'
     dir = '/cwork5/kodama/dataset/CERES/EBAF_TOA'
     tail = 'CERES_EBAF-TOA_Ed2.8_Subset_200003-201310.nc'
+    if( flag_show_dir = 1 ) ; return dir ; endif
 
     if( varid = 'lw_up_toa' )
       fv   = dtopen( dir, tail )
@@ -748,6 +762,7 @@ if(1 != 1)
   if( runid = 'MODIS' )
     run = 'MODIS'
     dir = '/cwork5/kodama/dataset/modis_swr/data_grd/'cdir
+    if( flag_show_dir = 1 ) ; return dir ; endif
     if( varid = 'sw_down_sfc' )
       tail = 'swr.ctl'
       fv   = dtopen( dir, tail )
@@ -760,6 +775,7 @@ if(1 != 1)
   if( runid = 'CMAP' & varid = 'precip' )
     run = 'CMAP'
     dir = '/cwork5/kodama/dataset_copy/CMAP/standard'
+    if( flag_show_dir = 1 ) ; return dir ; endif
     tail = 'precip.mon.mean.nc'
     fv   = dtopen( dir, tail, 'sdfopen' )
     var = 'precip.'fv'(z=1)'
@@ -779,6 +795,7 @@ if(1 != 1)
   if( runid = 'GPCP' & varid = 'precip' )
     run = 'GPCP.v2.2'
     dir = '/mwork0/ngatm/NOAA/gpcp_v2.2/ctl'
+    if( flag_show_dir = 1 ) ; return dir ; endif
     tail = 'gpcp_v2.2_psg.ctl'
     fv   = dtopen( dir, tail )
     var = 'precip.'fv'(z=1)'
@@ -789,6 +806,7 @@ if(1 != 1)
     run = 'TRMM_GSMaP_TMI'
 *    dir = '/cwork5/kodama/dataset_ngatm/GSMaP/'cdir
     dir = '/mwork0/ngatm/JAXA/GSMsP/GSMaP/monthly'
+    if( flag_show_dir = 1 ) ; return dir ; endif
     tail = 'GSMaP_TMI.monthly.ctl'
     fv   = dtopen( dir, tail )
     var = '24*precip.'fv
@@ -800,6 +818,7 @@ if(1 != 1)
   if( runid = 'ISCCP_D1_OBS' & ( varid = '' | varid = 'varid' ) )
     run = 'ISCCP_D1_OBS'
     dir = '/cwork5/kodama/dataset/isccp/D1nat/monthly'
+    if( flag_show_dir = 1 ) ; return dir ; endif
     tail = 'isccp_d1.ctl'
     fv   = dtopen( dir, tail )
     var = varid % '.'fv
@@ -809,6 +828,7 @@ if(1 != 1)
   if( runid = 'ISCCP_D1_OBS' & ( varid != '' & varid != 'varid' ) )
     run = 'ISCCP_D1_OBS'
     dir = '/cwork5/kodama/dataset/isccp/D1nat/monthly'
+    if( flag_show_dir = 1 ) ; return dir ; endif
     tail = 'isccp_d1.ctl'
 
     if( varid = 'isccp_all_vis' )
@@ -916,6 +936,7 @@ if(1 != 1)
   if( runid = 'OISST_v2' & varid = 'sst' )
     run = 'OISST_v2'
     dir = '/cwork5/kodama/dataset_copy/oisst_v2'
+    if( flag_show_dir = 1 ) ; return dir ; endif
     tail = 'sst.ctl'
     fv   = dtopen( dir, tail )
     var = 'sst.'fv'(z=1)'
@@ -926,6 +947,7 @@ if(1 != 1)
   if( runid = 'AMIP2_BOUNDARY' )
     run = 'AMIP2_bnd'
     dir = '/swork14/ngatm/hpci/amip/N12/NICAM_DATABASE_AMIP/raw_data_mri/data'
+    if( flag_show_dir = 1 ) ; return dir ; endif
     if( varid = 'sst' )
       tail = 'sst/sst.ctl'
       fv   = dtopen( dir, tail )
@@ -1000,6 +1022,7 @@ if(1 != 1)
     if( head = 'MIROC_amip_t106' )
       dir = '/cwork5/kodama/dataset/miroc/data/proj/amip/t106/gt3/ctl'
     endif
+    if( flag_show_dir = 1 ) ; return dir ; endif
 
     if( varid = 't2m' )
       tail = 'T2.ctl'
@@ -1777,6 +1800,8 @@ endif
     endif
     dir = '/cwork5/kodama/nicam_product/CLIM_MATSIRO_200406_gl05_rl01/'tail'/data_conv/'cdir
   endif
+
+  if( flag_show_dir = 1 ) ; return dir ; endif
 
   dir2 = ''
   if( cdir2 != '' )

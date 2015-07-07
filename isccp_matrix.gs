@@ -678,6 +678,11 @@ while( d <= dmax )
   d = d + 1
 endwhile
 
+if( _save != '_save' & _save != '' )
+*  'save '_save
+  'gxprint '_save'.eps white'
+endif
+
 
 return
 
