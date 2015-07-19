@@ -1352,32 +1352,17 @@ if(1 != 1)
     dir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.005/data_conv/'cdir
   endif
 
-
-*  if( runid = 'K.200406.L38.gl10.run01' )
-*    flag = 2
-*    run = 'N12.K.200406.gl10.L38.run01'
-*    dir = '/cwork5/kodama/nicam_product/product_k/200406/L38/gl10/run01/data_conv/'cdir
-*  endif
   if( runid = 'K.200406.L38.gl10.run03' )
     flag = 2
-    run = 'N12.K.200406.gl10.L38.run03'
-    dir = '/cwork5/kodama/nicam_product/product_k/200406/L38/gl10/run03/data_conv/'cdir
-  endif
-  if( runid = 'K.200406.L38.gl09.run01' )
-    flag = 2
-    run = 'N12.K.200406.gl09.L38.run01'
-    dir = '/cwork5/kodama/nicam_product/product_k/200406/L38/gl09/run01/data_conv/'cdir
-  endif
-  if( runid = 'K.200406.L38.gl09.run02' )
-    flag = 2
-    run = 'N12.K.200406.gl09.L38.run02'
-    dir = '/cwork5/kodama/nicam_product/product_k/200406/L38/gl09/run02/data_conv/'cdir
+    run = 'K.200406.N12.gl10.run03'
+    dir = '/cwork5/kodama/nicam_product/product_k/200406/N12/gl10/L38/run03/data_conv/'cdir
   endif
   if( runid = 'K.200406.L38.gl09.run06' )
     flag = 2
-    run = 'N12.K.200406.gl09.L38.run06'
-    dir = '/cwork5/kodama/nicam_product/product_k/200406/L38/gl09/control/run06/data_conv/'cdir
+    run = 'K.200406.N12.gl09.run06'
+    dir = '/cwork5/kodama/nicam_product/product_k/200406/N12/gl09/L38/run06/data_conv/'cdir
   endif
+
   if( runid = 'K.200406.L38.gl09.dt60s' )
     flag = 2
     run = 'N12.K.200406.gl09.L38.dt60s'
