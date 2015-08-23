@@ -1,0 +1,81 @@
+*
+* runid = 'NCEP1'
+*   cdir = 'moda/sfc/240x121', 'moda/pl/240x121', etc
+*
+* runid = 'NCEP_FNL'
+*   cdir = ''
+*
+function rl_ncep( runid, varid_base, varid_lev, cdir, flag_show_dir )
+  run = '' ; var = ''
+
+  if( runid = 'NCEP1' )
+    run = 'NCEP/NCAR'
+    pdir = '/cwork5/kodama/dataset_copy/ncep1/data_conv'
+    dir = pdir % '/' % cdir
+    if( flag_show_dir = 1 ) ; return dir ; endif
+    levstr = ''
+    if( valnum(varid_lev) != 0 ) ; levstr = '(lev=' % varid_lev % ')' ; endif
+
+    if( varid_base = 'lh_sfc' )
+      fv   = dtopen( dir, 'lhtfl/lhtfl.ctl' )
+      var = 'lhtfl.'fv
+    endif
+    if( varid_base = 'omega' | varid_base = 'rh' | varid_base = 't' | varid_base = 'u' | varid_base = 'v' )
+      tail = varid_base % '/' % varid_base % '.ctl'
+      fv   = dtopen( dir, tail )
+      var = varid_base % '.'fv''levstr
+    endif
+    if( varid_base = 'precip' )
+      fv   = dtopen( dir, 'prate/prate.ctl' )
+      var = '60*60*24*prate.'fv
+    endif
+    if( varid_base = 'sh_sfc' )
+      fv   = dtopen( dir, 'shtfl/shtfl.ctl' )
+      if( fv > 0 ) ; var = 'shtfl.'fv ; endif
+    endif
+    if( varid_base = 't2m' )
+      fv   = dtopen( dir, 't2m/t2m.ctl' )
+      var = 't2m.'fv''levstr
+    endif
+  endif
+
+  if( runid = 'NCEP_FNL' )
+    run = 'NCEP_FNL'
+    pdir = '/cwork5/kodama/dataset/ncep_fnl/by_yamada'
+    dir = pdir % '/' % cdir
+    if( flag_show_dir = 1 ) ; return dir ; endif
+    levstr = ''
+    if( valnum(varid_lev) != 0 ) ; levstr = '(lev=' % varid_lev % ')' ; endif
+
+    if( varid_base = 'qv' )
+      fv   = dtopen( dir, 'ms_qv.ctl' )
+      var = '1000*ms_qv.'fv''levstr
+    endif
+    if( varid_base = 'qv2m' )
+      fv   = dtopen( dir, 'ss_q2m.ctl' )
+      var = '1e+3*ss_q2m.'fv
+    endif
+    if( varid_base = 'rh' )
+      fv   = dtopen( dir, 'ms_rh.ctl' )
+      var = 'ms_rh.'fv''levstr
+    endif
+    if( varid_base = 't' )
+      fv   = dtopen( dir, 'ms_tem.ctl' )
+      var = 'ms_tem.'fv''levstr
+    endif
+    if( varid_base = 't2m' )
+      fv   = dtopen( dir, 'ss_t2m.ctl' )
+      var = 'ss_t2m.'fv
+    endif
+    if( varid_base = 'u' )
+      fv   = dtopen( dir, 'ms_u.ctl' )
+      var = 'ms_u.'fv''levstr
+    endif
+    if( varid_base = 'v' )
+      fv   = dtopen( dir, 'ms_v.ctl' )
+      var = 'ms_v.'fv''levstr
+    endif
+  endif
+
+  return run % ' ' % var
+return

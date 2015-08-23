@@ -1,103 +1,62 @@
 *
-* for runid = 'JRA55'
+* runid = 'JRA55'
+*   cdir = 'ctl_monthly'
 *
-function rl_jra55( cdir, varid, target )
-  var = ''
-  fv = last()
+*
+function rl_jra55( runid, varid_base, varid_lev, cdir, flag_show_dir )
+  run = '' ; var = ''
 
-  run = 'JRA55'
-
-  if( target = 'run' )
-    return run
-  endif
-
-* varid -> varid_base, varid_lev
-  tmp = varid_sep( varid )
-  varid_base = subwrd( tmp, 1 )
-  varid_lev  = subwrd( tmp, 2 )
-
+  if( runid = 'JRA55' )
+    run = 'JRA55'
     pdir = '/mwork0/ngatm/JMA/JRA55'
     dir = pdir % '/' % cdir
+    if( flag_show_dir = 1 ) ; return dir ; endif
+    levstr = ''
+    if( valnum(varid_lev) != 0 ) ; levstr = '(lev=' % varid_lev % ')' ; endif
 
-    if( varid = 'u' & cdir = 'ctl_monthly' )
-      tail = 'anl_p_ugrd.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'UGRDprs.'fv
+    if( cdir = 'ctl_monthly' )
+      if( varid_base = 'qv' )
+        fv   = dtopen( dir, 'anl_p_spfh.monthly.ctl' )
+        var = '1000*SPFHprs.'fv''levstr
+      endif
+      if( varid = 'qv2m' )
+        fv   = dtopen( dir, 'anl_surf125.monthly.ctl' )
+        var = '1000*SPFH2m.'fv
+      endif
+      if( varid_base = 'rh' )
+        fv   = dtopen( dir, 'anl_p_rh.monthly.ctl' )
+        var = 'RHprs.'fv''levstr
+      endif
+      if( varid = 'rh2m' )
+        fv   = dtopen( dir, 'anl_surf125.monthly.ctl' )
+        var = 'RH2m.'fv
+      endif
+      if( varid_base = 't' )
+        fv   = dtopen( dir, 'anl_p_tmp.monthly.ctl' )
+        var = 'TMPprs.'fv''levstr
+      endif
+      if( varid_base = 't2m' )
+        fv   = dtopen( dir, 'anl_surf125.monthly.ctl' )
+        var = 'TMP2m.'fv
+      endif
+      if( varid_base = 'u' )
+        fv   = dtopen( dir, 'anl_p_ugrd.monthly.ctl' )
+        var = 'UGRDprs.'fv''levstr
+      endif
+      if( varid = 'u10m' )
+        fv   = dtopen( dir, 'anl_surf125.monthly.ctl' )
+        var = 'UGRD10m.'fv
+      endif
+      if( varid_base = 'v' )
+        fv   = dtopen( dir, 'anl_p_vgrd.monthly.ctl' )
+        var = 'VGRDprs.'fv''levstr
+      endif
+      if( varid = 'v10m' )
+        fv   = dtopen( dir, 'anl_surf125.monthly.ctl' )
+        var = 'VGRD10m.'fv
+      endif
     endif
-    if( varid_base = 'u' & valnum(varid_lev) != 0 )
-      tail = 'anl_p_ugrd.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'UGRDprs.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 'v' & cdir = 'ctl_monthly' )
-      tail = 'anl_p_vgrd.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'VGRDprs.'fv
-    endif
-    if( varid_base = 'v' & valnum(varid_lev) != 0 )
-      tail = 'anl_p_vgrd.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'VGRDprs.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 't' & cdir = 'ctl_monthly' )
-      tail = 'anl_p_tmp.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'TMPprs.'fv
-    endif
-    if( varid_base = 't' & valnum(varid_lev) != 0 )
-      tail = 'anl_p_tmp.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'TMPprs.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 'qv' & cdir = 'ctl_monthly' )
-      tail = 'anl_p_spfh.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = '1000*SPFHprs.'fv
-    endif
-    if( varid_base = 'qv' & valnum(varid_lev) != 0 )
-      tail = 'anl_p_spfh.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = '1000*SPFHprs.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 'rh' & cdir = 'ctl_monthly' )
-      tail = 'anl_p_rh.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'RHprs.'fv
-    endif
-    if( varid_base = 'rh' & valnum(varid_lev) != 0 )
-      tail = 'anl_p_rh.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'RHprs.'fv'(lev='varid_lev')'
-    endif
-*
-    if( varid = 'u10m' & cdir = 'ctl_monthly' )
-      tail = 'anl_surf125.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'UGRD10m.'fv
-    endif
-    if( varid = 'v10m' & cdir = 'ctl_monthly' )
-      tail = 'anl_surf125.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'VGRD10m.'fv
-    endif
-    if( varid = 't2m' & cdir = 'ctl_monthly' )
-      tail = 'anl_surf125.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'TMP2m.'fv
-    endif
-    if( varid = 'qv2m' & cdir = 'ctl_monthly' )
-      tail = 'anl_surf125.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = '1000*SPFH2m.'fv
-    endif
-    if( varid = 'rh2m' & cdir = 'ctl_monthly' )
-      tail = 'anl_surf125.monthly.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'RH2m.'fv
-    endif
-
-  if( target = 'var' )
-    return var
   endif
 
+  return run % ' ' % var
 return

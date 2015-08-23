@@ -6,6 +6,8 @@
 *   runid, varid[, [ -cdir ] cdir ] [-show-dir]
 * )
 *
+* -show-dor is used in cnf_isccp_matrix.gsf. Is it really necessary?
+*
 function run_list( args )
 *
 *----- arguments
@@ -36,310 +38,66 @@ function run_list( args )
     endif
   endwhile
 
+*
+*-----
+*
   rc = gsfpath( 'run_list' )
   run  = ''
   var  = ''
   vary = ''
   varz = ''
 
-***************************************************************
-* varid -> varid_base, varid_lev (e.g., u500 -> u, 500)
+*
+*-----
+*
+* varid -> varid_base, varid_lev (e.g., 'u500' -> 'u', '500', 't2m' -> 't2m', '')
   tmp = varid_sep( varid )
   varid_base = subwrd( tmp, 1 )
   varid_lev  = subwrd( tmp, 2 )
 
-***************************************************************
-  if( runid = 'JRA125' )
-    run = 'JRA25'
-
-    pdir = '/cwork5/kodama/dataset/jra25/data_conv_v2'
-    dir = pdir % '/' % cdir
-    if( flag_show_dir = 1 ) ; return dir ; endif
-
-    if( varid = 'u' )
-      tail = 'ms_u/ms_u.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ms_u.'fv
-    endif
-    if( varid_base = 'u' & valnum(varid_lev) != 0 )
-      tail = 'ms_u/ms_u.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ms_u.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 'v' )
-      tail = 'ms_v/ms_v.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ms_v.'fv
-    endif
-    if( varid_base = 'v' & valnum(varid_lev) != 0 )
-      tail = 'ms_v/ms_v.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ms_v.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 't' )
-      tail = 'ms_tem/ms_tem.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ms_tem.'fv
-    endif
-    if( varid_base = 't' & valnum(varid_lev) != 0 )
-      tail = 'ms_tem/ms_tem.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ms_tem.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 'rh' )
-      tail = 'ms_rh/ms_rh.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ms_rh.'fv
-    endif
-    if( varid_base = 'rh' & valnum(varid_lev) != 0 )
-      tail = 'ms_rh/ms_rh.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ms_rh.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 'qv' )
-      tail = 'ms_qv/ms_qv.ctl'
-      fv   = dtopen( dir, tail )
-      var = '1e+3*ms_qv.'fv
-    endif
-    if( varid_base = 'qv' & valnum(varid_lev) != 0 )
-      tail = 'ms_qv/ms_qv.ctl'
-      fv   = dtopen( dir, tail )
-      var = '1e+3*ms_qv.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 't2m' )
-      tail = 'ss_t2m/ss_t2m.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ss_t2m.'fv
-    endif
-    if( varid = 'qv2m' )
-      tail = 'ss_q2m/ss_q2m.ctl'
-      fv   = dtopen( dir, tail )
-      var = '1e+3*ss_q2m.'fv
-    endif
-    if( varid = 'mslp' )
-      tail = 'ss_slp/ss_slp.ctl'
-      fv   = dtopen( dir, tail )
-      var = '0.01*ss_slp.'fv
-    endif
-  endif
-
-  if( runid = 'JRA55' )
-    run = rl_jra55( cdir, varid, 'run' )
-    var = rl_jra55( cdir, varid, 'var' )
-    fv = last()
-  endif
-
-***************************************************************
-  if( runid = 'ERA_INTERIM' )
-    run = 'ERA_INTERIM'
-    pdir = '/mwork0/ngatm/ECMWF/era_interim_v3'
-    dir = pdir % '/' % cdir
-    if( flag_show_dir = 1 ) ; return dir ; endif
-
-    if( varid = 't2m' )
-      tail = '2T/2T.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'no2Tsfc.'fv
-    endif
-
-    levstr = ''
-    if( varid_base != '' & valnum(varid_lev) != 0 )
-      levstr = '(lev=' % varid_lev % ')'
-    endif
-
-    if( varid = 't' | ( varid_base = 't' & varid != 't2m' ) )
-      tail = 'T/T.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'T.'fv % levstr
-    endif
-    if( varid = 'u' | varid_base = 'u' )
-      tail = 'U/U.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'U.'fv % levstr
-    endif
-    if( varid = 'v' | varid_base = 'v' )
-      tail = 'V/V.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'V.'fv % levstr
-    endif
-    if( varid = 'rh' | varid_base = 'rh' )
-      tail = 'R/R.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'R.'fv % levstr
-    endif
-
-    if( varid = 'mslp' )
-      tail = 'MSL/MSL.ctl'
-      fv   = dtopen( dir, tail )
-      var = '0.01*MSL.'fv
-    endif
-
-
-
-  endif
-
-
-***************************************************************
-*  if( runid = 'ERA_INTERIM' )
-*    run = 'ERA_INTERIM'
-*    pdir = '/cwork5/kodama/dataset_ngatm/era_interim'
-*    dir = pdir % '/' % cdir
-**    if( varid = 'u' | varid = 'v' | varid = 'omega' | varid = 't' | varid = 'rh' | varid_base = 'rh' | varid = 'rh700' | varid = 't2m' )
-**      tail = varid % '/' % varid % '.ctl'
-**      if( varid = 'omega' ) ; tail = 'w' % '/' % 'w' % '.ctl' ; endif
-**      if( varid_base != '' & valnum(varid_lev) != 0 )
-**        tail = varid_base % '/' % varid_base % '.ctl'
-**      endif
-**      fv   = dtopen( dir, tail )
-**      var = varid % '.'fv
-**      if( varid_base != '' & valnum(varid_lev) != 0 )
-**        var = varid_base % '.'fv'(lev='varid_lev')'
-**      endif
-**    endif
 *
-*    if( varid = 'u' | varid = 'v' | varid = 't' | varid = rh | varid = 't2m' )
-*      tail = varid % '/' % varid % '.ctl'
-*      fv   = dtopen( dir, tail )
-*      var = varid % '.'fv
-*    endif
-*    if( varid = 'omega' )
-*      tail = 'w/w.ctl'
-*      fv   = dtopen( dir, tail )
-*      var = varid % '.'fv
-*    endif
-*    if( varid_base != '' & valnum(varid_lev) != 0 )
-*      tail = varid_base % '/' % varid_base % '.ctl'
-*      fv   = dtopen( dir, tail )
-*        var = varid_base % '.'fv'(lev='varid_lev')'
-*    endif
-*  endif
+* rl_* returns run name and variable expression if possible.
+*
+  while ( 1 = 1 )
 
-***************************************************************
-  if( runid = 'NCEP1' )
-    run = 'NCEP/NCAR'
-    pdir = '/cwork5/kodama/dataset_copy/ncep1'
-    dir = pdir % '/' % cdir
-    if( flag_show_dir = 1 ) ; return dir ; endif
-    if( varid = 'u' | varid = 'v' | varid = 'omega' | varid = 't' | varid = 'rh' | varid = 't2m' )
-      tail = varid % '/' % varid % '.ctl'
-      fv   = dtopen( dir, tail )
-      if( fv > 0 ) ; var = varid % '.'fv ; endif
-    endif
-    if( varid_base != '' & valnum(varid_lev) != 0 )
-      tail = varid_base % '/' % varid_base % '.ctl'
-      fv   = dtopen( dir, tail )
-      if( fv > 0 ) ; var = varid_base % '.'fv'(lev='varid_lev')' ; endif
-    endif
-    if( varid = 'precip' )
-      tail = 'prate/prate.ctl'
-      fv   = dtopen( dir, tail )
-      if( fv > 0 ) ; var = '60*60*24*prate.'fv ; endif
-    endif
-    if( varid = 'lh_sfc' )
-      tail = 'lhtfl/lhtfl.ctl'
-      fv   = dtopen( dir, tail )
-      if( fv > 0 ) ; var = 'lhtfl.'fv ; endif
-    endif
-    if( varid = 'sh_sfc' )
-      tail = 'shtfl/shtfl.ctl'
-      fv   = dtopen( dir, tail )
-      if( fv > 0 ) ; var = 'shtfl.'fv ; endif
-    endif
+    tmp = rl_era( runid, varid_base, varid_lev, cdir, flag_show_dir )
+    if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
+
+    tmp = rl_jra25( runid, varid_base, varid_lev, cdir, flag_show_dir )
+    if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
+
+    tmp = rl_jra55( runid, varid_base, varid_lev, cdir, flag_show_dir )
+    if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
+
+    tmp = rl_ncep( runid, varid_base, varid_lev, cdir, flag_show_dir )
+    if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
+
+    tmp = rl_srb( runid, varid_base, varid_lev, cdir, flag_show_dir )
+    if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
+
+
+
+
+    break
+  endwhile
+
+  if( tmp != '' )
+    if( flag_show_dir = 1 ) ; return tmp ; endif
+    run = subwrd( tmp, 1 )
+    var = subwrd( tmp, 2 )
   endif
 
 ***************************************************************
-  if( runid = 'NCEP_FNL' )
-    run = 'NCEP_FNL'
-
-*    pdir = '/cwork2/yyamada/product_mydb/oneyr_200406ncep-fnl/data_grd'
-    pdir = '/cwork5/kodama/dataset/ncep_fnl/by_yamada'
-
-    dir = pdir % '/' % cdir
-    if( flag_show_dir = 1 ) ; return dir ; endif
-
-    if( varid = 'u' )
-      tail = 'ms_u.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ms_u.'fv
-    endif
-    if( varid_base = 'u' & valnum(varid_lev) != 0 )
-      tail = 'ms_u.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ms_u.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 'v' )
-      tail = 'ms_v.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ms_v.'fv
-    endif
-    if( varid_base = 'v' & valnum(varid_lev) != 0 )
-      tail = 'ms_v.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ms_v.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 't' )
-      tail = 'ms_tem.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ms_tem.'fv
-    endif
-    if( varid_base = 't' & valnum(varid_lev) != 0 )
-      tail = 'ms_tem.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ms_tem.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 'rh' )
-      tail = 'ms_rh.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ms_rh.'fv
-    endif
-    if( varid_base = 'rh' & valnum(varid_lev) != 0 )
-      tail = 'ms_rh.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ms_rh.'fv'(lev='varid_lev')'
-    endif
-*    if( varid = 'rh700' )
-*      tail = 'ms_rh.ctl'
-*      fv   = dtopen( dir, tail )
-*      var = 'ms_rh.'fv'(lev=700)'
-*    endif
-    if( varid = 'qv' )
-      tail = 'ms_qv.ctl'
-      fv   = dtopen( dir, tail )
-      var = '1000*ms_qv.'fv
-    endif
-    if( varid_base = 'qv' & valnum(varid_lev) != 0 )
-      tail = 'ms_qv.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ms_qv.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 't2m' )
-      tail = 'ss_t2m.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'ss_t2m.'fv
-    endif
-    if( varid = 'qv2m' )
-      tail = 'ss_q2m.ctl'
-      fv   = dtopen( dir, tail )
-      var = '1e+3*ss_q2m.'fv
-    endif
-  endif
-
-
 ***************************************************************
-  if( runid = 'CIRA86' )
-    run = 'CIRA86_CLIM'
-    pdir = '/cwork5/kodama/dataset_copy/CIRA86/raw_data'
-    if( flag_show_dir = 1 ) ; return pdir ; endif
-    tail = 'cira.ctl'
-    if( varid = 'u' )
-      fv   = dtopen( pdir, tail, open )
-      if( fv > 0 ) ; var = 'ua.'fv ; endif
-    endif
-    if( varid = 't' )
-      fv   = dtopen( pdir, tail, open )
-      if( fv > 0 ) ; var = 'ta.'fv ; endif
-    endif
-  endif
+***************************************************************
+
+
+
+
+
+
+
+
 
 
 ***************************************************************
@@ -508,202 +266,6 @@ if(1 != 1)
 
 
 
-***************************************************************
-* TODO: time -> cdir
-if( 1 = 2 )
-  if( runid = 'ERBE' )
-    run = 'ERBE'
-    dir = '/cwork5/kodama/dataset_ngatm/erbe'
-    if( flag_show_dir = 1 ) ; return dir ; endif
-    tail = 'grads.ctl'
-***** longwave, monthly-mean *****
-    if( var = '' & time = 'monthly_mean' )
-      if( varid = 'lw_up_toa' )
-        fv   = dtopen( dir, tail )
-        var = 'v12.'fv
-      endif
-      if( varid = 'lw_up_clr_toa' )
-        fv   = dtopen( dir, tail )
-        var = 'v26.'fv
-      endif
-      if( varid = 'lw_crf_toa' )
-        fv   = dtopen( dir, tail )
-        var = 'v26.'fv'-v12.'fv
-      endif
-      if( varid = 'sw_up_toa' )
-        fv   = dtopen( dir, tail )
-        var = 'v7.'fv
-      endif
-      if( varid = 'sw_up_clr_toa' )
-        fv   = dtopen( dir, tail )
-        var = 'v21.'fv
-      endif
-      if( varid = 'sw_crf_toa' )
-        fv   = dtopen( dir, tail )
-        var = 'v21.'fv'-v7.'fv
-      endif
-      if( varid = 'aw_crf_toa' )
-        fv   = dtopen( dir, tail )
-        var = 'v26.'fv'-v12.'fv'+v21.'fv'-v7.'fv
-      endif
-
-
-    endif
-  endif
-endif
-
-***************************************************************
-* TODO: time -> cdir
-if( 1 = 2 )
-  if( runid = 'SRB3.0' )
-    run = 'SRB3.0'
-    pdir = '/cwork5/kodama/dataset/from_Hara/SRB3.0/data_grd'
-    if( flag_show_dir = 1 ) ; return pdir ; endif
-
-    tid = ''
-    if( time = 'monthly_mean' )
-      tid = 'monthly'
-    endif
-    if( time = 'daily_mean' )
-      tid = 'daily'
-    endif
-endif
-
-***** longwave *****
-    dir = pdir % '/longwave/'tid
-    if( var = '' & tid != '' )
-      if( varid = 'lw_up_toa' )
-        tail = 'toa_up.ctl'
-        fv   = dtopen( dir, tail )
-        var = 'toa_up.'fv
-      endif
-      if( varid = 'lw_up_clr_toa' )
-        tail = 'clr_toa_up.ctl'
-        fv   = dtopen( dir, tail )
-        var = 'clr_toa_up.'fv
-      endif
-      if( varid = 'lw_crf_toa' )
-        tail1 = 'toa_up.ctl'
-        fv1   = dtopen( dir, tail1 )
-        tail2 = 'clr_toa_up.ctl'
-        fv2   = dtopen( dir, tail2 )
-        if( fv1 > 0 & fv > 2 ) ; var = 'clr_toa_up.'fv2'-toa_up.'fv1 ; endif
-      endif
-      if( varid = 'lw_up_sfc' )
-        tail = 'sfc_up.ctl'
-        fv   = dtopen( dir, tail )
-        var = 'sfc_up.'fv
-      endif
-      if( varid = 'lw_down_sfc' )
-        tail = 'sfc_down.ctl'
-        fv   = dtopen( dir, tail )
-        var = 'sfc_down.'fv
-      endif
-      if( varid = 'lw_net_sfc' )
-        tail1 = 'sfc_up.ctl'
-        fv1   = dtopen( dir, tail1 )
-        tail2 = 'sfc_down.ctl'
-        fv2   = dtopen( dir, tail2 )
-        if( fv1 > 0 & fv > 2 ) ; var = 'sfc_down.'fv2'-sfc_up.'fv1 ; endif
-      endif
-    endif
-
-    dir = pdir % '/shortwave/'tid'/local'
-    if( var = '' )
-      if( varid = 'sw_up_toa' )
-        tail = 'toa_up.ctl'
-        fv   = dtopen( dir, tail )
-        var = 'toa_up.'fv
-      endif
-      if( varid = 'sw_up_clr_toa' )
-        tail = 'clr_toa_up.ctl'
-        fv   = dtopen( dir, tail )
-        var = 'clr_toa_up.'fv
-      endif
-      if( varid = 'sw_up_sfc' )
-        tail = 'sfc_up.ctl'
-        fv   = dtopen( dir, tail )
-        var = 'sfc_up.'fv
-      endif
-      if( varid = 'sw_down_toa' )
-        tail = 'toa_down.ctl'
-        fv   = dtopen( dir, tail )
-        var = 'toa_down.'fv
-      endif
-      if( varid = 'sw_crf_toa' )
-        tail1 = 'toa_up.ctl'
-        fv1   = dtopen( dir, tail1 )
-        tail2 = 'clr_toa_up.ctl'
-        fv2   = dtopen( dir, tail2 )
-        if( fv1 > 0 & fv2 > 0 ) ; var = 'clr_toa_up.'fv2'-toa_up.'fv1 ; endif
-      endif
-      if( varid = 'sw_down_sfc' )
-        tail = 'sfc_down.ctl'
-        fv   = dtopen( dir, tail )
-        var = 'sfc_down.'fv
-      endif
-      if( varid = 'sw_net_toa' )
-        tail1 = 'toa_up.ctl'
-        fv1   = dtopen( dir, tail1 )
-        tail2 = 'toa_down.ctl'
-        fv2   = dtopen( dir, tail2 )
-        if( fv1 > 0 & fv2 > 0 ) ; var = 'toa_down.'fv2'-toa_up.'fv1 ; endif
-      endif
-      if( varid = 'sw_net_sfc' )
-        tail1 = 'sfc_up.ctl'
-        fv1   = dtopen( dir, tail1 )
-        tail2 = 'sfc_down.ctl'
-        fv2   = dtopen( dir, tail2 )
-        if( fv1 > 0 & fv2 > 0 ) ; var = 'sfc_down.'fv2'-sfc_up.'fv1 ; endif
-      endif
-    endif
-
-    if( var = '' & tid != '' )
-      if( varid = 'aw_net_toa' )
-        dir = pdir % '/shortwave/'tid'/local'
-        tail1 = 'toa_up.ctl'
-        fv1   = dtopen( dir, tail1 )
-        tail2 = 'toa_down.ctl'
-        fv2   = dtopen( dir, tail2 )
-        dir = pdir % '/longwave/'tid
-        tail3 = 'toa_up.ctl'
-        fv3   = dtopen( dir, tail3 )
-        if( fv1 > 0 & fv2 > 0 & fv3 > 0 ) ; var = 'toa_down.'fv2'-toa_up.'fv1'-toa_up.'fv3 ; endif
-      endif
-      if( varid = 'aw_crf_toa' )
-        dir = pdir % '/shortwave/'tid'/local'
-        tail1 = 'toa_up.ctl'
-        fv1   = dtopen( dir, tail1 )
-        tail2 = 'clr_toa_up.ctl'
-        fv2   = dtopen( dir, tail2 )
-        dir = pdir % '/longwave/'tid
-        tail3 = 'toa_up.ctl'
-        fv3   = dtopen( dir, tail3 )
-        tail4 = 'clr_toa_up.ctl'
-        fv4   = dtopen( dir, tail4 )
-        if( fv1 > 0 & fv2 > 0 & fv3 > 0 & fv4 > 0 ) ; var = 'clr_toa_up.'fv2'-toa_up.'fv1'+clr_toa_up.'fv4'-toa_up.'fv3 ; endif
-      endif
-      if( varid = 'aw_net_sfc' )
-        dir = pdir % '/shortwave/'tid'/local'
-        tail1 = 'sfc_up.ctl'
-        fv1   = dtopen( dir, tail1 )
-        tail2 = 'sfc_down.ctl'
-        fv2   = dtopen( dir, tail2 )
-        dir = pdir % '/longwave/'tid
-        tail3 = 'sfc_up.ctl'
-        fv3   = dtopen( dir, tail3 )
-        tail4 = 'sfc_down.ctl'
-        fv4   = dtopen( dir, tail4 )
-        if( fv1 > 0 & fv2 > 0 & fv3 > 0 & fv4 > 0 )
-          var = 'sfc_down.'fv2'-sfc_up.'fv1'+sfc_down.'fv4'-sfc_up.'fv3
-        endif
-      endif
-
-
-    endif
-
-
-  endif
 
 
 
@@ -2899,7 +2461,6 @@ function dtopen( dir, tail, cmd )
     fv_pre = last()
 
     if( cmd = 'cmd' | cmd = '' )
-*      'open 'dir'/'tail
       'xopen 'dir'/'tail
     else
       cmd' 'dir'/'tail
@@ -2913,6 +2474,8 @@ function dtopen( dir, tail, cmd )
       say 'open #' % fv % ': ' % dir % '/' % tail
     endif
   else
+    say 'error: fail to open ' % dir % '/' % tail
+    exit
     fv = -1
   endif
 return fv
@@ -2926,14 +2489,20 @@ function varid_sep( varid )
   target.5 = 'qv'
   tarmax = 5
 
+  varid_base = varid
+  varid_lev = ''
+
   tar = 1
   while( tar <= tarmax )
     target_len = math_strlen(target.tar)
     tmp1 = substr(varid,1,target_len)
     tmp2 = math_strlen(varid)
     if( tmp1 = target.tar & tmp2 > target_len )
-      varid_base = tmp1
-      varid_lev = substr(varid,target_len+1,tmp2-target_len)
+      varid_lev_tmp = substr(varid,target_len+1,tmp2-target_len)
+      if( valnum( varid_lev_tmp ) != 0 )
+        varid_base = tmp1
+        varid_lev = varid_lev_tmp
+      endif
     endif
     tar = tar + 1
   endwhile

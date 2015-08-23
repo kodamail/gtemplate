@@ -1,0 +1,54 @@
+*
+* runid = 'JRA25'
+*   cdir = 'sl/144x72/tstep', etc
+*
+*
+function rl_jra25( runid, varid_base, varid_lev, cdir, flag_show_dir )
+  run = '' ; var = ''
+
+  if( runid = 'JRA25' )
+    run = 'JRA25'
+    pdir = '/cwork5/kodama/dataset/jra25/data_conv_v2'
+    dir = pdir % '/' % cdir
+    if( flag_show_dir = 1 ) ; return dir ; endif
+    levstr = ''
+    if( valnum(varid_lev) != 0 ) ; levstr = '(lev=' % varid_lev % ')' ; endif
+
+    if( varid_base = 'mslp' )
+      fv   = dtopen( dir, 'ss_slp/ss_slp.ctl' )
+      var = '0.01*ss_slp.'fv
+    endif
+    if( varid_base = 'qv' )
+      fv   = dtopen( dir, 'ms_qv/ms_qv.ctl' )
+      var = '1e+3*ms_qv.'fv''levstr
+*      if( valnum(varid_lev) != 0 ) ; var = var % '(lev='varid_lev')' ; endif
+    endif
+    if( varid_base = 'qv2m' )
+      fv   = dtopen( dir, 'ss_q2m/ss_q2m.ctl' )
+      var = 'ss_q2m.'fv
+    endif
+    if( varid_base = 'rh' )
+      fv   = dtopen( dir, 'ms_rh/ms_rh.ctl' )
+      var = 'ms_rh.'fv''levstr
+    endif
+    if( varid_base = 't' )
+      fv   = dtopen( dir, 'ms_tem/ms_tem.ctl' )
+      var = 'ms_tem.'fv''levstr
+    endif
+    if( varid_base = 't2m' )
+      fv   = dtopen( dir, 'ss_t2m/ss_t2m.ctl' )
+      var = 'ss_t2m.'fv
+    endif
+    if( varid_base = 'u' )
+      fv   = dtopen( dir, 'ms_u/ms_u.ctl' )
+      var = 'ms_u.'fv''levstr
+    endif
+    if( varid_base = 'v' )
+      fv   = dtopen( dir, 'ms_v/ms_v.ctl' )
+      var = 'ms_v.'fv''levstr
+    endif
+
+  endif
+
+  return run % ' ' % var
+return

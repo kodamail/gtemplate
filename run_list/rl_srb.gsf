@@ -1,0 +1,100 @@
+*
+* runid = 'SRB3.0'
+*   cdir = 'monthly', etc
+*
+*
+function rl_srb( runid, varid_base, varid_lev, cdir, flag_show_dir )
+  run = '' ; var = ''
+
+  if( runid = 'SRB3.0' )
+    run = 'SRB3.0'
+    pdir = '/cwork5/kodama/dataset/from_Hara/SRB3.0/data_grd'
+    dir = pdir % '/' % cdir
+    if( flag_show_dir = 1 ) ; return dir ; endif
+
+    if( varid_base = 'aw_crf_toa' )
+      fv1   = dtopen( dir, 'shortwave/local/toa_up.ctl' )
+      fv2   = dtopen( dir, 'shortwave/local/clr_toa_up.ctl' )
+      fv3   = dtopen( dir, 'longwave/toa_up.ctl' )
+      fv4   = dtopen( dir, 'longwave/clr_toa_up.ctl' )
+      var = 'clr_toa_up.'fv2'-toa_up.'fv1'+clr_toa_up.'fv4'-toa_up.'fv3
+    endif
+    if( varid_base = 'aw_net_sfc' )
+      fv1   = dtopen( dir, 'shortwave/local/sfc_up.ctl' )
+      fv2   = dtopen( dir, 'shortwave/local/sfc_down.ctl' )
+      fv3   = dtopen( dir, 'longwave/sfc_up.ctl' )
+      fv4   = dtopen( dir, 'longwave/sfc_down.ctl' )
+      var = 'sfc_down.'fv2'-sfc_up.'fv1'+sfc_down.'fv4'-sfc_up.'fv3
+    endif
+    if( varid_base = 'aw_net_toa' )
+      fv1   = dtopen( dir, 'shortwave/local/toa_up.ctl' )
+      fv2   = dtopen( dir, 'shortwave/local/toa_down.ctl' )
+      fv3   = dtopen( dir, 'longwave/toa_up.ctl' )
+      var = 'toa_down.'fv2'-toa_up.'fv1'-toa_up.'fv3
+    endif
+    if( varid_base = 'lw_crf_toa' )
+      fv1   = dtopen( dir, 'longwave/toa_up.ctl' )
+      fv2   = dtopen( dir, 'longwave/clr_toa_up.ctl' )
+      var = 'clr_toa_up.'fv2'-toa_up.'fv1
+    endif
+    if( varid_base = 'lw_down_sfc' )
+      fv   = dtopen( dir, 'longwave/sfc_down.ctl' )
+      var = 'sfc_down.'fv
+    endif
+    if( varid_base = 'lw_net_sfc' )
+      fv1   = dtopen( dir, 'longwave/sfc_up.ctl' )
+      fv2   = dtopen( dir, 'longwave/sfc_down.ctl' )
+      var = 'sfc_down.'fv2'-sfc_up.'fv1
+    endif
+    if( varid_base = 'lw_up_clr_toa' )
+      fv   = dtopen( dir, 'longwave/clr_toa_up.ctl' )
+      var = 'clr_toa_up.'fv
+    endif
+    if( varid_base = 'lw_up_sfc' )
+      fv   = dtopen( dir, 'longwave/sfc_up.ctl' )
+      var = 'sfc_up.'fv
+    endif
+    if( varid_base = 'lw_up_toa' )
+      fv   = dtopen( dir, 'longwave/toa_up.ctl' )
+      var = 'toa_up.'fv
+    endif
+    if( varid_base = 'sw_crf_toa' )
+      fv1   = dtopen( dir, 'shortwave/local/toa_up.ctl' )
+      fv2   = dtopen( dir, 'shortwave/local/clr_toa_up.ctl' )
+      var = 'clr_toa_up.'fv2'-toa_up.'fv1
+    endif
+    if( varid_base = 'sw_down_sfc' )
+      fv   = dtopen( dir, 'shortwave/local/sfc_down.ctl' )
+      var = 'sfc_down.'fv
+    endif
+    if( varid_base = 'sw_down_toa' )
+      fv   = dtopen( dir, 'shortwave/local/toa_down.ctl' )
+      var = 'toa_down.'fv
+    endif
+    if( varid_base = 'sw_net_sfc' )
+      fv1   = dtopen( dir, 'shortwave/local/sfc_up.ctl' )
+      fv2   = dtopen( dir, 'shortwave/local/sfc_down.ctl' )
+      var = 'sfc_down.'fv2'-sfc_up.'fv1
+    endif
+    if( varid_base = 'sw_net_toa' )
+      fv1   = dtopen( dir, 'shortwave/local/toa_up.ctl' )
+      fv2   = dtopen( dir, 'shortwave/local/toa_down.ctl' )
+      var = 'toa_down.'fv2'-toa_up.'fv1
+    endif
+    if( varid_base = 'sw_up_clr_toa' )
+      fv   = dtopen( dir, 'shortwave/local/clr_toa_up.ctl' )
+      var = 'clr_toa_up.'fv
+    endif
+    if( varid_base = 'sw_up_sfc' )
+      fv   = dtopen( dir, 'shortwave/local/sfc_up.ctl' )
+      var = 'sfc_up.'fv
+    endif
+    if( varid_base = 'sw_up_toa' )
+      fv   = dtopen( dir, 'shortwave/local/toa_up.ctl' )
+      var = 'toa_up.'fv
+    endif
+  endif
+
+
+  return run % ' ' % var
+return

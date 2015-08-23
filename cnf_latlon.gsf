@@ -10,7 +10,8 @@ function cnf_latlon()
 *
 * _varid: unique id for each variable
 *
-_varid = 't2m'
+*_varid = 't2m'
+*_varid = 'u500'
 *_varid = 'qv2m'
 *_varid = 'precip'
 *_varid = 'mslp'
@@ -21,19 +22,19 @@ _varid = 't2m'
 *_varid = 'iwp'
 *_varid = 'lwp'
 
-*_varid = 'lw_up_toa'
-*_varid = 'lw_up_clr_toa'
-*_varid = 'lw_crf_toa'
-*_varid = 'sw_up_toa'
-*_varid = 'sw_up_clr_toa'
-*_varid = 'sw_crf_toa'
-*_varid = 'sw_down_toa'
-*_varid = 'sw_net_toa'
-*_varid = 'aw_net_toa'
-*_varid = 'aw_crf_toa'
+_varid = 'lw_up_toa'
+_varid = 'lw_up_clr_toa'
+_varid = 'lw_crf_toa'
+_varid = 'sw_up_toa'
+_varid = 'sw_up_clr_toa'
+_varid = 'sw_crf_toa'
+_varid = 'sw_down_toa'
+_varid = 'sw_net_toa'
+_varid = 'aw_net_toa'
+_varid = 'aw_crf_toa'
 
-*_varid = 'lw_up_sfc'
-*_varid = 'lw_down_sfc'
+_varid = 'lw_up_sfc'
+_varid = 'lw_down_sfc'
 *_varid = 'lw_net_sfc'
 *_varid = 'sw_up_sfc'
 *_varid = 'sw_down_sfc'
@@ -101,10 +102,10 @@ _mpdraw = 'on'
 if( 1 = 1 )
   _disp.1 = '1'
   _disp.2 = '2'
-  _disp.3 = '3'
-  _disp.4 = '3 2'
+*  _disp.3 = '3'
+*  _disp.4 = '3 2'
   _disp.5 = '2 1'
-  _disp.6 = '3 1'
+*  _disp.6 = '3 1'
   _cbar.3 = 'hor'
   _cbar.6 = 'hor'
 endif
@@ -239,63 +240,49 @@ _region = 'global'
 f = 1
 ***************************************************************
 if( 1 != 1 )
-  ret = run_list( 'JRA125 '_varid' -cdir sl/144x72/tstep' )
+*  cdir = 'sl/144x72/tstep'
+  cdir = 'ml_plev/144x72x23/tstep'
+  ret = run_list( 'JRA25 '_varid' 'cdir )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
+  if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
+endif
 
-  if( _month = 345 )
-    _clim_arg.f = '01mar%y 31may%y 2000 2009'
-  endif
-  if( _month = 678 )
-    _clim_arg.f = '01jun%y 31aug%y 2000 2009'
-  endif
-  if( _month = 901 )
-    _clim_arg.f = '01sep%y 30nov%y 2000 2009'
-  endif
-  if( _month = 212 )
-    _clim_arg.f = '01dec%y 28feb%ypp 2000 2008'
-  endif
+***************************************************************
+if( 1 != 1 )
+  cdir = 'ctl_monthly'
+  ret = run_list( 'JRA55 '_varid' 'cdir )
+  _run.f = subwrd( ret, 2 )
+  _var.f = subwrd( ret, 4 )
+  if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
+endif
 
+***************************************************************
+if( 1 != 1 )
+*  cdir = 'moda/sfc/240x121'
+  cdir = 'moda/pl/240x121'
+  ret = run_list( 'ERA_INTERIM '_varid' 'cdir )
+  _run.f = subwrd( ret, 2 )
+  _var.f = subwrd( ret, 4 )
+  if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
+endif
+
+***************************************************************
+if( 1 != 1 )
+  cdir = 'surface/144x73/monthly'
+  cdir = 'pressure/144x73/monthly'
+  ret = run_list( 'NCEP1 '_varid' 'cdir )
+  _run.f = subwrd( ret, 2 )
+  _var.f = subwrd( ret, 4 )
   if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
 endif
 
 ***************************************************************
 if( 1 = 1 )
-  cdir = 'ctl_monthly'
-  ret = run_list( 'JRA55 '_varid' -cdir 'cdir )
+  cdir = 'monthly'
+  ret = run_list( 'SRB3.0 '_varid' 'cdir )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
-  if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-*  cdir = 'monthly/surface'
-  cdir = 'moda/sfc/240x121'
-  ret = run_list( 'ERA_INTERIM '_varid' -cdir 'cdir )
-  _run.f = subwrd( ret, 2 )
-  _var.f = subwrd( ret, 4 )
-  if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  cdir = 'data_conv/surface/144x73/monthly'
-  ret = run_list( 'NCEP1 '_varid' -cdir 'cdir )
-  _run.f = subwrd( ret, 2 )
-  _var.f = subwrd( ret, 4 )
-  if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( 'SRB3.0 '_varid' -time monthly_mean' )
-*  ret = run_list( 'SRB3.0 '_varid' -time daily_mean' )
-  _run.f = subwrd( ret, 2 )
-  _var.f = subwrd( ret, 4 )
-*  cm   = cmonth( _month, 3 )
-*  _clim_arg.f = cm % '%y ' % cm % '%y 1983 2004'
-*  _clim_arg.f = cm % '%y ' % cm % '%y 1984 2006'
   if( 1 != 1 )
     if( _month = 345 )
       _clim_arg.f = 'mar%y may%y 1984 2006'
@@ -310,16 +297,6 @@ if( 1 != 1 )
       _clim_arg.f = 'dec%y feb%ypp 1984 2005'
     endif
   endif
-  if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
-endif
-
-***************************************************************
-if( 1 != 1 )
-  ret = run_list( 'ERBE '_varid' -time monthly_mean' )
-  _run.f = subwrd( ret, 2 )
-  _var.f = subwrd( ret, 4 )
-  cm   = cmonth( _month, 3 )
-  _clim_arg.f = cm % '%y ' % cm % '%y 1985 1988'
   if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
 endif
 
@@ -472,7 +449,7 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 != 1 )
+if( 1 = 1 )
   cdir = 'sl/144x72/tstep'
   ret = run_list( 'K.200406.L38.gl09.run06 '_varid' -cdir 'cdir )
   _run.f = subwrd( ret, 2 )
@@ -499,12 +476,12 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 = 1 )
+if( 1 != 1 )
 *  cdir = 'sl/144x72/monthly_mean'
   cdir = 'sl/288x145/monthly_mean'
 *  cdir = 'sl/2560x1280/monthly_mean'
 *  cdir = 'isccp/144x72x49/monthly_mean'
-  ret = run_list( 'K.200406.N12.gl09.L38.b '_varid' -cdir 'cdir )
+  ret = run_list( 'K.200406.N12.gl09.L38.b '_varid' 'cdir )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
   if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
@@ -547,12 +524,12 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 = 1 )
+if( 1 != 1 )
 *  cdir = 'sl/144x72/monthly_mean'
   cdir = 'sl/288x145/monthly_mean'
 *  cdir = 'sl/2560x1280/monthly_mean'
 *  cdir = 'isccp/144x72x49/monthly_mean'
-  ret = run_list( 'K.200406.N12.gl09.L38.b.004 '_varid' -cdir 'cdir )
+  ret = run_list( 'K.200406.N12.gl09.L38.b.004 '_varid' 'cdir )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
   if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
