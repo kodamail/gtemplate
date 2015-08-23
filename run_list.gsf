@@ -1,58 +1,49 @@
 *
 * Run list for template GrADS script
 *
+*
+* run_list(
+*   runid, varid[, [ -cdir ] cdir ] [-show-dir]
+* )
+*
 function run_list( args )
-  runid = subwrd( args, 1 )
-  varid = subwrd( args, 2 )
-  rc = gsfpath( 'run_list' )
-
-*say 'args: ' % args
-  lon   = 'native'
-  lat   = 'native'
-  lev   = 'altitude'
-  time  = 'native'
-  year  = ''
-  cdir  = ''
-  cdir2 = ''
+*
+*----- arguments
+*
+  runid = ''
+  varid = ''
+  cdir = ''
   flag_show_dir = 0
-  i = 3
+  i = 1
   while( i < 1000 )
+    flag = 0
     key = subwrd( args, i ) ; i = i + 1
     if( key = '' ) ; break ; endif
-
-    if( key = '-lon' )
-      lon = subwrd( args, i ) ; i = i + 1
+    if( flag = 0 & key = '-cdir' )
+      flag = 1 ; cdir = subwrd( args, i ) ; i = i + 1
     endif
-    if( key = '-lat' )
-      lat = subwrd( args, i ) ; i = i + 1
-    endif
-    if( key = '-lev' )
-      lev = subwrd( args, i ) ; i = i + 1
-    endif
-    if( key = '-time' )
-      time = subwrd( args, i ) ; i = i + 1
-    endif
-    if( key = '-year' )
-      year = subwrd( args, i ) ; i = i + 1
-    endif
-    if( key = '-cdir' )
-      cdir = subwrd( args, i ) ; i = i + 1
-    endif
-    if( key = '-cdir2' )
-      cdir2 = subwrd( args, i ) ; i = i + 1
+    if( flag = 0 & key = '-show-dir' )
+      flag = 1 ; flag_show_dir = 1
     endif 
-    if( key = '-show-dir' )
-      flag_show_dir = 1
-    endif 
- endwhile
+    if( flag = 0 & runid = '' )
+      flag = 1 ; runid = key
+    endif
+    if( flag = 0 & varid = '' )
+      flag = 1 ;  varid = key
+    endif
+    if( flag = 0 & cdir = '' )
+      flag = 1 ; cdir = key
+    endif
+  endwhile
 
+  rc = gsfpath( 'run_list' )
   run  = ''
   var  = ''
   vary = ''
   varz = ''
 
 ***************************************************************
-* varid -> varid_base, varid_lev
+* varid -> varid_base, varid_lev (e.g., u500 -> u, 500)
   tmp = varid_sep( varid )
   varid_base = subwrd( tmp, 1 )
   varid_lev  = subwrd( tmp, 2 )
@@ -518,6 +509,8 @@ if(1 != 1)
 
 
 ***************************************************************
+* TODO: time -> cdir
+if( 1 = 2 )
   if( runid = 'ERBE' )
     run = 'ERBE'
     dir = '/cwork5/kodama/dataset_ngatm/erbe'
@@ -557,9 +550,11 @@ if(1 != 1)
 
     endif
   endif
-
+endif
 
 ***************************************************************
+* TODO: time -> cdir
+if( 1 = 2 )
   if( runid = 'SRB3.0' )
     run = 'SRB3.0'
     pdir = '/cwork5/kodama/dataset/from_Hara/SRB3.0/data_grd'
@@ -572,6 +567,7 @@ if(1 != 1)
     if( time = 'daily_mean' )
       tid = 'daily'
     endif
+endif
 
 ***** longwave *****
     dir = pdir % '/longwave/'tid
@@ -1196,6 +1192,8 @@ if(1 != 1)
   endif
 
 ***************************************************************
+* TODO: lon, lat, lev, time -> cdir
+if( 1 = 2 )
   if( runid = '200406_GW' )
     run = runid
     pdir = '/cwork5/kodama/nicam_product/' % run % '_by_yamada_copy'
@@ -1239,9 +1237,11 @@ if(1 != 1)
     endif
 
   endif
-
+endif
 
 ***************************************************************
+* TODO: lat, lon, lev, time -> cdir
+if( 1 = 2 )
   if( runid = 'CMIP_GW_GL9' )
     if( runid = 'CMIP_GW_GL9' )
       run = 'CMIP_GW_GL9'
@@ -1270,7 +1270,7 @@ if(1 != 1)
       var = nicam2( varid, dir )
     endif
   endif
-
+endif
 
 ***************************************************************
   flag = 0
@@ -1310,43 +1310,43 @@ if(1 != 1)
     run = 'K.200406.N12.gl09.L38.a.005'
     dir = '/cwork5/kodama/nicam_product/product_k/200406/N12/gl09/L38/a.005/data_conv/'cdir
   endif
-  if( runid = 'K.200406.N12.gl09.b' )
+*  if( runid = 'K.200406.N12.gl09.b' )
+  if( runid = 'K.200406.N12.gl09.b' | runid = 'K.200406.N12.gl09.L38.b' )
     flag = 2
     run = 'K.200406.N12.gl09.b'
     dir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b/data_conv/'cdir
   endif
-
-  if( runid = 'K.200406.N12.gl09.b.001' )
+  if( runid = 'K.200406.N12.gl09.b.001' | runid = 'K.200406.N12.gl09.L38.b.001' )
     flag = 2
     run = 'K.200406.N12.gl09.b.001'
     dir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.001/data_conv/'cdir
   endif
 
-  if( runid = 'K.200406.N12.gl09.b.002' )
+  if( runid = 'K.200406.N12.gl09.L38.b.002' )
     flag = 2
     run = 'K.200406.N12.gl09.b.002'
     dir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.002/data_conv/'cdir
   endif
 
-  if( runid = 'K.200406.N12.gl09.b.002.001' )
+  if( runid = 'K.200406.N12.gl09.L38.b.002.001' )
     flag = 2
     run = 'K.200406.N12.gl09.b.002.001'
     dir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.002.001/data_conv/'cdir
   endif
 
-  if( runid = 'K.200406.N12.gl09.b.003' )
+  if( runid = 'K.200406.N12.gl09.L38.b.003' )
     flag = 2
     run = 'K.200406.N12.gl09.b.003'
     dir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.003/data_conv/'cdir
   endif
 
-  if( runid = 'K.200406.N12.gl09.b.004' )
+  if( runid = 'K.200406.N12.gl09.L38.b.004' )
     flag = 2
     run = 'K.200406.N12.gl09.b.004'
     dir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.004/data_conv/'cdir
   endif
 
-  if( runid = 'K.200406.N12.gl09.b.005' )
+  if( runid = 'K.200406.N12.gl09.L38.b.005' )
     flag = 2
     run = 'K.200406.N12.gl09.b.005'
     dir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.005/data_conv/'cdir
@@ -1789,9 +1789,9 @@ endif
   if( flag_show_dir = 1 ) ; return dir ; endif
 
   dir2 = ''
-  if( cdir2 != '' )
-    dir2 = strrep( dir, cdir, cdir2 )
-  endif
+*  if( cdir2 != '' )
+*    dir2 = strrep( dir, cdir, cdir2 )
+*  endif
   if( flag = 2 )
     var = nicam2( varid, dir, dir2 )
   endif
