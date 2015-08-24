@@ -1,0 +1,21 @@
+*
+* runid = 'GSMaP_TMI
+*   cdir = 'monthly', 'daily', 'hourly'
+*
+*
+function rl_trmm( runid, varid_base, varid_lev, cdir, flag_show_dir )
+  run = '' ; var = ''
+
+  if( runid = 'GSMaP_TMI' )
+    run = 'TRMM_GSMaP_TMI'
+    dir = '/mwork0/ngatm/JAXA/GSMsP/GSMaP/'cdir
+    if( flag_show_dir = 1 ) ; return dir ; endif
+
+    if( varid_base = 'precip' & cdir = 'monthly' )
+      fv   = dtopen( dir, 'GSMaP_TMI.monthly.ctl' )
+      var = '24*precip.'fv
+    endif
+  endif
+
+  return run % ' ' % var
+return

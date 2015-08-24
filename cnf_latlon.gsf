@@ -15,26 +15,26 @@ function cnf_latlon()
 *_varid = 'qv2m'
 *_varid = 'precip'
 *_varid = 'mslp'
-*_varid = 'sst'
+_varid = 'sst'
 
 *_varid = 'pt_700_minus_925'
 ***_varid = 'pt_z3000s_minus_z500s'
 *_varid = 'iwp'
 *_varid = 'lwp'
 
-_varid = 'lw_up_toa'
-_varid = 'lw_up_clr_toa'
-_varid = 'lw_crf_toa'
-_varid = 'sw_up_toa'
-_varid = 'sw_up_clr_toa'
-_varid = 'sw_crf_toa'
-_varid = 'sw_down_toa'
-_varid = 'sw_net_toa'
-_varid = 'aw_net_toa'
-_varid = 'aw_crf_toa'
+*_varid = 'lw_up_toa'
+*_varid = 'lw_up_clr_toa'
+*_varid = 'lw_crf_toa'
+*_varid = 'sw_up_toa'
+*_varid = 'sw_up_clr_toa'
+*_varid = 'sw_crf_toa'
+*_varid = 'sw_down_toa'
+*_varid = 'sw_net_toa'
+*_varid = 'aw_net_toa'
+*_varid = 'aw_crf_toa'
 
-_varid = 'lw_up_sfc'
-_varid = 'lw_down_sfc'
+*_varid = 'lw_up_sfc'
+*_varid = 'lw_down_sfc'
 *_varid = 'lw_net_sfc'
 *_varid = 'sw_up_sfc'
 *_varid = 'sw_down_sfc'
@@ -278,7 +278,7 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 = 1 )
+if( 1 != 1 )
   cdir = 'monthly'
   ret = run_list( 'SRB3.0 '_varid' 'cdir )
   _run.f = subwrd( ret, 2 )
@@ -302,7 +302,7 @@ endif
 
 ***************************************************************
 if( 1 != 1 )
-  ret = run_list( 'CERES_EBAF_TOA_Ed2.8 '_varid' -time monthly_mean' )
+  ret = run_list( 'CERES_EBAF_TOA_Ed2.8 '_varid )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
 *  cm   = cmonth( month, 3 )
@@ -313,7 +313,7 @@ endif
 ***************************************************************
 if( 1 != 1 )
   cdir = 'monthly'
-  ret = run_list( 'MODIS '_varid' -cdir 'cdir )
+  ret = run_list( 'MODIS '_varid' 'cdir )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
   cm   = cmonth( _month, 3 )
@@ -345,7 +345,7 @@ endif
 
 ***************************************************************
 if( 1 != 1 )
-  ret = run_list( 'GPCP '_varid  )
+  ret = run_list( 'GPCP.v2.2 '_varid  )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
 *  cm   = cmonth( _month, 3 )
@@ -372,18 +372,28 @@ endif
 
 ***************************************************************
 if( 1 != 1 )
-  ret = run_list( 'GSMaP_TMI '_varid' -cdir monthly' )
+  cdir = 'monthly'
+  ret = run_list( 'GSMaP_TMI '_varid' 'cdir )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
-  cm   = cmonth( _month, 3 )
+*  cm   = cmonth( _month, 3 )
 *  _clim_arg.f = cm % '%y ' % cm % '%y 1998 2006'
+  if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
+endif
+
+***************************************************************
+if( 1 = 1 )
+  ret = run_list( 'OISST.v2 '_varid  )
+  _run.f = subwrd( ret, 2 )
+  _var.f = subwrd( ret, 4 )
   if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
 endif
 
 
 ***************************************************************
 if( 1 != 1 )
-  ret = run_list( 'ISCCP_D1_OBS '_varid )
+  cdir = 'monthly'
+  ret = run_list( 'ISCCP_D1_OBS '_varid' 'cdir )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
 
@@ -450,8 +460,10 @@ endif
 
 ***************************************************************
 if( 1 = 1 )
-  cdir = 'sl/144x72/tstep'
-  ret = run_list( 'K.200406.L38.gl09.run06 '_varid' -cdir 'cdir )
+  cdir = 'ol/144x72/tstep'
+*  cdir = 'sl/144x72/tstep'
+*  cdir = 'isccp/144x72x49/monthly_mean'
+  ret = run_list( 'K.200406.L38.gl09.run06 '_varid' 'cdir )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
   if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif

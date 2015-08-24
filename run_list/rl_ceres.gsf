@@ -1,0 +1,51 @@
+*
+* runid = 'CERES_EBAF_TOA_Ed2.8'
+*   cdir = ''
+*
+*
+function rl_ceres( runid, varid_base, varid_lev, cdir, flag_show_dir )
+  run = '' ; var = ''
+
+  if( runid = 'CERES_EBAF_TOA_Ed2.8' )
+    run = 'CERES_EBAF'
+    dir = '/cwork5/kodama/dataset/CERES/EBAF_TOA'
+    tail = 'CERES_EBAF-TOA_Ed2.8_Subset_200003-201310.nc'
+    if( flag_show_dir = 1 ) ; return dir ; endif
+
+    if( varid_base = 'lw_up_toa' )
+      fv   = dtopen( dir, tail )
+      var = 'toa_lw_all_mon.'fv'(z=1)'
+    endif
+    if( varid_base = 'lw_up_clr_toa' )
+      fv   = dtopen( dir, tail )
+      var = 'toa_lw_clr_mon.'fv'(z=1)'
+    endif
+    if( varid_base = 'lw_crf_toa' )
+      fv   = dtopen( dir, tail )
+      var = 'toa_cre_lw_mon.'fv'(z=1)'
+    endif
+
+    if( varid_base = 'sw_up_toa' )
+      fv   = dtopen( dir, tail )
+      var = 'toa_sw_all_mon.'fv'(z=1)'
+    endif
+    if( varid_base = 'sw_up_clr_toa' )
+      fv   = dtopen( dir, tail )
+      var = 'toa_sw_clr_mon.'fv'(z=1)'
+    endif
+    if( varid_base = 'sw_crf_toa' )
+      fv   = dtopen( dir, tail )
+      var = 'toa_cre_sw_mon.'fv'(z=1)'
+    endif
+    if( varid_base = 'sw_down_toa' )
+      fv   = dtopen( dir, tail )
+      var = 'solar_mon.'fv'(z=1)'
+    endif
+    if( varid_base = 'aw_net_toa' )
+      fv   = dtopen( dir, tail )
+      var = '-toa_lw_all_mon.'fv'(z=1)-toa_sw_all_mon.'fv'(z=1)+solar_mon.'fv'(z=1)'
+    endif
+  endif
+
+  return run % ' ' % var
+return

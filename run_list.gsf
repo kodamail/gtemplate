@@ -60,7 +60,19 @@ function run_list( args )
 *
   while ( 1 = 1 )
 
+    tmp = rl_ceres( runid, varid_base, varid_lev, cdir, flag_show_dir )
+    if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
+
+    tmp = rl_cmap( runid, varid_base, varid_lev, cdir, flag_show_dir )
+    if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
+
     tmp = rl_era( runid, varid_base, varid_lev, cdir, flag_show_dir )
+    if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
+
+    tmp = rl_gpcp( runid, varid_base, varid_lev, cdir, flag_show_dir )
+    if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
+
+    tmp = rl_isccp_obs( runid, varid_base, varid_lev, cdir, flag_show_dir )
     if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
 
     tmp = rl_jra25( runid, varid_base, varid_lev, cdir, flag_show_dir )
@@ -69,7 +81,16 @@ function run_list( args )
     tmp = rl_jra55( runid, varid_base, varid_lev, cdir, flag_show_dir )
     if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
 
+    tmp = rl_modis( runid, varid_base, varid_lev, cdir, flag_show_dir )
+    if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
+
     tmp = rl_ncep( runid, varid_base, varid_lev, cdir, flag_show_dir )
+    if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
+
+    tmp = rl_oisst( runid, varid_base, varid_lev, cdir, flag_show_dir )
+    if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
+
+    tmp = rl_trmm( runid, varid_base, varid_lev, cdir, flag_show_dir )
     if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
 
     tmp = rl_srb( runid, varid_base, varid_lev, cdir, flag_show_dir )
@@ -248,8 +269,6 @@ if(1 != 1)
     endif
   endif
 
-
-
 ***************************************************************
   if( runid = 'COLA-IFS-T2047' )
     run = 'COLA-IFS-T2047'
@@ -266,239 +285,6 @@ if(1 != 1)
 
 
 
-
-
-
-***************************************************************
-  if( runid = 'CERES_EBAF_TOA_Ed2.8' )
-    run = 'CERES_EBAF'
-    dir = '/cwork5/kodama/dataset/CERES/EBAF_TOA'
-    tail = 'CERES_EBAF-TOA_Ed2.8_Subset_200003-201310.nc'
-    if( flag_show_dir = 1 ) ; return dir ; endif
-
-    if( varid = 'lw_up_toa' )
-      fv   = dtopen( dir, tail )
-      var = 'toa_lw_all_mon.'fv'(z=1)'
-    endif
-    if( varid = 'lw_up_clr_toa' )
-      fv   = dtopen( dir, tail )
-      var = 'toa_lw_clr_mon.'fv'(z=1)'
-    endif
-    if( varid = 'lw_crf_toa' )
-      fv   = dtopen( dir, tail )
-      var = 'toa_cre_lw_mon.'fv'(z=1)'
-    endif
-
-    if( varid = 'sw_up_toa' )
-      fv   = dtopen( dir, tail )
-      var = 'toa_sw_all_mon.'fv'(z=1)'
-    endif
-    if( varid = 'sw_up_clr_toa' )
-      fv   = dtopen( dir, tail )
-      var = 'toa_sw_clr_mon.'fv'(z=1)'
-    endif
-    if( varid = 'sw_crf_toa' )
-      fv   = dtopen( dir, tail )
-      var = 'toa_cre_sw_mon.'fv'(z=1)'
-    endif
-    if( varid = 'sw_down_toa' )
-      fv   = dtopen( dir, tail )
-      var = 'solar_mon.'fv'(z=1)'
-    endif
-    if( varid = 'aw_net_toa' )
-      fv   = dtopen( dir, tail )
-      var = '-toa_lw_all_mon.'fv'(z=1)-toa_sw_all_mon.'fv'(z=1)+solar_mon.'fv'(z=1)'
-    endif
-  endif
-
-
-
-
-
-
-***************************************************************
-  if( runid = 'MODIS' )
-    run = 'MODIS'
-    dir = '/cwork5/kodama/dataset/modis_swr/data_grd/'cdir
-    if( flag_show_dir = 1 ) ; return dir ; endif
-    if( varid = 'sw_down_sfc' )
-      tail = 'swr.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'swr.'fv'(z=1)'
-    endif
-  endif
-
-
-***************************************************************
-  if( runid = 'CMAP' & varid = 'precip' )
-    run = 'CMAP'
-    dir = '/cwork5/kodama/dataset_copy/CMAP/standard'
-    if( flag_show_dir = 1 ) ; return dir ; endif
-    tail = 'precip.mon.mean.nc'
-    fv   = dtopen( dir, tail, 'sdfopen' )
-    var = 'precip.'fv'(z=1)'
-  endif
-
-
-***************************************************************
-*  if( runid = 'GPCP' & varid = 'precip' )
-*    run = 'GPCP'
-*    dir = '/cwork5/kodama/dataset_ngatm/gpcp'
-*    tail = 'gpcp_big.ctl'
-*    fv   = dtopen( dir, tail )
-*    var = 'p.'fv'(z=1)'
-*  endif
-
-***************************************************************
-  if( runid = 'GPCP' & varid = 'precip' )
-    run = 'GPCP.v2.2'
-    dir = '/mwork0/ngatm/NOAA/gpcp_v2.2/ctl'
-    if( flag_show_dir = 1 ) ; return dir ; endif
-    tail = 'gpcp_v2.2_psg.ctl'
-    fv   = dtopen( dir, tail )
-    var = 'precip.'fv'(z=1)'
-  endif
-
-***************************************************************
-  if( runid = 'GSMaP_TMI' & varid = 'precip' )
-    run = 'TRMM_GSMaP_TMI'
-*    dir = '/cwork5/kodama/dataset_ngatm/GSMaP/'cdir
-    dir = '/mwork0/ngatm/JAXA/GSMsP/GSMaP/monthly'
-    if( flag_show_dir = 1 ) ; return dir ; endif
-    tail = 'GSMaP_TMI.monthly.ctl'
-    fv   = dtopen( dir, tail )
-    var = '24*precip.'fv
-  endif
-
-
-
-***************************************************************
-  if( runid = 'ISCCP_D1_OBS' & ( varid = '' | varid = 'varid' ) )
-    run = 'ISCCP_D1_OBS'
-    dir = '/cwork5/kodama/dataset/isccp/D1nat/monthly'
-    if( flag_show_dir = 1 ) ; return dir ; endif
-    tail = 'isccp_d1.ctl'
-    fv   = dtopen( dir, tail )
-    var = varid % '.'fv
-  endif
-
-***************************************************************
-  if( runid = 'ISCCP_D1_OBS' & ( varid != '' & varid != 'varid' ) )
-    run = 'ISCCP_D1_OBS'
-    dir = '/cwork5/kodama/dataset/isccp/D1nat/monthly'
-    if( flag_show_dir = 1 ) ; return dir ; endif
-    tail = 'isccp_d1.ctl'
-
-    if( varid = 'isccp_all_vis' )
-      fv   = dtopen( dir, tail )
-      var = 'hthin.'fv'+hmed.'fv'+hthick.'fv'+mthin.'fv'+mmed.'fv'+mthick.'fv'+lthin.'fv'+lmed.'fv'+lthick.'fv
-    endif
-    if( varid = 'isccp_all_vis_thin' )
-      fv   = dtopen( dir, tail )
-      var = 'hthin.'fv'+mthin.'fv'+lthin.'fv
-    endif
-    if( varid = 'isccp_all_vis_med' )
-      fv   = dtopen( dir, tail )
-      var = 'hmed.'fv'+mmed.'fv'+lmed.'fv
-    endif
-    if( varid = 'isccp_all_vis_thick' )
-      fv   = dtopen( dir, tail )
-      var = 'hthick.'fv'+mthick.'fv'+lthick.'fv
-    endif
-    if( varid = 'isccp_high_vis' )
-      fv   = dtopen( dir, tail )
-      var = 'hthin.'fv'+hmed.'fv'+hthick.'fv
-    endif
-    if( varid = 'isccp_high_vis_thin' )
-      fv   = dtopen( dir, tail )
-      var = 'hthin.'fv
-    endif
-    if( varid = 'isccp_high_vis_med' )
-      fv   = dtopen( dir, tail )
-      var = 'hmed.'fv
-    endif
-    if( varid = 'isccp_high_vis_thick' )
-      fv   = dtopen( dir, tail )
-      var = 'hthick.'fv
-    endif
-    if( varid = 'isccp_middle_vis' )
-      fv   = dtopen( dir, tail )
-      var = 'mthin.'fv'+mmed.'fv'+mthick.'fv
-    endif
-    if( varid = 'isccp_middle_vis_thin' )
-      fv   = dtopen( dir, tail )
-      var = 'mthin.'fv
-    endif
-    if( varid = 'isccp_middle_vis_med' )
-      fv   = dtopen( dir, tail )
-      var = 'mmed.'fv
-    endif
-    if( varid = 'isccp_middle_vis_thick' )
-      fv   = dtopen( dir, tail )
-      var = 'mthick.'fv
-    endif
-    if( varid = 'isccp_low_vis' )
-      fv   = dtopen( dir, tail )
-      var = 'lthin.'fv'+lmed.'fv'+lthick.'fv
-    endif
-    if( varid = 'isccp_low_vis_thin' )
-      fv   = dtopen( dir, tail )
-      var = 'lthin.'fv
-    endif
-    if( varid = 'isccp_low_vis_med' )
-      fv   = dtopen( dir, tail )
-      var = 'lmed.'fv
-    endif
-    if( varid = 'isccp_low_vis_thick' )
-      fv   = dtopen( dir, tail )
-      var = 'lthick.'fv
-    endif
-    if( varid = 'isccp_vis_thin' )
-      fv   = dtopen( dir, tail )
-      var = 'hthin.'fv'+mthin.'fv'+lthin.'fv
-    endif
-    if( varid = 'isccp_vis_med' )
-      fv   = dtopen( dir, tail )
-      var = 'hmed.'fv'+mmed.'fv'+lmed.'fv
-    endif
-    if( varid = 'isccp_vis_thick' )
-      fv   = dtopen( dir, tail )
-      var = 'hthick.'fv'+mthick.'fv'+lthick.'fv
-    endif
-    if( varid = 'isccp_high_middle_vis' )
-      fv   = dtopen( dir, tail )
-      var = 'hthin.'fv'+hmed.'fv'+hthick.'fv'+mthin.'fv'+mmed.'fv'+mthick.'fv
-    endif
-
-    varid_h = substr( varid, 1, 5 )
-    pcat = substr( varid, 8, 1 )
-    taucat = substr( varid, 12, 1 )
-    if( varid_h = 'isccp' & valnum(pcat) = 1 & valnum(taucat) = 1 )
-      if( pcat >= 1 & pcat <= 7 & taucat >= 1 & taucat <= 6 )
-      n = 30 + (pcat-1) * 6 + (taucat-1)
-      fv   = dtopen( dir, tail )
-      var = 'var'n'.'fv
-      endif
-    endif
-
-
-*    if( varid = '' )
-*      fv   = dtopen( dir, tail )
-*      var = varid'.'fv
-*    endif
-
-  endif
-
-
-***************************************************************
-  if( runid = 'OISST_v2' & varid = 'sst' )
-    run = 'OISST_v2'
-    dir = '/cwork5/kodama/dataset_copy/oisst_v2'
-    if( flag_show_dir = 1 ) ; return dir ; endif
-    tail = 'sst.ctl'
-    fv   = dtopen( dir, tail )
-    var = 'sst.'fv'(z=1)'
-  endif
 
 
 ***************************************************************
