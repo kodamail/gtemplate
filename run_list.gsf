@@ -60,6 +60,9 @@ function run_list( args )
 *
   while ( 1 = 1 )
 
+    tmp = rl_afes( runid, varid_base, varid_lev, cdir, flag_show_dir )
+    if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
+
     tmp = rl_ceres( runid, varid_base, varid_lev, cdir, flag_show_dir )
     if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
 
@@ -79,6 +82,9 @@ function run_list( args )
     if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
 
     tmp = rl_jra55( runid, varid_base, varid_lev, cdir, flag_show_dir )
+    if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
+
+    tmp = rl_miroc( runid, varid_base, varid_lev, cdir, flag_show_dir )
     if ( subwrd( tmp, 1 ) != '' ) ; break ; endif
 
     tmp = rl_modis( runid, varid_base, varid_lev, cdir, flag_show_dir )
@@ -283,14 +289,10 @@ if(1 != 1)
   endif
 
 
-
-
-
-
 ***************************************************************
   if( runid = 'AMIP2_BOUNDARY' )
     run = 'AMIP2_bnd'
-    dir = '/swork14/ngatm/hpci/amip/N12/NICAM_DATABASE_AMIP/raw_data_mri/data'
+    dir = '/swork14/ngatm/hpci/amip/N12/NICAM_DATABASE_AMIP_org/raw_data_mri/data'
     if( flag_show_dir = 1 ) ; return dir ; endif
     if( varid = 'sst' )
       tail = 'sst/sst.ctl'
@@ -313,18 +315,6 @@ if(1 != 1)
 ***************************************************************
 * JMIP
 ***************************************************************
-
-  if( runid = 'AFES_T239L48')
-    run = rl_afes( runid, cdir, varid, 'run' )
-    var = rl_afes( runid, cdir, varid, 'var' )
-    fv = last()
-  endif
-
-  if( runid = 'MIROC5_AGCM6_T85L40')
-    run = rl_miroc( runid, cdir, varid, 'run' )
-    var = rl_miroc( runid, cdir, varid, 'var' )
-    fv = last()
-  endif
 
 
 

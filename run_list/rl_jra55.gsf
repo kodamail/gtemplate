@@ -58,5 +58,4 @@ function rl_jra55( runid, varid_base, varid_lev, cdir, flag_show_dir )
     endif
   endif
 
-  return run % ' ' % var
-return
+return run % ' ' % var

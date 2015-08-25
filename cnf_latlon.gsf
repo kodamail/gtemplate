@@ -15,7 +15,7 @@ function cnf_latlon()
 *_varid = 'qv2m'
 *_varid = 'precip'
 *_varid = 'mslp'
-_varid = 'sst'
+*_varid = 'sst'
 
 *_varid = 'pt_700_minus_925'
 ***_varid = 'pt_z3000s_minus_z500s'
@@ -31,7 +31,7 @@ _varid = 'sst'
 *_varid = 'sw_down_toa'
 *_varid = 'sw_net_toa'
 *_varid = 'aw_net_toa'
-*_varid = 'aw_crf_toa'
+_varid = 'aw_crf_toa'
 
 *_varid = 'lw_up_sfc'
 *_varid = 'lw_down_sfc'
@@ -146,6 +146,7 @@ endif
 * 2. monthly or seasonal mean
 *
 _year = 2004
+_year = 1990
 _month = 6
 *_month = 678
 *_month = 901
@@ -382,7 +383,7 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 = 1 )
+if( 1 != 1 )
   ret = run_list( 'OISST.v2 '_varid  )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
@@ -411,6 +412,26 @@ if( 1 != 1 )
 *    _clim_arg.f = 'dec%y feb%ypp 1995 2007'
 *  endif
 
+  if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
+endif
+
+
+***************************************************************
+if( 1 = 1 )
+  cdir = '00144x00072.zorg.mm'
+  ret = run_list( 'AFES_T239L48 '_varid' 'cdir )
+  _run.f = subwrd( ret, 2 )
+  _var.f = subwrd( ret, 4 )
+  if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
+endif
+
+
+***************************************************************
+if( 1 = 1 )
+  cdir = '00144x00072.zorg.mm'
+  ret = run_list( 'MIROC5_AGCM6_T85L40 '_varid' 'cdir )
+  _run.f = subwrd( ret, 2 )
+  _var.f = subwrd( ret, 4 )
   if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif
 endif
 
@@ -459,9 +480,9 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 = 1 )
-  cdir = 'ol/144x72/tstep'
-*  cdir = 'sl/144x72/tstep'
+if( 1 != 1 )
+*  cdir = 'ol/144x72/tstep'
+  cdir = 'sl/144x72/tstep'
 *  cdir = 'isccp/144x72x49/monthly_mean'
   ret = run_list( 'K.200406.L38.gl09.run06 '_varid' 'cdir )
   _run.f = subwrd( ret, 2 )

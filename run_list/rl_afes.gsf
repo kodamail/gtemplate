@@ -1,208 +1,126 @@
 *
 * for runid = 'AFES_*'
 *
-function rl_afes( runid, cdir, varid, target )
-  var = ''
-  fv = last()
-
-* varid -> varid_base, varid_lev
-  tmp = varid_sep( varid )
-  varid_base = subwrd( tmp, 1 )
-  varid_lev  = subwrd( tmp, 2 )
+function rl_afes( runid, varid_base, varid_lev, cdir, flag_show_dir )
+  run = '' ; var = ''
 
   if( runid = 'AFES_T239L48')
     run = 'AFES_T239L48'
-    if( target = 'run' ) ; return run ; endif
+    pdir = '/cwork5/kodama/dataset/jmip/data_conv/amip/afes/T239L48'
+    dir = pdir % '/' % cdir
+    if( flag_show_dir = 1 ) ; return dir ; endif
+    levstr = ''
+    if( valnum(varid_lev) != 0 ) ; levstr = '(lev=' % varid_lev % ')' ; endif
 
-    dir = '/cwork5/kodama/dataset/jmip/data_conv/amip/afes/T239L48/'cdir
-
-    if( varid = 'aw_crf_toa' )
-      tail.1 = 'OLR/OLR.ctl'
-      tail.2 = 'OLRC/OLRC.ctl'
-      tail.3 = 'OSR/OSR.ctl'
-      tail.4 = 'OSRC/OSRC.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      fv.2   = dtopen( dir, tail.2 )
-      fv.3   = dtopen( dir, tail.3 )
-      fv.4   = dtopen( dir, tail.4 )
-      if( fv.1 > 0 & fv.2 > 0 & fv.3 > 0 & fv.4 > 0 )
-        var = 'OLRC.'fv.2'(z=1)-OLR.'fv.1'(z=1)+OSRC.'fv.4'(z=1)-OSR.'fv.3'(z=1)'
-      endif
+    if( varid_base = 'aw_crf_toa' )
+      fv1 = dtopen( dir, 'OLR/OLR.ctl' )
+      fv2 = dtopen( dir, 'OLRC/OLRC.ctl' )
+      fv3 = dtopen( dir, 'OSR/OSR.ctl' )
+      fv4 = dtopen( dir, 'OSRC/OSRC.ctl' )
+      var = 'OLRC.'fv2'(z=1)-OLR.'fv1'(z=1)+OSRC.'fv4'(z=1)-OSR.'fv3'(z=1)'
     endif
-
-    if( varid = 'aw_net_sfc' )
-      tail.1 = 'SLR/SLR.ctl'
-      tail.2 = 'SSR/SSR.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      fv.2   = dtopen( dir, tail.2 )
-      if( fv.1 > 0 & fv.2 > 0 ) ; var = '-SLR.'fv.1'(z=1)-SSR.'fv.2'(z=1)' ; endif
+    if( varid_base = 'aw_net_sfc' )
+      fv1 = dtopen( dir, 'SLR/SLR.ctl' )
+      fv2 = dtopen( dir, 'SSR/SSR.ctl' )
+      var = '-SLR.'fv1'(z=1)-SSR.'fv2'(z=1)'
     endif
-
-    if( varid = 'aw_net_toa' )
-      tail.1 = 'OLR/OLR.ctl'
-      tail.2 = 'OSR/OSR.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      fv.2   = dtopen( dir, tail.2 )
-      if( fv.1 > 0 & fv.2 > 0 ) ; var = '-OLR.'fv.1'(z=1)-OSR.'fv.2'(z=1)' ; endif
+    if( varid_base = 'aw_net_toa' )
+      fv1 = dtopen( dir, 'OLR/OLR.ctl' )
+      fv2 = dtopen( dir, 'OSR/OSR.ctl' )
+      var = '-OLR.'fv1'(z=1)-OSR.'fv2'(z=1)'
     endif
-
-    if( varid = 'lh_sfc' )
-      tail.1 = 'EVAP/EVAP.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      if( fv.1 > 0 ) ; var = 'EVAP.'fv.1'(z=1)' ; endif
+    if( varid_base = 'lh_sfc' )
+      fv1 = dtopen( dir, 'EVAP/EVAP.ctl' )
+      var = 'EVAP.'fv1'(z=1)'
     endif
-
-    if( varid = 'lw_crf_toa' )
-      tail.1 = 'OLR/OLR.ctl'
-      tail.2 = 'OLRC/OLRC.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      fv.2   = dtopen( dir, tail.2 )
-      if( fv.1 > 0 & fv.2 > 0 )
-        var = 'OLRC.'fv.2'(z=1)-OLR.'fv.1'(z=1)'
-      endif
+    if( varid_base = 'lw_crf_toa' )
+      fv1 = dtopen( dir, 'OLR/OLR.ctl' )
+      fv2 = dtopen( dir, 'OLRC/OLRC.ctl' )
+      var = 'OLRC.'fv2'(z=1)-OLR.'fv1'(z=1)'
     endif
-
-    if( varid = 'lw_down_sfc' )
-      tail.1 = 'SLRD/SLRD.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      if( fv.1 > 0 ) ; var = 'SLRD.'fv.1'(z=1)' ; endif
+    if( varid_base = 'lw_down_sfc' )
+      fv1 = dtopen( dir, 'SLRD/SLRD.ctl' )
+      var = 'SLRD.'fv1'(z=1)'
     endif
-
-    if( varid = 'lw_net_sfc' )
-      tail.1 = 'SLR/SLR.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      if( fv.1 > 0 ) ; var = '-SLR.'fv.1'(z=1)' ; endif
+    if( varid_base = 'lw_net_sfc' )
+      fv1 = dtopen( dir, 'SLR/SLR.ctl' )
+      var = '-SLR.'fv1'(z=1)'
     endif
-
-    if( varid = 'lw_up_clr_toa' )
-      tail.1 = 'OLRC/OLRC.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      if( fv.1 > 0 ) ; var = 'OLRC.'fv.1'(z=1)' ; endif
+    if( varid_base = 'lw_up_clr_toa' )
+      fv1 = dtopen( dir, 'OLRC/OLRC.ctl' )
+      var = 'OLRC.'fv1'(z=1)'
     endif
-
-* peinding
-    if( varid = 'lw_up_sfc' )
-      tail.1 = 'SLR/SLR.ctl'
-      tail.2 = 'SLRD/SLRD.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      fv.2   = dtopen( dir, tail.2 )
-      if( fv.1 > 0 & fv.2 > 0 )
-        var = 'SLR.'fv.1'(z=1)+SLRD.'fv.2'(z=1)'
-      endif
+    if( varid_base = 'lw_up_sfc' )
+      fv1 = dtopen( dir, 'SLR/SLR.ctl' )
+      fv2 = dtopen( dir, 'SLRD/SLRD.ctl' )
+      var = 'SLR.'fv1'(z=1)+SLRD.'fv2'(z=1)'
     endif
-
-    if( varid = 'lw_up_toa' )
-      tail.1 = 'OLR/OLR.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      if( fv.1 > 0 ) ; var = 'OLR.'fv.1'(z=1)' ; endif
+    if( varid_base = 'lw_up_toa' )
+      fv1 = dtopen( dir, 'OLR/OLR.ctl' )
+      var = 'OLR.'fv1'(z=1)'
     endif
-
-    if( varid = 'precip' )
-      tail.1 = 'PRCP/PRCP.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      if( fv.1 > 0 ) ; var = '60*60*24*PRCP.'fv.1'(z=1)' ; endif
+    if( varid_base = 'precip' )
+      fv1 = dtopen( dir, 'PRCP/PRCP.ctl' )
+      var = '60*60*24*PRCP.'fv1'(z=1)'
     endif
-
-    if( varid = 'qv' )
-      tail.1 = 'Q/Q.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      if( fv.1 > 0 ) ; var = '1e+3*Q.'fv.1 ; endif
+    if( varid_base = 'qv' )
+      fv1 = dtopen( dir, 'Q/Q.ctl' )
+      var = '1e+3*Q.'fv1
     endif
-
-    if( varid = 'qv2m' )
-      tail.1 = 'Q2/Q2.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      if( fv.1 > 0 ) ; var = '1e+3*Q2.'fv.1 ; endif
+    if( varid_base = 'qv2m' )
+      fv1 = dtopen( dir, 'Q2/Q2.ctl' )
+      var = '1e+3*Q2.'fv1
     endif
-
-    if( varid = 'sh_sfc' )
-      tail.1 = 'SENS/SENS.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      if( fv.1 > 0 ) ; var = 'SENS.'fv.1'(z=1)' ; endif
+    if( varid_base = 'sh_sfc' )
+      fv1 = dtopen( dir, 'SENS/SENS.ctl' )
+      var = 'SENS.'fv1'(z=1)'
     endif
-
-    if( varid = 'sw_crf_toa' )
-      tail.1 = 'OSR/OSR.ctl'
-      tail.2 = 'OSRC/OSRC.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      fv.2   = dtopen( dir, tail.2 )
-      if( fv.1 > 0 & fv.2 > 0 )
-        var = 'OSRC.'fv.2'(z=1)-OSR.'fv.1'(z=1)'
-      endif
+    if( varid_base = 'sw_crf_toa' )
+      fv1 = dtopen( dir, 'OSR/OSR.ctl' )
+      fv2 = dtopen( dir, 'OSRC/OSRC.ctl' )
+      var = 'OSRC.'fv2'(z=1)-OSR.'fv1'(z=1)'
     endif
-
-    if( varid = 'sw_net_toa' )
-      tail.1 = 'OSR/OSR.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      if( fv.1 > 0 ) ; var = '-OSR.'fv.1'(z=1)' ; endif
+    if( varid_base = 'sw_net_toa' )
+      fv1 = dtopen( dir, 'OSR/OSR.ctl' )
+      var = '-OSR.'fv1'(z=1)'
     endif
-
-    if( varid = 'sw_net_sfc' )
-      tail.1 = 'SSR/SSR.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      if( fv.1 > 0 ) ; var = '-SSR.'fv.1'(z=1)' ; endif
+    if( varid_base = 'sw_net_sfc' )
+      fv1 = dtopen( dir, 'SSR/SSR.ctl' )
+      var = '-SSR.'fv1'(z=1)'
     endif
-
-    if( varid = 'sw_down_sfc' )
-      tail.1 = 'SSRD/SSRD.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      if( fv.1 > 0 ) ; var = 'SSRD.'fv.1'(z=1)' ; endif
+    if( varid_base = 'sw_down_sfc' )
+      fv1 = dtopen( dir, 'SSRD/SSRD.ctl' )
+      var = 'SSRD.'fv1'(z=1)'
     endif
-
-    if( varid = 'sw_up_sfc' )
-      tail.1 = 'SSR/SSR.ctl'
-      tail.2 = 'SSRD/SSRD.ctl'
-      fv.1   = dtopen( dir, tail.1 )
-      fv.2   = dtopen( dir, tail.2 )
-      if( fv.1 > 0 & fv.2 > 0 ) ; var = 'SSR.'fv.1'(z=1)+SSRD.'fv.2'(z=1)' ; endif
+    if( varid_base = 'sw_up_sfc' )
+      fv1 = dtopen( dir, 'SSR/SSR.ctl' )
+      fv2 = dtopen( dir, 'SSRD/SSRD.ctl' )
+      var = 'SSR.'fv1'(z=1)+SSRD.'fv2'(z=1)'
     endif
-
-    if( varid = 't' )
-      tail = 'T/T.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'T.'fv
+    if( varid_base = 't' )
+      fv  = dtopen( dir, 'T/T.ctl' )
+      var = 'T.'fv''levstr
     endif
-    if( varid_base = 't' & valnum(varid_lev) != 0 )
-      tail = 'T/T.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'T.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 't2m' )
-      tail = 'T2/T2.ctl'
-      fv   = dtopen( dir, tail )
+    if( varid_base = 't2m' )
+      fv  = dtopen( dir, 'T2/T2.ctl' )
       var = 'T2.'fv'(z=1)'
     endif
-    if( varid = 'u' )
-      tail = 'U/U.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'U.'fv
+    if( varid_base_base = 'u' )
+      fv  = dtopen( dir, 'U/U.ctl' )
+      var = 'U.'fv''levstr
     endif
-    if( varid_base = 'u' & valnum(varid_lev) != 0 )
-      tail = 'U/U.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'U.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 'u10m' )
-      tail = 'U10/U10.ctl'
-      fv   = dtopen( dir, tail )
+    if( varid_base = 'u10m' )
+      fv  = dtopen( dir, 'U10/U10.ctl' )
       var = 'U10.'fv
     endif
-    if( varid = 'v' )
-      tail = 'V/V.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'V.'fv
+    if( varid_base = 'v' )
+      fv  = dtopen( dir, 'V/V.ctl' )
+      var = 'V.'fv''levstr
     endif
-    if( varid_base = 'v' & valnum(varid_lev) != 0 )
-      tail = 'V/V.ctl'
-      fv   = dtopen( dir, tail )
-      var = 'V.'fv'(lev='varid_lev')'
-    endif
-    if( varid = 'v10m' )
-      tail = 'V10/V10.ctl'
-      fv   = dtopen( dir, tail )
+    if( varid_base = 'v10m' )
+      fv  = dtopen( dir, 'V10/V10.ctl' )
       var = 'V10.'fv
     endif
   endif
 
-  if( target = 'var' ) ; return var ; endif
-return
+return run % ' ' % var
