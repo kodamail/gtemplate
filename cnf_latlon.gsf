@@ -22,7 +22,7 @@ function cnf_latlon()
 *_varid = 'iwp'
 *_varid = 'lwp'
 
-_varid = 'lw_up_toa'
+*_varid = 'lw_up_toa'
 *_varid = 'lw_up_clr_toa'
 *_varid = 'lw_crf_toa'
 *_varid = 'sw_up_toa'
@@ -55,7 +55,7 @@ _varid = 'lw_up_toa'
 
 *_varid = 'isccp_high_vis'
 *_varid = 'isccp_middle_vis'
-*_varid = 'isccp_low_vis'
+_varid = 'isccp_low_vis'
 *_varid = 'isccp_high_vis_thin'
 *_varid = 'isccp_high_vis_med'
 *_varid = 'isccp_high_vis_thick'
@@ -427,7 +427,7 @@ endif
 
 
 ***************************************************************
-if( 1 = 1 )
+if( 1 != 1 )
   cdir = '00144x00072.zorg.mm'
   ret = run_list( 'MIROC5_AGCM6_T85L40 '_varid' 'cdir )
   _run.f = subwrd( ret, 2 )
@@ -469,7 +469,7 @@ endif
 
 
 ***************************************************************
-if( 1 = 1 )
+if( 1 != 1 )
   cdir = '00144x00072.zorg.mm'
   ret = run_list( 'SINTEX_F1SFE1 '_varid' 'cdir )
   _run.f = subwrd( ret, 2 )
@@ -518,11 +518,11 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 != 1 )
+if( 1 = 1 )
 *  cdir = 'sl/144x72/monthly_mean'
-  cdir = 'sl/288x145/monthly_mean'
+*  cdir = 'sl/288x145/monthly_mean'
 *  cdir = 'sl/2560x1280/monthly_mean'
-*  cdir = 'isccp/144x72x49/monthly_mean'
+  cdir = 'isccp/144x72x49/monthly_mean'
   ret = run_list( 'K.200406.N12.gl09.L38.b '_varid' 'cdir )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
@@ -530,12 +530,12 @@ if( 1 != 1 )
 endif
 
 ***************************************************************
-if( 1 != 1 )
+if( 1 = 1 )
 *  cdir = 'sl/144x72/monthly_mean'
 *  cdir = 'sl/288x145/monthly_mean'
 *  cdir = 'sl/2560x1280/monthly_mean'
   cdir = 'isccp/144x72x49/monthly_mean'
-  ret = run_list( 'K.200406.N12.gl09.L38.b.001 '_varid' -cdir 'cdir )
+  ret = run_list( 'K.200406.N12.gl09.L38.b.001 '_varid' 'cdir )
   _run.f = subwrd( ret, 2 )
   _var.f = subwrd( ret, 4 )
   if( _var.f != '' ) ; _f2df.f = last() ; f = f + 1 ; endif

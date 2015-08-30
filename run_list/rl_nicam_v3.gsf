@@ -1,0 +1,498 @@
+*
+* runid = ''
+*   cdir following data_conv convention.
+*
+* newer first
+*
+function rl_nicam_v3( runid, varid_base, varid_lev, cdir, flag_show_dir )
+  run = '' ; var = ''
+
+*
+*---------- NICAM.12 ----------*
+*
+
+*----- 200406 sensitivity experiments (stream b) on K
+
+  if( runid = 'K.200406.N12.gl09.L38.b.005' )
+    run  = 'K.200406.N12.gl09.b.005'
+    pdir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.005/data_conv'
+  endif
+  if( runid = 'K.200406.N12.gl09.L38.b.004' )
+    run  = 'K.200406.N12.gl09.b.004'
+    pdir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.004/data_conv'
+  endif
+  if( runid = 'K.200406.N12.gl09.L38.b.003' )
+    run  = 'K.200406.N12.gl09.b.003'
+    pdir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.003/data_conv'
+  endif
+  if( runid = 'K.200406.N12.gl09.L38.b.002.001' )
+    run  = 'K.200406.N12.gl09.b.002.001'
+    pdir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.002.001/data_conv'
+  endif
+  if( runid = 'K.200406.N12.gl09.L38.b.002' )
+    run = 'K.200406.N12.gl09.b.002'
+    pdir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.002/data_conv'
+  endif
+*  if( runid = 'K.200406.N12.gl09.b.001' | runid = 'K.200406.N12.gl09.L38.b.001' )
+  if( runid = 'K.200406.N12.gl09.b.001' )
+    run = 'K.200406.N12.gl09.b.001'
+    pdir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.001/data_conv'
+  endif
+*  if( runid = 'K.200406.N12.gl09.b' | runid = 'K.200406.N12.gl09.L38.b' )
+  if( runid = 'K.200406.N12.gl09.b' )
+    run  = 'K.200406.N12.gl09.b'
+    pdir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b/data_conv'
+  endif
+
+*----- AMIP
+  if( runid = 'AMIP.N12.197806.gl09.L38.run01' )
+    run  = 'AMIP.N12.197806.gl09.L38.run01'
+    pdir = '/cwork5/kodama/nicam_product/amip/N12/197806/gl09/control/run01/data_conv'
+  endif
+  if( runid = 'AMIP.N12.207406.gl09.L38.run01' )
+    run  = 'AMIP.N12.207406.gl09.L38.run01'
+    pdir = '/cwork5/kodama/nicam_product/amip/N12/207406/gl09/control/run01/data_conv'
+  endif
+
+*----- 200406 gl09/10/11 annual run on K
+* note: runid = 'K.200406.L38.gl09.run06' is equivalen to 'K.200406.N12.gl09.L38.a'
+  if( runid = 'K.200406.L38.gl10.run03' )
+    run  = 'K.200406.N12.gl10.run03'
+    pdir = '/cwork5/kodama/nicam_product/product_k/200406/N12/gl10/L38/run03/data_conv'
+  endif
+
+*----- 200406 sensitivity experiments (stream a) and gl09/gl10/11 experiments on K
+  if( runid = 'K.200406.N12.gl09.L38.a.006' | runid = 'K.200406.L38.gl09.fixed_sst' )
+*    run  = 'N12.K.200406.gl09.L38.fixed_sst'
+    run  = 'K.200406.N12.gl09.L38.a.006'
+    pdir = '/cwork5/kodama/nicam_product/product_k/200406/N12/gl09/L38/a.006/data_conv'
+  endif
+  if( runid = 'K.200406.N12.gl09.L38.a.005' | runid = 'K.200406.L38.gl09.dt60s.fixed_numfilter' )
+*    run  = 'N12.K.200406.gl09.L38.dt60s.fixed_numfilter'
+    run = 'K.200406.N12.gl09.L38.a.005'
+    pdir = '/cwork5/kodama/nicam_product/product_k/200406/N12/gl09/L38/a.005/data_conv'
+  endif
+  if( runid = 'K.200406.N12.gl09.L38.a.001' | runid = 'K.200406.L38.gl09.dt60s' )
+*    run  = 'N12.K.200406.gl09.L38.dt60s'
+    run = 'K.200406.N12.gl09.L38.a.001'
+    pdir = '/cwork5/kodama/nicam_product/product_k/200406/N12/gl09/L38/a.001/data_conv'
+  endif
+  if( runid = 'K.200406.N12.gl09.L38.a' | runid = 'K.200406.L38.gl09.run06' )
+    run  = 'K.200406.N12.gl09.L38.a'
+    pdir = '/cwork5/kodama/nicam_product/product_k/200406/N12/gl09/L38/a/data_conv'
+  endif
+
+
+
+
+
+*----- 200406/200404 sensitivity experiments on ES
+  if( runid = 'N12.ES.200404.gl09.L40.ndw6' )
+*    run = 'N12.ES.200404.gl09.L40.ndw6'
+    run = 'ES.200404.N12.gl09.L40.ndw6'
+    pdir = '/cwork5/kodama/nicam_product/N12.ES.200404.gl09.L40.ndw6/data_conv'
+  endif
+  if( runid = 'N12.ES.200406.gl09.L40.ndw6' )
+*    run = 'N12.ES.200406.gl09.L40.ndw6'
+    run = 'ES.200406.N12.gl09.L40.ndw6'
+    pdir = '/cwork5/kodama/nicam_product/N12.ES.200406.gl09.L40.ndw6/data_conv'
+  endif
+
+
+
+*----- NICAM.09 -----*
+  if( runid = 'CMIP_GW_GL9' )
+    run = 'CMIP_GW_GL9'
+    pdir = '/cwork5/kodama/nicam_product/CMIP_GW_GL9/run15'
+  endif
+
+*----- finalize -----*
+  if( run != '' )
+    dir = pdir % '/' % cdir
+    if( flag_show_dir = 1 ) ; return dir ; endif
+    if( flag = 2 )
+      var = nicam3( varid_base, varid_lev, dir,'' )
+    endif
+  endif
+
+return run % ' ' % var
+
+
+* following data_conv convention
+function nicam3( varid_base, varid_lev, dir )
+  var = ''
+  sa.1 = 'a'
+  sa.2 = 'l'
+  sa.3 = 's'
+*  fv = 0
+*  fv1 = 0
+*  fv2 = 0
+*  fv3 = 0
+*  fv4 = 0
+
+  levstr = ''
+  if( valnum(varid_lev) != 0 )
+    levstr = '(lev=' % varid_lev % ')'
+    zstr   = '(z=' % varid_lev % ')'
+  endif
+
+  if( varid_base = 'aw_crf_toa' )
+    fv1 = dtopen( dir, 'sa_lwu_toa/sa_lwu_toa.ctl' )
+    fv2 = dtopen( dir, 'sa_lwu_toa_c/sa_lwu_toa_c.ctl' )
+    fv3 = dtopen( dir, 'sa_swu_toa/sa_swu_toa.ctl' )
+    fv4 = dtopen( dir, 'sa_swu_toa_c/sa_swu_toa_c.ctl' )
+    var = 'sa_lwu_toa_c.'fv2'-sa_lwu_toa.'fv1'+sa_swu_toa_c.'fv4'-sa_swu_toa.'fv3
+  endif
+  if( varid_base = 'aw_net_sfc' )
+    fv1 = dtopen( dir, 'sa_swu_sfc/sa_swu_sfc.ctl' )
+    fv2 = dtopen( dir, 'sa_swd_sfc/sa_swd_sfc.ctl' )
+    fv3 = dtopen( dir, 'sa_lwu_sfc/sa_lwu_sfc.ctl' )
+    fv4 = dtopen( dir, 'sa_lwd_sfc/sa_lwd_sfc.ctl' )
+    var = 'sa_swd_sfc.'fv2'-sa_swu_sfc.'fv1'+sa_lwd_sfc.'fv4'-sa_lwu_sfc.'fv3
+  endif
+  if( varid_base = 'aw_net_toa' )
+    fv1 = dtopen( dir, 'sa_swu_toa/sa_swu_toa.ctl' )
+    fv2 = dtopen( dir, 'sa_swd_toa/sa_swd_toa.ctl' )
+    fv3 = dtopen( dir, 'sa_lwu_toa/sa_lwu_toa.ctl' )
+    var = 'sa_swd_toa.'fv2'-sa_swu_toa.'fv1'-sa_lwu_toa.'fv3
+  endif
+  if( varid_base = 'energy_net_sfc' )
+    fv1 = dtopen( dir, 'sa_swu_sfc/sa_swu_sfc.ctl' )
+    fv2 = dtopen( dir, 'sa_swd_sfc/sa_swd_sfc.ctl' )
+    fv3 = dtopen( dir, 'sa_lwu_sfc/sa_lwu_sfc.ctl' )
+    fv4 = dtopen( dir, 'sa_lwd_sfc/sa_lwd_sfc.ctl' )
+    fv5 = dtopen( dir, 'sa_sh_sfc/sa_sh_sfc.ctl' )
+    fv6 = dtopen( dir, 'sa_lh_sfc/sa_lh_sfc.ctl' )
+    var = 'sa_swd_sfc.'fv2'-sa_swu_sfc.'fv1'+sa_lwd_sfc.'fv4'-sa_lwu_sfc.'fv3'-sa_sh_sfc.'fv5'-sa_lh_sfc.'fv6
+  endif
+  if( varid_base = 'evap' )
+    fv  = dtopen( dir, 'sa_evap/sa_evap.ctl' )
+    var = '24*60*60*sa_evap.'fv
+  endif
+  if( varid_base = 'ice' )
+    fv  = dtopen( dir, 'oa_ice/oa_ice.ctl' )
+    var = 'oa_ice.'fv
+  endif
+  if( varid_base = 'icr' )
+    fv  = dtopen( dir, 'oa_icr/oa_icr.ctl' )
+    var = '100*oa_icr.'fv
+  endif
+  varid_h = substr( varid_base, 1, 5 )
+  if( varid_h = 'isccp' )
+    fv  = dtopen( dir, 'dfq_isccp2/dfq_isccp2.ctl' )
+    if( varid_base = 'isccp_all' )
+      var = 'sum(100*dfq_isccp2.'fv',z=1,z=49)'
+    endif
+    if( varid_base = 'isccp_all_vis' )
+      var = 'sum(100*dfq_isccp2.'fv',z=2,z=7)+sum(100*dfq_isccp2.'fv',z=9,z=14)+sum(100*dfq_isccp2.'fv',z=16,z=21)+sum(100*dfq_isccp2.'fv',z=23,z=28)+sum(100*dfq_isccp2.'fv',z=30,z=35)+sum(100*dfq_isccp2.'fv',z=37,z=42)+sum(100*dfq_isccp2.'fv',z=44,z=49)'
+    endif
+    if( varid_base = 'isccp_all_vis_thin' )
+      var = 'sum(100*dfq_isccp2.'fv',z=2,z=3)+sum(100*dfq_isccp2.'fv',z=9,z=10)+sum(100*dfq_isccp2.'fv',z=16,z=17)+sum(100*dfq_isccp2.'fv',z=23,z=24)+sum(100*dfq_isccp2.'fv',z=30,z=31)+sum(100*dfq_isccp2.'fv',z=37,z=38)+sum(100*dfq_isccp2.'fv',z=44,z=45)'
+    endif
+    if( varid_base = 'isccp_all_vis_med' )
+      var = 'sum(100*dfq_isccp2.'fv',z=4,z=5)+sum(100*dfq_isccp2.'fv',z=11,z=12)+sum(100*dfq_isccp2.'fv',z=18,z=19)+sum(100*dfq_isccp2.'fv',z=25,z=26)+sum(100*dfq_isccp2.'fv',z=32,z=33)+sum(100*dfq_isccp2.'fv',z=39,z=40)+sum(100*dfq_isccp2.'fv',z=46,z=47)'
+    endif
+    if( varid_base = 'isccp_all_vis_thick' )
+      var = 'sum(100*dfq_isccp2.'fv',z=6,z=7)+sum(100*dfq_isccp2.'fv',z=13,z=14)+sum(100*dfq_isccp2.'fv',z=20,z=21)+sum(100*dfq_isccp2.'fv',z=27,z=28)+sum(100*dfq_isccp2.'fv',z=34,z=35)+sum(100*dfq_isccp2.'fv',z=41,z=42)+sum(100*dfq_isccp2.'fv',z=48,z=49)'
+    endif
+    if( varid_base = 'isccp_high_vis' )
+      var = 'sum(100*dfq_isccp2.'fv',z=2,z=7)+sum(100*dfq_isccp2.'fv',z=9,z=14)+sum(100*dfq_isccp2.'fv',z=16,z=21)'
+    endif
+    if( varid_base = 'isccp_middle_vis' )
+      var = 'sum(100*dfq_isccp2.'fv',z=23,z=28)+sum(100*dfq_isccp2.'fv',z=30,z=35)'
+    endif
+    if( varid_base = 'isccp_low_vis' )
+      var = 'sum(100*dfq_isccp2.'fv',z=37,z=42)+sum(100*dfq_isccp2.'fv',z=44,z=49)'
+    endif
+    if( varid_base = 'isccp_high_vis_thin' )
+      var = 'sum(100*dfq_isccp2.'fv',z=2,z=3)+sum(100*dfq_isccp2.'fv',z=9,z=10)+sum(100*dfq_isccp2.'fv',z=16,z=17)'
+    endif
+    if( varid_base = 'isccp_high_vis_med' )
+      var = 'sum(100*dfq_isccp2.'fv',z=4,z=5)+sum(100*dfq_isccp2.'fv',z=11,z=12)+sum(100*dfq_isccp2.'fv',z=18,z=19)'
+    endif
+    if( varid_base = 'isccp_high_vis_thick' )
+      var = 'sum(100*dfq_isccp2.'fv',z=6,z=7)+sum(100*dfq_isccp2.'fv',z=13,z=14)+sum(100*dfq_isccp2.'fv',z=20,z=21)'
+    endif
+    if( varid_base = 'isccp_middle_vis_thin' )
+      var = 'sum(100*dfq_isccp2.'fv',z=23,z=24)+sum(100*dfq_isccp2.'fv',z=30,z=31)'
+    endif
+    if( varid_base = 'isccp_middle_vis_med' )
+      var = 'sum(100*dfq_isccp2.'fv',z=25,z=26)+sum(100*dfq_isccp2.'fv',z=32,z=33)'
+    endif
+    if( varid_base = 'isccp_middle_vis_thick' )
+      var = 'sum(100*dfq_isccp2.'fv',z=27,z=28)+sum(100*dfq_isccp2.'fv',z=34,z=35)'
+    endif
+    if( varid_base = 'isccp_low_vis_thin' )
+      var = 'sum(100*dfq_isccp2.'fv',z=37,z=38)+sum(100*dfq_isccp2.'fv',z=44,z=45)'
+    endif
+    if( varid_base = 'isccp_low_vis_med' )
+      var = 'sum(100*dfq_isccp2.'fv',z=39,z=40)+sum(100*dfq_isccp2.'fv',z=46,z=47)'
+    endif
+    if( varid_base = 'isccp_low_vis_thick' )
+      var = 'sum(100*dfq_isccp2.'fv',z=41,z=42)+sum(100*dfq_isccp2.'fv',z=48,z=49)'
+    endif
+    if( varid_base = 'isccp_vis_thin' )
+      var = 'sum(100*dfq_isccp2.'fv',z=2,z=3)+sum(100*dfq_isccp2.'fv',z=9,z=10)+sum(100*dfq_isccp2.'fv',z=16,z=17)+sum(100*dfq_isccp2.'fv',z=23,z=24)+sum(100*dfq_isccp2.'fv',z=30,z=31)+sum(100*dfq_isccp2.'fv',z=37,z=38)+sum(100*dfq_isccp2.'fv',z=44,z=45)'
+    endif
+    if( varid_base = 'isccp_vis_med' )
+      var = 'sum(100*dfq_isccp2.'fv',z=4,z=5)+sum(100*dfq_isccp2.'fv',z=11,z=12)+sum(100*dfq_isccp2.'fv',z=18,z=19)+sum(100*dfq_isccp2.'fv',z=25,z=26)+sum(100*dfq_isccp2.'fv',z=32,z=33)+sum(100*dfq_isccp2.'fv',z=39,z=40)+sum(100*dfq_isccp2.'fv',z=46,z=47)'
+    endif
+    if( varid_base = 'isccp_vis_thick' )
+      var = 'sum(100*dfq_isccp2.'fv',z=6,z=7)+sum(100*dfq_isccp2.'fv',z=13,z=14)+sum(100*dfq_isccp2.'fv',z=20,z=21)+sum(100*dfq_isccp2.'fv',z=27,z=28)+sum(100*dfq_isccp2.'fv',z=34,z=35)+sum(100*dfq_isccp2.'fv',z=41,z=42)+sum(100*dfq_isccp2.'fv',z=48,z=49)'
+    endif
+    if( varid_base = 'isccp_high_middle_vis' )
+      var = 'sum(100*dfq_isccp2.'fv',z=2,z=7)+sum(100*dfq_isccp2.'fv',z=9,z=14)+sum(100*dfq_isccp2.'fv',z=16,z=21)+sum(100*dfq_isccp2.'fv',z=23,z=28)+sum(100*dfq_isccp2.'fv',z=30,z=35)'
+    endif
+    if( varid_base = 'dfq_isccp2' )
+      var  = 'dfq_isccp2.'fv
+    endif
+    if( varid_base = 'isccp_ctp_all' )
+      var =        '0.5*(50+180)*sum(dfq_isccp2.'fv',z=1,z=7)'
+      var = var % '+0.5*(180+310)*sum(dfq_isccp2.'fv',z=8,z=14)'
+      var = var % '+0.5*(310+440)*sum(dfq_isccp2.'fv',z=15,z=21)'
+      var = var % '+0.5*(440+560)*sum(dfq_isccp2.'fv',z=22,z=28)'
+      var = var % '+0.5*(560+680)*sum(dfq_isccp2.'fv',z=29,z=35)'
+      var = var % '+0.5*(680+800)*sum(dfq_isccp2.'fv',z=36,z=42)'
+      var = var % '+0.5*(800+1000)*sum(dfq_isccp2.'fv',z=43,z=49)'
+      var = '(' % var % ')/sum(dfq_isccp2.'fv',z=1,z=49)'
+    endif
+    if( varid_base = 'isccp_ctp_all_vis' )
+      var =        '0.5*(50+180)*sum(dfq_isccp2.'fv',z=2,z=7)'
+      var = var % '+0.5*(180+310)*sum(dfq_isccp2.'fv',z=9,z=14)'
+      var = var % '+0.5*(310+440)*sum(dfq_isccp2.'fv',z=16,z=21)'
+      var = var % '+0.5*(440+560)*sum(dfq_isccp2.'fv',z=23,z=28)'
+      var = var % '+0.5*(560+680)*sum(dfq_isccp2.'fv',z=30,z=35)'
+      var = var % '+0.5*(680+800)*sum(dfq_isccp2.'fv',z=37,z=42)'
+      var = var % '+0.5*(800+1000)*sum(dfq_isccp2.'fv',z=44,z=49)'
+      var = '(' % var % ')/(sum(dfq_isccp2.'fv',z=2,z=7)+sum(dfq_isccp2.'fv',z=9,z=14)+sum(dfq_isccp2.'fv',z=16,z=21)+sum(dfq_isccp2.'fv',z=23,z=28)+sum(dfq_isccp2.'fv',z=30,z=35)+sum(dfq_isccp2.'fv',z=37,z=42)+sum(dfq_isccp2.'fv',z=44,z=49))'
+    endif
+    if( varid_base = 'isccp_od_all_vis' )
+      tau.1 = 0
+      tau.2 = 0.5*(math_log(0.3)+math_log(1.3))
+      tau.3 = 0.5*(math_log(1.3)+math_log(3.6))
+      tau.4 = 0.5*(math_log(3.6)+math_log(9.4))
+      tau.5 = 0.5*(math_log(9.4)+math_log(23))
+      tau.6 = 0.5*(math_log(23)+math_log(60))
+      tau.7 = 0.5*(math_log(60)+math_log(380))
+      var1 = ''
+      var2 = ''
+      t = 1
+      z = 1
+      while( z <= 49 )
+        if( t != 1 )
+          if( z != 2 ) ; var = var % '+' ; endif
+          var1 = '(' % tau.t % ')' % '*dfq_isccp2.'fv'(z='z')'
+          var = var % '(' % var1 % ')/(sum(dfq_isccp2.'fv',z=2,z=7)+sum(dfq_isccp2.'fv',z=9,z=14)+sum(dfq_isccp2.'fv',z=16,z=21)+sum(dfq_isccp2.'fv',z=23,z=28)+sum(dfq_isccp2.'fv',z=30,z=35)+sum(dfq_isccp2.'fv',z=37,z=42)+sum(dfq_isccp2.'fv',z=44,z=49))'
+        endif
+        t = t + 1
+        if( t > 7 ) ; t = 1 ; endif
+        z = z + 1
+      endwhile
+    endif
+    pcat = substr( varid_base, 8, 1 )
+    taucat = substr( varid_base, 12, 1 )
+    if( valnum(pcat) = 1 & valnum(taucat) = 1 )
+      if( pcat >= 1 & pcat <= 7 & taucat >= 0 & taucat <= 6 )
+        n = 1 + (pcat-1) * 7 + taucat
+        var  = '100*dfq_isccp2.'fv'(z='n')'
+      endif
+    endif
+  endif
+  if( varid_base = 'iwp' )
+    fv  = dtopen( dir, 'sa_cldi/sa_cldi.ctl' )
+    var = '1e+3*sa_cldi.'fv
+  endif
+* varid = 'land_wg_[1-5]', previously
+  if( varid_base = 'land_wg' )
+    fv  = dtopen( dir, 'la_wg/la_wg.ctl' )
+    var = 'la_wg.'fv''zstr
+  endif
+  if( varid_base = 'lh_sfc' )
+    fv  = dtopen( dir, 'sa_lh_sfc/sa_lh_sfc.ctl' )
+    var = 'sa_lh_sfc.'fv
+  endif
+  if( varid_base = 'lw_crf_toa' )
+    fv1 = dtopen( dir, 'sa_lwu_toa/sa_lwu_toa.ctl' )
+    fv2 = dtopen( dir, 'sa_lwu_toa_c/sa_lwu_toa_c.ctl' )
+    var = 'sa_lwu_toa_c.'fv2'-sa_lwu_toa.'fv1
+  endif
+  if( varid_base = 'lw_down_sfc' )
+    fv  = dtopen( dir, 'sa_lwd_sfc/sa_lwd_sfc.ctl' )
+    var = 'sa_lwd_sfc.'fv
+  endif
+  if( varid_base = 'lw_net_sfc' )
+    fv1 = dtopen( dir, 'sa_lwu_sfc/sa_lwu_sfc.ctl' )
+    fv2 = dtopen( dir, 'sa_lwd_sfc/sa_lwd_sfc.ctl' )
+    var = 'sa_lwd_sfc.'fv2'-sa_lwu_sfc.'fv1
+  endif
+  if( varid_base = 'lw_up_clr_toa' )
+    fv  = dtopen( dir, 'sa_lwu_toa_c/sa_lwu_toa_c.ctl' )
+    var = 'sa_lwu_toa_c.'fv
+  endif
+  if( varid_base = 'lw_up_sfc' )
+    fv  = dtopen( dir, 'sa_lwu_sfc/sa_lwu_sfc.ctl' )
+    var = 'sa_lwu_sfc.'fv
+  endif
+  if( varid_base = 'lw_up_toa' )
+    fv  = dtopen( dir, 'sa_lwu_toa/sa_lwu_toa.ctl' )
+    var = 'sa_lwu_toa.'fv
+  endif
+  if( varid_base = 'lwp' )
+    fv  = dtopen( dir, 'sa_cldw/sa_cldw.ctl' )
+    var = '1e+3*sa_cldw.'fv
+  endif
+  if( varid_base = 'mim_divf' )
+    fv  = dtopen( dir, 'zonal/zonal.ctl' )
+    var = '86400*divf.'fv
+  endif
+  if( varid_base = 'mim_st' )
+    fv  = dtopen( dir, 'zonal/zonal.ctl' )
+    var = '1e-10*st.'fv
+  endif
+  if( varid_base = 'mim_u' )
+    fv  = dtopen( dir, 'zonal/zonal.ctl' )
+    var = 'u.'fv
+  endif
+  if( varid_base = 'mslp' )
+    fv  = dtopen( dir, 'sa_slp/sa_slp.ctl' )
+    var = '0.01*sa_slp.'fv'(z=1)'
+  endif
+  if( varid_base = 'precip' )
+    fv  = dtopen( dir, 'sa_tppn/sa_tppn.ctl' )
+    var = '24*60*60*sa_tppn.'fv
+  endif
+  if( varid_base = 'pres' )
+    fv  = dtopen( dir, 'ms_pres/ms_pres.ctl', '', 0 )
+    var = 'ms_pres.'fv''levstr
+    if( fv < 0 )
+      fv  = dtopen( dir, 'ma_pres/ma_pres.ctl', '', 1 )
+      var = 'ma_pres.'fv''levstr
+    endif
+  endif
+  if( varid_base = 'pt_700_minus_925' )
+    fv   = dtopen( dir, 'ms_tem/ms_tem.ctl' )
+    var = '(ms_tem.'fv'(lev=700)*pow(1000/700,0.286))-(ms_tem.'fv'(lev=925)*pow(1000/925,0.286))'
+  endif
+  if( varid_base = 'qc' | varid_base = 'qg' | varid_base = 'qi' | varid_base = 'qr' | varid_base = 'qs' )
+    fv  = dtopen( dir, 'ms_'varid_base'/ms_'varid_base'.ctl' )
+    var = '1e+6*ms_'varid_base'.'fv
+  endif
+  if( varid_base = 'qv' )
+    fv  = dtopen( dir, 'ms_qv/ms_qv.ctl' )
+    var = '1e+3*ms_qv.'fv''levstr
+  endif
+  if( varid_base = 'qv2m' )
+    fv   = dtopen( dir, 'sa_q2m/sa_q2m.ctl' )
+    var  = '1e+3*sa_q2m.'fv
+  endif
+  if( varid_base = 'rh' )
+    fv  = dtopen( dir, 'ms_rh/ms_rh.ctl' )
+    var = 'ms_rh.'fv''levstr
+  endif
+  if( varid_base = 'sh_sfc' )
+    fv  = dtopen( dir, 'sa_sh_sfc/sa_sh_sfc.ctl' )
+    var = 'sa_sh_sfc.'fv
+  endif
+  if( varid_base = 'sst' )
+    fv  = dtopen( dir, 'oa_sst/oa_sst.ctl' )
+    var = 'oa_sst.'fv
+  endif
+  if( varid_base = 'sw_crf_toa' )
+    fv1 = dtopen( dir, 'sa_swu_toa/sa_swu_toa.ctl' )
+    fv2 = dtopen( dir, 'sa_swu_toa_c/sa_swu_toa_c.ctl' )
+    var = 'sa_swu_toa_c.'fv2'-sa_swu_toa.'fv1
+  endif
+  if( varid_base = 'sw_down_sfc' )
+    fv  = dtopen( dir, 'sa_swd_sfc/sa_swd_sfc.ctl' )
+    var = 'sa_swd_sfc.'fv
+  endif
+  if( varid_base = 'sw_down_toa' )
+    fv  = dtopen( dir, 'sa_swd_toa/sa_swd_toa.ctl' )
+    var = 'sa_swd_toa.'fv
+  endif
+  if( varid_base = 'sw_net_sfc' )
+    fv1 = dtopen( dir, 'sa_swu_sfc/sa_swu_sfc.ctl' )
+    fv2 = dtopen( dir, 'sa_swd_sfc/sa_swd_sfc.ctl' )
+    var = 'sa_swd_sfc.'fv2'-sa_swu_sfc.'fv1
+  endif
+  if( varid_base = 'sw_net_toa' )
+    fv1 = dtopen( dir, 'sa_swu_toa/sa_swu_toa.ctl' )
+    fv2 = dtopen( dir, 'sa_swd_toa/sa_swd_toa.ctl' )
+    var = 'sa_swd_toa.'fv2'-sa_swu_toa.'fv1
+  endif
+  if( varid_base = 'sw_up_clr_toa' )
+    fv  = dtopen( dir, 'sa_swu_toa_c/sa_swu_toa_c.ctl' )
+    var = 'sa_swu_toa_c.'fv
+  endif
+  if( varid_base = 'sw_up_sfc' )
+    fv  = dtopen( dir, 'sa_swu_sfc/sa_swu_sfc.ctl' )
+    var = 'sa_swu_sfc.'fv
+  endif
+  if( varid_base = 'sw_up_toa' )
+    fv  = dtopen( dir, 'sa_swu_toa/sa_swu_toa.ctl' )
+    var = 'sa_swu_toa.'fv
+  endif
+  if( varid_base = 't' )
+    fv  = dtopen( dir, 'ms_tem/ms_tem.ctl', '', 0 )
+    var = 'ms_tem.'fv''levstr
+    if( fv < 0 )
+      fv  = dtopen( dir, 'ma_tem/ma_tem.ctl', '', 1 )
+      var = 'ma_tem.'fv''levstr
+    endif
+  endif
+  if( varid_base = 't2m' )
+    fv  = dtopen( dir, 'sa_t2m/sa_t2m.ctl' )
+    var = 'sa_t2m.'fv
+  endif
+  if( varid_base = 'u' )
+    fv  = dtopen( dir, 'ms_u/ms_u.ctl', '', 0 )
+    var = 'ms_u.'fv''levstr
+    if( fv < 0 )
+      fv  = dtopen( dir, 'ma_u/ma_u.ctl', '', 1 )
+      var = 'ma_u.'fv''levstr
+    endif
+  endif
+  if( varid_base = 'u10m' )
+    fv  = dtopen( dir, 'sa_u10m/sa_u10m.ctl' )
+    var = 'sa_u10m.'fv
+  endif
+  if( varid_base = 'v' )
+    fv  = dtopen( dir, 'ms_v/ms_v.ctl', '', 0 )
+    var = 'ms_v.'fv''levstr
+    if( fv < 0 )
+      fv  = dtopen( dir, 'ma_v/ma_v.ctl', '', 1 )
+      var = 'ma_v.'fv''levstr
+    endif
+  endif
+  if( varid_base = 'v10m' )
+    fv  = dtopen( dir, 'sa_v10m/sa_v10m.ctl' )
+    var = 'sa_v10m.'fv
+  endif
+  if( varid_base = 'w' )
+    fv  = dtopen( dir, 'ms_w/ms_w.ctl', '', 0 )
+    var = 'ms_w.'fv''levstr
+    if( fv < 0 )
+      fv  = dtopen( dir, 'ma_w/ma_w.ctl', '', 1 )
+      var = 'ma_w.'fv''levstr
+    endif
+  endif
+
+*  if( varid_base = 'sst' | varid_base = 'icr' | varid_base = 'ice' )
+*    varidtmp = varid_base
+*    fact = 1
+*    if( varid_base = 'icr' ) ; fact = 100 ; endif
+*    vartmp1=''
+*    vartmp2=''
+*    if( dir2 != '' )
+*      fv   = dtopen( dir2, 'lsmask/lsmask.ctl' )
+*      if( fv > 0 )
+*        vartmp1 = 'maskout('
+*        vartmp2 = ',-lsmask.'fv'(z=1,t=1)+1e-10)'
+*      endif
+*    endif
+*    tail = 'oa_'varidtmp/oa_'varidtmp'.ctl'
+*    fv   = dtopen( dir, tail )
+*    var  = fact % '*('vartmp1'oa_' % varidtmp % '.'fv'(z=1)' % vartmp2 % ')'
+*  endif
+
+return var
