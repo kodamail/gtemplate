@@ -11,8 +11,33 @@ function rl_nicam_v3( runid, varid_base, varid_lev, cdir, flag_show_dir )
 *---------- NICAM.12 ----------*
 *
 
-*----- 200406 sensitivity experiments (stream b) on K
+*
+*----- strat
+*
+* style of runid: strat.N12.v003.gl05.type02.L0061.dz2000m.top080km.case002
+*                 1     2   3    4    5      6     7       8        9
+*
+  if( rgnwrd(runid,1,3,'.') = 'strat.N12.v003' )
+    flag = 2
+    runid_gl   = rgnwrd(runid,4,4,'.') ; gl   = strrep(runid_gl,'gl0','gl')
+    runid_lev  = rgnwrd(runid,6,6,'.') ; lev  = strrep(runid_lev,'L00','L') ; lev = strrep(lev,'L0','L')
+    runid_dz   = rgnwrd(runid,7,7,'.')
+    runid_top  = rgnwrd(runid,8,8,'.') ; top  = strrep(runid_top,'top0','') ; top  = strrep(top,'top','')
+    runid_case = rgnwrd(runid,9,9,'.') ; case = strrep(runid_case,'case00','c') ; case = strrep(case,'case0','c') ; case = strrep(case,'case','c')
+    run = 'strat.N12.v3.' % gl % '.' % lev % '.' % top % '.' % case
+    pdir = '/cwork5/kodama/nicam_product/strat/N12/v003_copy/'runid_gl'/type02_'runid_lev'_'runid_dz'_'runid_top'/'runid_case'/data_conv'
 
+    if( varid_base = 'tem_divf' )
+      dir = '/cwork5/kodama/nicam_analysis/TEM/TEM-0.10r3/strat/N12/v003/'runid_gl'/type02_'runid_lev'_'runid_dz'_'runid_top'/'runid_case
+      fv   = dtopen( dir, 'tem.ctl' )
+      var  = '60*60*24*divf.'fv
+      vary = 'epy.'fv
+      varz = 'epz.'fv
+      return run % ' ' % var % ' ' % vary % ' ' % varz
+    endif
+  endif
+
+*----- 200406 sensitivity experiments (stream b) on K
   if( runid = 'K.200406.N12.gl09.L38.b.005' )
     run  = 'K.200406.N12.gl09.b.005'
     pdir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.005/data_conv'
@@ -54,14 +79,42 @@ function rl_nicam_v3( runid, varid_base, varid_lev, cdir, flag_show_dir )
     pdir = '/cwork5/kodama/nicam_product/amip/N12/207406/gl09/control/run01/data_conv'
   endif
 
-*----- 200406 gl09/10/11 annual run on K
+*----- 200406/20XX05 gl09/10/11 annual run on K
 * note: runid = 'K.200406.L38.gl09.run06' is equivalen to 'K.200406.N12.gl09.L38.a'
   if( runid = 'K.200406.L38.gl10.run03' )
-    run  = 'K.200406.N12.gl10.run03'
+    run  = 'K.200406.N12.gl10.L38.run03'
     pdir = '/cwork5/kodama/nicam_product/product_k/200406/N12/gl10/L38/run03/data_conv'
+  endif
+  if( runid = 'K.20xx05.L38.gl09.run00' )
+    run = 'K.20xx05.N12.gl09.L38.run00'
+    pdir = '/cwork5/kodama/nicam_product/product_k/20xx05/L38/gl09/run00/data_conv'
+  endif
+  if( runid = 'K.20xx05.L38.gl10.run01' )
+    run = 'K.20xx05.N12.gl10.L38.run01'
+    pdir = '/cwork5/kodama/nicam_product/product_k/20xx05/L38/gl10/run01/data_conv'
   endif
 
 *----- 200406 sensitivity experiments (stream a) and gl09/gl10/11 experiments on K
+  if( runid = 'K.200406.N12.gl09.L38.a.010' | runid = 'K.200406.L38.gl09.miura.s7' )
+*    run = 'N12.K.200406.gl09.L38.miura.s7'
+    run = 'K.200406.N12.gl09.L38.a.010'
+    pdir = '/cwork5/kodama/nicam_product/product_k/200406/N12/gl09/L38/a.010/data_conv'
+  endif
+  if( runid = 'K.200406.N12.gl09.L38.a.009' | runid = 'K.200406.L38.gl09.gwd' )
+*    run = 'N12.K.200406.gl09.L38.gwd'
+    run = 'K.200406.N12.gl09.L38.a.009'
+    pdir = '/cwork5/kodama/nicam_product/product_k/200406/N12/gl09/L38/a.009/data_conv'
+  endif
+  if( runid = 'K.200406.N12.gl09.L38.a.008' | runid = 'K.200406.L38.gl09.ndw6' )
+*    run = 'N12.K.200406.gl09.L38.ndw6'
+    run = 'K.200406.N12.gl09.L38.a.008'
+    pdir = '/cwork5/kodama/nicam_product/product_k/200406/N12/gl09/L38/a.008/data_conv'
+  endif
+  if( runid = 'K.200406.N12.gl09.L38.a.007' |runid = 'K.200406.L38.gl09.g98' )
+*    run = 'N12.K.200406.gl09.L38.g98'
+    run = 'K.200406.N12.gl09.L38.a.007'
+    pdir = '/cwork5/kodama/nicam_product/product_k/200406/N12/gl09/L38/a.007/data_conv'
+  endif
   if( runid = 'K.200406.N12.gl09.L38.a.006' | runid = 'K.200406.L38.gl09.fixed_sst' )
 *    run  = 'N12.K.200406.gl09.L38.fixed_sst'
     run  = 'K.200406.N12.gl09.L38.a.006'
@@ -82,10 +135,6 @@ function rl_nicam_v3( runid, varid_base, varid_lev, cdir, flag_show_dir )
     pdir = '/cwork5/kodama/nicam_product/product_k/200406/N12/gl09/L38/a/data_conv'
   endif
 
-
-
-
-
 *----- 200406/200404 sensitivity experiments on ES
   if( runid = 'N12.ES.200404.gl09.L40.ndw6' )
 *    run = 'N12.ES.200404.gl09.L40.ndw6'
@@ -99,7 +148,6 @@ function rl_nicam_v3( runid, varid_base, varid_lev, cdir, flag_show_dir )
   endif
 
 
-
 *----- NICAM.09 -----*
   if( runid = 'CMIP_GW_GL9' )
     run = 'CMIP_GW_GL9'
@@ -110,9 +158,7 @@ function rl_nicam_v3( runid, varid_base, varid_lev, cdir, flag_show_dir )
   if( run != '' )
     dir = pdir % '/' % cdir
     if( flag_show_dir = 1 ) ; return dir ; endif
-    if( flag = 2 )
-      var = nicam3( varid_base, varid_lev, dir,'' )
-    endif
+    var = nicam3( varid_base, varid_lev, dir,'' )
   endif
 
 return run % ' ' % var
