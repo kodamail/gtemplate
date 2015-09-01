@@ -1,0 +1,34 @@
+*
+function rl_misc( runid, varid_base, varid_lev, cdir, flag_show_dir )
+  run = '' ; var = ''
+
+  if( runid = 'COLA-IFS-T2047' )
+    run = 'COLA-IFS-T2047'
+    pdir = '/cwork5/kodama/COLA/ifs/t2047/data_conv'
+    dir = pdir % '/' % cdir
+    if( flag_show_dir = 1 ) ; return dir ; endif
+    if( varid_base = 'precip' )
+      fv   = dtopen( dir, 'sa_tppn.ctl' )
+      var = '24*sa_tppn.'fv
+    endif
+  endif
+
+  if( runid = 'AMIP2_BOUNDARY' )
+    run = 'AMIP2_bnd'
+    dir = '/swork14/ngatm/hpci/amip/N12/NICAM_DATABASE_AMIP_org/raw_data_mri/data'
+    if( flag_show_dir = 1 ) ; return dir ; endif
+    if( varid_base = 'sst' )
+      fv  = dtopen( dir, 'sst/sst.ctl' )
+      var = 'sst.'fv'(z=1)'
+    endif
+    if( varid_base = 'icr' )
+      fv   = dtopen( dir, 'ice/ice.ctl' )
+      va = '100*ice.'fv'(z=1)'
+    endif
+    if( varid_base = 'ice' )
+      fv  = dtopen( dir, 'icemass/icemass.ctl' )
+      var = 'ice.'fv'(z=1)'
+    endif
+  endif
+
+return run % ' ' % var

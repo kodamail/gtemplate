@@ -38,23 +38,28 @@ function rl_nicam_v3( runid, varid_base, varid_lev, cdir, flag_show_dir )
   endif
 
 *----- 200406 sensitivity experiments (stream b) on K
-  if( runid = 'K.200406.N12.gl09.L38.b.005' )
+*  if( runid = 'K.200406.N12.gl09.L38.b.005' )
+  if( runid = 'K.200406.N12.gl09.b.005' )
     run  = 'K.200406.N12.gl09.b.005'
     pdir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.005/data_conv'
   endif
-  if( runid = 'K.200406.N12.gl09.L38.b.004' )
+*  if( runid = 'K.200406.N12.gl09.L38.b.004' )
+  if( runid = 'K.200406.N12.gl09.b.004' )
     run  = 'K.200406.N12.gl09.b.004'
     pdir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.004/data_conv'
   endif
-  if( runid = 'K.200406.N12.gl09.L38.b.003' )
+*  if( runid = 'K.200406.N12.gl09.L38.b.003' )
+  if( runid = 'K.200406.N12.gl09.b.003' )
     run  = 'K.200406.N12.gl09.b.003'
     pdir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.003/data_conv'
   endif
-  if( runid = 'K.200406.N12.gl09.L38.b.002.001' )
+*  if( runid = 'K.200406.N12.gl09.L38.b.002.001' )
+  if( runid = 'K.200406.N12.gl09.b.002.001' )
     run  = 'K.200406.N12.gl09.b.002.001'
     pdir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.002.001/data_conv'
   endif
-  if( runid = 'K.200406.N12.gl09.L38.b.002' )
+*  if( runid = 'K.200406.N12.gl09.L38.b.002' )
+  if( runid = 'K.200406.N12.gl09.b.002' )
     run = 'K.200406.N12.gl09.b.002'
     pdir = '/cwork5/kodama/nicam_product/product_k/200406_copy/N12/gl09/b.002/data_conv'
   endif
@@ -81,11 +86,13 @@ function rl_nicam_v3( runid, varid_base, varid_lev, cdir, flag_show_dir )
 
 *----- 200406/20XX05 gl09/10/11 annual run on K
 * note: runid = 'K.200406.L38.gl09.run06' is equivalen to 'K.200406.N12.gl09.L38.a'
-  if( runid = 'K.200406.L38.gl10.run03' )
+*  if( runid = 'K.200406.L38.gl10.run03' )
+  if( runid = 'K.200406.gl10.L38.run03' )
     run  = 'K.200406.N12.gl10.L38.run03'
     pdir = '/cwork5/kodama/nicam_product/product_k/200406/N12/gl10/L38/run03/data_conv'
   endif
-  if( runid = 'K.20xx05.L38.gl09.run00' )
+*  if( runid = 'K.20xx05.L38.gl09.run00' )
+  if( runid = 'K.20xx05.gl09.L38.run00' )
     run = 'K.20xx05.N12.gl09.L38.run00'
     pdir = '/cwork5/kodama/nicam_product/product_k/20xx05/L38/gl09/run00/data_conv'
   endif
@@ -147,11 +154,173 @@ function rl_nicam_v3( runid, varid_base, varid_lev, cdir, flag_show_dir )
     pdir = '/cwork5/kodama/nicam_product/N12.ES.200406.gl09.L40.ndw6/data_conv'
   endif
 
+*
+*---------- NICAM.10 ----------*
+*
+  if( runid = '200406.new.prun2010.gl09' )
+*    run = 'N10.ES.200406.L40.gl09'
+    run = 'ES.200406.N10.gl09.L40'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_prun2010_by_noda/gl09/control/data_conv'
+  endif
+  if( runid = '200404.new.prun2010.gl09' )
+*    run = 'N10.ES.200404.L40.gl09'
+    run = 'ES.200404.N10.gl09.L40'
+    pdir = '/cwork5/kodama/nicam_product/200404.new_prun2010_by_noda/gl09/product/data_conv'
+  endif
+  if( runid = '200403.new.prun2010.gl09.plus.dsst' )
+*    run = '200403.prun2010.gl09.plus.dsst'
+*    run = 'N10.ES.200403.L40.gl09.plus.dsst'
+    run = 'ES.200403.N10.gl09.L40.plus.dsst'
+*    dir = '/cwork5/kodama/nicam_product/200403_plus_dsst_ver.201011/gl09/rl03/run3/data_conv/'cdir
+    pdir = '/cwork5/kodama/nicam_product/200403.dsst.new_prun2010/gl09/rl03/run3/data_conv'
+  endif
+  if( runid = '200406.new.prun2010.gl09_nsw5' )
+*    run = 'N10.ES.200406.gl09.L40.nsw5'
+    run = 'ES.200406.N10.gl09.L40.nsw5'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_prun2010_by_noda/gl09/nsw5/data_conv'
+  endif
+  if( runid = '200406.new.prun2010.gl09_chikira_def' )
+*    run = 'N10.ES.200406.L40.gl09.chikira-def'
+    run = 'ES.200406.N10.gl09.L40.chikira-def'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_prun2010_by_noda/gl09/chikira_def/data_conv'
+  endif
+ if( runid = '200406.new.prun2010.gl09_chikira_pa01_clmd03' )
+*    run = 'N10.ES.200406.L40.gl09.chikira-pa01-clmd03'
+    run = 'ES.200406.N10.gl09.L40.chikira-pa01-clmd03'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_prun2010_by_noda/gl09/chikira_pa01_clmd03/data_conv'
+  endif
+  if( runid = '200406.new.prun2010.gl09_chikira_pa01_clmd07' )
+*    run = 'N10.ES.200406.L40.gl09.chikira-pa01-clmd07'
+    run = 'ES.200406.N10.gl09.L40.chikira-pa01-clmd07'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_prun2010_by_noda/gl09/chikira_pa01_clmd07/data_conv'
+  endif
+  if( runid = '200406.new.prun2010.gl09_chikira_pa09_clmd03' )
+*    run = 'N10.ES.200406.L40.gl09.chikira-pa09-clmd03'
+    run = 'ES.200406.N10.gl09.L40.chikira-pa09-clmd03'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_prun2010_by_noda/gl09/chikira_pa09_clmd03/data_conv'
+  endif
+  if( runid = '200406.new.prun2010.gl09_chikira_pa09_clmd07' )
+*    run = 'N10.ES.200406.L40.gl09.chikira-pa09-clmd07'
+    run = 'ES.200406.N10.gl09.L40.chikira-pa09-clmd07'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_prun2010_by_noda/gl09/chikira_pa09_clmd07/data_conv'
+  endif
+  if( runid = '200406.new.prun2010.gl08' )
+*    run = 'N10.ES.200406.L40.gl08'
+    run = 'ES.200406.N10.gl08.L40'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_prun2010_by_noda/gl08/control/data_conv'
+  endif
+  if( runid = '200406.new.prun2010.gl08_as' )
+*    run = 'N10.ES.200406.L40.gl08.as'
+    run = 'ES.200406.N10.gl08.L40.as'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_prun2010_by_noda/gl08/as/data_conv'
+  endif
+  if( runid = '200406.new.prun2010.gl07' )
+*    run = 'N10.ES.200406.L40.gl07'
+    run = 'ES.200406.N10.gl07.L40'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_prun2010_by_noda/gl07/control/data_conv'
+  endif
+  if( runid = '200406.new.prun2010.gl07_as' )
+*    run = 'N10.ES.200406.L40.gl07.as'
+    run = 'ES.200406.N10.gl07.L40.as'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_prun2010_by_noda/gl07/as/data_conv'
+  endif
+  if( runid = '200406.new.prun2010.gl06' )
+*    run = 'N10.ES.200406.L40.gl06'
+    run = 'ES.200406.N10.gl06.L40'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_prun2010_by_noda/gl06/control/data_conv'
+  endif
+  if( runid = '200406.new.prun2010.gl06_as' )
+*    run = 'N10.ES.200406.L40.gl06.as'
+    run = 'ES.200406.N10.gl06.L40.as'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_prun2010_by_noda/gl06/as/data_conv'
+  endif
+  if( runid = '200406.new.prun2010.gl05' )
+*    run = 'N10.ES.200406.L40.gl05'
+    run = 'ES.200406.N10.gl05.L40'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_prun2010_by_noda/gl05/control/data_conv'
+  endif
 
-*----- NICAM.09 -----*
+*
+*---------- NICAM.09 ----------*
+*
   if( runid = 'CMIP_GW_GL9' )
-    run = 'CMIP_GW_GL9'
+*    run = 'CMIP_GW_GL9'
+    run = 'ES.20XX05.N09.gl09.L40'
     pdir = '/cwork5/kodama/nicam_product/CMIP_GW_GL9/run15'
+  endif
+  if( runid = '200406.new' )
+    run = 'ES.200406.N09.gl09.L40'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_by_noda/run/data_conv'
+  endif
+  if( runid = '200406.new_g98' )
+    run = 'ES.200406.N09.gl09.L40.g98'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_g98_by_yamada/data_conv'
+  endif
+  if( runid = '200406.new_bc' )
+    run = 'ES.200406.N09.gl09.L40'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_bc_by_yamada/data_conv'
+  endif
+  if( runid = '200406.new_4water' )
+*    run = 'qicrt=0,4water'
+    run = 'ES.200406.N09.gl09.L40.qicrt0.4water'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_4water_by_noda/run/data_conv'
+  endif
+  if( runid = '200406.new_qicrt0' )
+*    run = 'qicrt=0,3water'
+    run = 'ES.200406.N09.gl09.L40.qicrt0.3water'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_qicrt0_by_noda/run/data_conv'
+  endif
+  if( runid = '200406.new_qicrt0001' )
+*    run = 'qicrt=0.001,3water'
+    run = 'ES.200406.N09.gl09.L40.qicrt0.001.3water'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_qicrt0001_by_noda/run/data_conv'
+  endif
+  if( runid = '200406.new_qicrt0005' )
+*    run = 'qicrt=0.005,3water'
+    run = 'ES.200406.N09.gl09.L40.qicrt0.005.3water'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_by_noda/run/data_conv'
+  endif
+  if( runid = '200406.new_qicrt001' )
+*    run = 'qicrt=0.01,3water'
+    run = 'ES.200406.N09.gl09.L40.qicrt0.01.3water'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_qicrt001_by_noda/run/data_conv'
+  endif
+  if( runid = '200406.new_qicrt01' )
+*    run = 'qicrt=0.1,3water'
+    run = 'ES.200406.N09.gl09.L40.qicrt0.1.3water'
+    pdir = '/cwork5/kodama/nicam_product/200406.new_qicrt01_by_noda/run/data_conv'
+  endif
+
+*
+*---------- other ----------*
+*
+  if( runid = 'CLIM_MATSIRO_200406.run18' )
+    run = 'CLIM_MATSIRO_200406.gl05.run18'
+    pdir = '/cwork5/kodama/nicam_product/CLIM_MATSIRO_200406_gl05_rl01/run18/data_conv'
+  endif
+  if( runid = 'CLIM_MATSIRO_FUTURE_SST.run01' )
+    run = 'CLIM_MATSIRO_FUTURE_SST.gl05.run01'
+    pdir = '/cwork5/kodama/nicam_product/CLIM_MATSIRO_FUTURE_SST_gl05_rl01/run01/data_conv'
+  endif
+  if( runid = 'CLIM_MATSIRO_FUTURE_CO2.run01' )
+    run = 'CLIM_MATSIRO_FUTURE_CO2.gl05.run01'
+    pdir = '/cwork5/kodama/nicam_product/CLIM_MATSIRO_FUTURE_CO2_gl05_rl01/run01/data_conv'
+  endif
+
+  head_cmp = 'CLIM_MATSIRO_200406.run17_'
+  head_len = math_strlen( head_cmp )
+  head     = substr( runid, 1, head_len )
+  if( head_cmp = head )
+    run = runid
+    head_cmp = 'CLIM_MATSIRO_200406.'
+    head_len = math_strlen( head_cmp )
+    head     = substr( runid, 1, head_len )
+    all_len = math_strlen( runid )
+    if( head_len < all_len )
+      tail = substr( runid, head_len+1, all_len-head_len )
+      say 'head=' % head % ', tail='  % tail
+    endif
+    pdir = '/cwork5/kodama/nicam_product/CLIM_MATSIRO_200406_gl05_rl01/'tail'/data_conv'
   endif
 
 *----- finalize -----*

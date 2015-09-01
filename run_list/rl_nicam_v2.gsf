@@ -1,0 +1,769 @@
+*
+* not well checked
+*
+* newer first
+*
+function rl_nicam_v2( runid, varid_base, varid_lev, cdir, flag_show_dir )
+  run = '' ; var = ''
+
+*
+*---------- NICAM.09 ----------*
+*
+  if( runid = 'COLA-NICAM' )
+*    run = 'N09.Athena.200X0521.L40.gl10'
+    run = 'thena.200X0521.N09.gl10.L40'
+    pdir = '/cwork5/kodama/COLA/nc_data'
+    dir = pdir % '/' % cdir
+    if( flag_show_dir = 1 ) ; return dir ; endif
+    if( varid_base = 'precip' )
+      fv  = dtopen( dir, 'sa_tppn.ctl' )
+      var = '24*sa_tppn.'fv
+    else
+      var = nicam2( varid_base, varid_lev, dir, '', 'no' )
+    endif
+    return run % ' ' % var
+  endif
+
+  if( runid = 'APE.ctl.gl09.by_iga' )
+    run = 'APE.ctl.gl09.by_iga'
+    pdir = '/cwork5/kodama/nicam_product/APE3_ctl_by_iga/run/data_conv'
+  endif
+  if( runid = 'APE.p4k.gl09.by_iga' )
+    run = 'APE.p4k.gl09.by_iga'
+    pdir = '/cwork5/kodama/nicam_product/APE3_p4k_by_iga/run/data_conv'
+  endif
+
+
+*----- finalize -----*
+  if( run != '' )
+    dir = pdir % '/' % cdir
+    if( flag_show_dir = 1 ) ; return dir ; endif
+    var = nicam2( varid_base, varid_lev, dir, '' )
+  endif
+
+return run % ' ' % var
+
+* 2009-
+*function nicam2( varid, dir, dir2, sepdir )
+function nicam2( varid_base, varid_lev, dir, dir2, sepdir )
+  var = ''
+  sa.1 = 'a'
+  sa.2 = 'l'
+  sa.3 = 's'
+*  fv = 0
+*  fv1 = 0
+*  fv2 = 0
+*  fv3 = 0
+*  fv4 = 0
+
+*  tmp = varid_sep( varid )
+*  varid_base = subwrd( tmp, 1 )
+*  varid_lev  = subwrd( tmp, 2 )
+
+***** 3D *****
+  if( varid_base = 'u' )
+    tail = 'ms_u.ctl'
+    if( sepdir != 'no' ) ; tail = 'ms_u/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'ms_u.'fv ; endif
+  endif
+  if( varid_base = 'u' & valnum(varid_lev) != 0 )
+    tail = 'ms_u/ms_u.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var = 'ms_u.'fv'(lev='varid_lev')' ; endif
+  endif
+  if( varid_base = 'v' )
+    tail = 'ms_v.ctl'
+    if( sepdir != 'no' ) ; tail = 'ms_v/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'ms_v.'fv ; endif
+  endif
+  if( varid_base = 'v' & valnum(varid_lev) != 0 )
+    tail = 'ms_v/ms_v.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var = 'ms_v.'fv'(lev='varid_lev')' ; endif
+  endif
+  if( varid_base = 'w' )
+    tail = 'ms_w.ctl'
+    if( sepdir != 'no' ) ; tail = 'ms_w/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = '1000*ms_w.'fv ; endif
+  endif
+  if( varid_base = 't' )
+    tail = 'ms_tem.ctl'
+    if( sepdir != 'no' ) ; tail = 'ms_tem/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'ms_tem.'fv ; endif
+  endif
+  if( varid_base = 't' & valnum(varid_lev) != 0 )
+    tail = 'ms_tem/ms_tem.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var = 'ms_tem.'fv'(lev='varid_lev')' ; endif
+  endif
+  if( varid_base = 'pres' )
+    tail = 'ms_pres.ctl'
+    if( sepdir != 'no' ) ; tail = 'ms_pres/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'ms_pres.'fv ; endif
+  endif
+  if( varid_base = 'rh' )
+    tail = 'ms_rh.ctl'
+    if( sepdir != 'no' ) ; tail = 'ms_rh/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = '100*ms_rh.'fv ; endif
+  endif
+  if( varid_base = 'rh' & valnum(varid_lev) != 0 )
+    tail = 'ms_rh/ms_rh.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var = '100*ms_rh.'fv'(lev='varid_lev')' ; endif
+  endif
+*  if( varid_base = 'rh700' )
+*    tail = 'ms_rh.ctl'
+*    if( sepdir != 'no' ) ; tail = 'ms_rh/' % tail ; endif
+*    fv   = dtopen( dir, tail )
+*    if( fv > 0 ) ; var  = '100*ms_rh.'fv'(lev=700)' ; endif
+*  endif
+  if( varid_base = 'qv' )
+    tail = 'ms_qv.ctl'
+    if( sepdir != 'no' ) ; tail = 'ms_qv/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = '1e+3*ms_qv.'fv ; endif
+  endif
+  if( varid_base = 'qv' & valnum(varid_lev) != 0 )
+    tail = 'ms_qv/ms_qv.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var = '1e+3*ms_qv.'fv'(lev='varid_lev')' ; endif
+  endif
+  if( varid_base = 'qc' | varid_base = 'qi' | varid_base = 'qr' | varid_base = 'qs' | varid_base = 'qg' )
+    tail = 'ms_'varid_base'.ctl'
+    if( sepdir != 'no' ) ; tail = 'ms_'varid_base'/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = '1e+6*ms_'varid_base'.'fv ; endif
+  endif
+*  if( varid_base = 'temp' )
+*    tail = 'ms_qi/ms_qi.ctl'
+*    fv   = dtopen( dir, tail )
+**    if( fv > 0 ) ; var  = '1e+6*ms_qi.'fv ; endif
+*    if( fv > 0 )
+*      tail = 'ms_rho/ms_rho.ctl'
+*      fv2   = dtopen( dir, tail )
+*      if( fv2 > 0 )
+**        var  = '1e+6*ms_qi.'fv
+*        var  = '3.29*pow(maskout(ms_rho.'fv2'*ms_qi.'fv',ms_rho.'fv2'*ms_qi.'fv'),0.16)'
+*      endif
+*    endif
+*  endif
+
+***** 2D *****
+  if( varid_base = 'evap' )
+    fv = 0
+    i = 1
+    while( i <= 3 & fv <= 0 )
+      tail = 's'sa.i'_evap.ctl'
+      if( sepdir != 'no' ) ; tail = 's'sa.i'_evap/' % tail ; endif
+      fv   = dtopen( dir, tail )
+      if( fv > 0 ) ; var  = '24*60*60*s'sa.i'_evap.'fv ; endif
+      i = i + 1
+    endwhile
+  endif
+  if( varid_base = 'iwp' )
+    tail = 'sa_cldi.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_cldi/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = '1e+3*sa_cldi.'fv ; endif
+    if( fv <= 0 )
+      tail = 'sl_cldi.ctl'
+      if( sepdir != 'no' ) ; tail = 'sl_cldi/' % tail ; endif
+      fv   = dtopen( dir, tail )
+      if( fv > 0 ) ; var  = '1e+3*sl_cldi.'fv ; endif
+    endif
+  endif
+  if( varid_base = 'lwp' )
+    tail = 'sa_cldw.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_cldw/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = '1e+3*sa_cldw.'fv ; endif
+    if( fv <= 0 )
+      tail = 'sl_cldw.ctl'
+      if( sepdir != 'no' ) ; tail = 'sl_cldw/' % tail ; endif
+      fv   = dtopen( dir, tail )
+      if( fv > 0 ) ; var  = '1e+3*sl_cldw.'fv ; endif
+    endif
+  endif
+  if( varid_base = 'precip' )
+    fv = 0
+    i = 1
+    while( i <= 3 & fv <= 0 )
+      tail = 's'sa.i'_tppn.ctl'
+      if( sepdir != 'no' ) ; tail = 's'sa.i'_tppn/' % tail ; endif
+      fv   = dtopen( dir, tail )
+      if( fv > 0 ) ; var  = '24*60*60*s'sa.i'_tppn.'fv ; endif
+      i = i + 1
+    endwhile
+  endif
+  if( varid_base = 'pt_700_minus_925' )
+    tail = 'ms_tem.ctl'
+    if( sepdir != 'no' ) ; tail = 'ms_tem/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var = '(ms_tem.'fv'(lev=700)*pow(1000/700,0.286))-(ms_tem.'fv'(lev=925)*pow(1000/925,0.286))' ; endif
+  endif
+  if( varid_base = 'qv2m' )
+    tail = 'sa_q2m.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_q2m/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = '1e+3*sa_q2m.'fv ; endif
+    if( fv <= 0 )
+      tail = 'sl_q2m.ctl'
+      if( sepdir != 'no' ) ; tail = 'sl_q2m/' % tail ; endif
+      fv   = dtopen( dir, tail )
+      if( fv > 0 ) ; var  = '1e+3*sl_q2m.'fv ; endif
+    endif
+  endif
+  if( varid_base = 't2m' )
+    tail = 'sa_t2m.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_t2m/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sa_t2m.'fv ; endif
+    if( fv <= 0 )
+      tail = 'sl_t2m.ctl'
+      if( sepdir != 'no' ) ; tail = 'sl_t2m/' % tail ; endif
+      fv   = dtopen( dir, tail )
+      if( fv > 0 ) ; var  = 'sl_t2m.'fv ; endif
+    endif    
+  endif
+  if( varid_base = 'u10m' )
+    tail = 'sa_u10m.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_u10m/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sa_u10m.'fv ; endif
+    if( fv <= 0 )
+      tail = 'sl_u10m.ctl'
+      if( sepdir != 'no' ) ; tail = 'sl_u10m/' % tail ; endif
+      fv   = dtopen( dir, tail )
+      if( fv > 0 ) ; var  = 'sl_u10m.'fv ; endif
+    endif    
+  endif
+  if( varid_base = 'v10m' )
+    tail = 'sa_v10m.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_v10m/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sa_v10m.'fv ; endif
+    if( fv <= 0 )
+      tail = 'sl_v10m.ctl'
+      if( sepdir != 'no' ) ; tail = 'sl_v10m/' % tail ; endif
+      fv   = dtopen( dir, tail )
+      if( fv > 0 ) ; var  = 'sl_v10m.'fv ; endif
+    endif    
+  endif
+  if( varid_base = 'mslp' )
+    tail = 'sa_slp.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_slp/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = '0.01*sa_slp.'fv'(z=1)' ; endif
+    if( fv <= 0 )
+      tail = 'sl_slp.ctl'
+      if( sepdir != 'no' ) ; tail = 'sl_slp/' % tail ; endif
+      fv   = dtopen( dir, tail )
+      if( fv > 0 ) ; var  = '0.01*sl_slp.'fv'(z=1)' ; endif
+    endif
+  endif
+  if( varid_base = 'lw_up_toa' )
+    tail = 'sa_lwu_toa.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_lwu_toa/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sa_lwu_toa.'fv ; endif
+    if( fv <= 0 )
+      tail = 'sl_lwu_toa.ctl'
+      if( sepdir != 'no' ) ; tail = 'sl_lwu_toa/' % tail ; endif
+      fv   = dtopen( dir, tail )
+      if( fv > 0 ) ; var  = 'sl_lwu_toa.'fv ; endif
+    endif
+  endif
+  if( varid_base = 'lw_up_clr_toa' )
+    tail = 'sa_lwu_toa_c.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_lwu_toa_c/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sa_lwu_toa_c.'fv ; endif
+    if( fv <= 0 )
+      tail = 'sl_lwu_toa_c.ctl'
+      if( sepdir != 'no' ) ; tail = 'sl_lwu_toa_c/' % tail ; endif
+      fv   = dtopen( dir, tail )
+      if( fv > 0 ) ; var  = 'sl_lwu_toa_c.'fv ; endif
+    endif
+  endif
+  if( varid_base = 'lw_crf_toa' )
+    i = 1
+    fv1 = 0
+    fv2 = 0
+    while( i <= 3 & fv1 <= 0 & fv2 <= 0 )
+      tail1 = 's'sa.i'_lwu_toa.ctl'
+      if( sepdir != 'no' ) ; tail1 = 's'sa.i'_lwu_toa/' % tail1 ; endif
+      fv1   = dtopen( dir, tail1 )
+      tail2 = 's'sa.i'_lwu_toa_c.ctl'
+      if( sepdir != 'no' ) ; tail2 = 's'sa.i'_lwu_toa_c/' % tail2 ; endif
+      fv2   = dtopen( dir, tail2 )
+      if( fv1 > 0 & fv > 2 ) ; var  = 's'sa.i'_lwu_toa_c.'fv2'-s'sa.i'_lwu_toa.'fv1 ; endif
+      i = i + 1
+    endwhile
+  endif
+  if( varid_base = 'lw_up_sfc' )
+    tail = 'sa_lwu_sfc.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_lwu_sfc/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sa_lwu_sfc.'fv ; endif
+  endif
+  if( varid_base = 'lw_down_sfc' )
+    tail = 'sa_lwd_sfc.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_lwd_sfc/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sa_lwd_sfc.'fv ; endif
+  endif
+  if( varid_base = 'lw_net_sfc' )
+    tail1 = 'sa_lwu_sfc.ctl'
+    if( sepdir != 'no' ) ; tail1 = 'sa_lwu_sfc/' % tail1 ; endif
+    fv1   = dtopen( dir, tail1 )
+    tail2 = 'sa_lwd_sfc.ctl'
+    if( sepdir != 'no' ) ; tail2 = 'sa_lwd_sfc/' % tail2 ; endif
+    fv2   = dtopen( dir, tail2 )
+    if( fv1 > 0 & fv > 2 ) ; var  = 'sa_lwd_sfc.'fv2'-sa_lwu_sfc.'fv1 ; endif
+  endif
+  if( varid_base = 'sw_up_toa' )
+    fv = 0
+    i = 1
+    while( i <= 3 & fv <= 0 )
+      tail = 's'sa.i'_swu_toa.ctl'
+      if( sepdir != 'no' ) ; tail = 's'sa.i'_swu_toa/' % tail ; endif
+      fv   = dtopen( dir, tail )
+      if( fv > 0 ) ; var  = 's'sa.i'_swu_toa.'fv ; endif
+      i = i + 1
+    endwhile
+  endif
+  if( varid_base = 'sw_up_clr_toa' )
+    tail = 'sa_swu_toa_c.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_swu_toa_c/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sa_swu_toa_c.'fv ; endif
+    if( fv <= 0 )
+      tail = 'sl_swu_toa_c.ctl'
+      if( sepdir != 'no' ) ; tail = 'sl_swu_toa_c/' % tail ; endif
+      fv   = dtopen( dir, tail )
+      if( fv > 0 ) ; var  = 'sl_swu_toa_c.'fv ; endif
+    endif
+  endif
+  if( varid_base = 'sw_up_sfc' )
+    tail = 'sa_swu_sfc.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_swu_sfc/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sa_swu_sfc.'fv ; endif
+  endif
+  if( varid_base = 'sw_down_toa' )
+    tail = 'sa_swd_toa.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_swd_toa/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sa_swd_toa.'fv ; endif
+  endif
+  if( varid_base = 'sw_crf_toa' )
+    i = 1
+    fv1 = 0
+    fv2 = 0
+    while( i <= 3 & fv1 <= 0 & fv2 <= 0 )
+      tail1 = 's'sa.i'_swu_toa.ctl'
+      if( sepdir != 'no' ) ; tail1 = 's'sa.i'_swu_toa/' % tail1 ; endif
+      fv1   = dtopen( dir, tail1 )
+      tail2 = 's'sa.i'_swu_toa_c.ctl'
+      if( sepdir != 'no' ) ; tail2 = 's'sa.i'_swu_toa_c/' % tail2 ; endif
+      fv2   = dtopen( dir, tail2 )
+      if( fv1 > 0 & fv2 > 0 ) ; var  = 's'sa.i'_swu_toa_c.'fv2'-s'sa.i'_swu_toa.'fv1 ; endif
+      i = i + 1
+    endwhile
+  endif
+  if( varid_base = 'sw_down_sfc' )
+    tail = 'sa_swd_sfc.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_swd_sfc/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sa_swd_sfc.'fv ; endif
+  endif
+  if( varid_base = 'sw_net_toa' )
+    tail1 = 'sa_swu_toa.ctl'
+    if( sepdir != 'no' ) ; tail1 = 'sa_swu_toa/' % tail1 ; endif
+    fv1   = dtopen( dir, tail1 )
+    tail2 = 'sa_swd_toa.ctl'
+    if( sepdir != 'no' ) ; tail2 = 'sa_swd_toa/' % tail2 ; endif
+    fv2   = dtopen( dir, tail2 )
+    if( fv1 > 0 & fv2 > 0 ) ; var  = 'sa_swd_toa.'fv2'-sa_swu_toa.'fv1 ; endif
+  endif
+  if( varid_base = 'sw_net_sfc' )
+    tail1 = 'sa_swu_sfc.ctl'
+    if( sepdir != 'no' ) ; tail1 = 'sa_swu_sfc/' % tail1 ; endif
+    fv1   = dtopen( dir, tail1 )
+    tail2 = 'sa_swd_sfc.ctl'
+    if( sepdir != 'no' ) ; tail2 = 'sa_swd_sfc/' % tail2 ; endif
+    fv2   = dtopen( dir, tail2 )
+    if( fv1 > 0 & fv2 > 0 ) ; var  = 'sa_swd_sfc.'fv2'-sa_swu_sfc.'fv1 ; endif
+  endif
+  if( varid_base = 'aw_net_toa' )
+    tail1 = 'sa_swu_toa.ctl'
+    if( sepdir != 'no' ) ; tail1 = 'sa_swu_toa/' % tail1 ; endif
+    fv1   = dtopen( dir, tail1 )
+    tail2 = 'sa_swd_toa.ctl'
+    if( sepdir != 'no' ) ; tail2 = 'sa_swd_toa/' % tail2 ; endif
+    fv2   = dtopen( dir, tail2 )
+    tail3 = 'sa_lwu_toa.ctl'
+    if( sepdir != 'no' ) ; tail3 = 'sa_lwu_toa/' % tail3 ; endif
+    fv3   = dtopen( dir, tail3 )
+    if( fv1 > 0 & fv2 > 0 & fv3 > 0 ) ; var  = 'sa_swd_toa.'fv2'-sa_swu_toa.'fv1'-sa_lwu_toa.'fv3 ; endif
+  endif
+  if( varid_base = 'aw_crf_toa' )
+    tail1 = 'sa_lwu_toa.ctl'
+    if( sepdir != 'no' ) ; tail1 = 'sa_lwu_toa/' % tail1 ; endif
+    fv1   = dtopen( dir, tail1 )
+    tail2 = 'sa_lwu_toa_c.ctl'
+    if( sepdir != 'no' ) ; tail2 = 'sa_lwu_toa_c/' % tail2 ; endif
+    fv2   = dtopen( dir, tail2 )
+    tail3 = 'sa_swu_toa.ctl'
+    if( sepdir != 'no' ) ; tail3 = 'sa_swu_toa/' % tail3 ; endif
+    fv3   = dtopen( dir, tail3 )
+    tail4 = 'sa_swu_toa_c.ctl'
+    if( sepdir != 'no' ) ; tail4 = 'sa_swu_toa_c/' % tail4 ; endif
+    fv4   = dtopen( dir, tail4 )
+    if( fv1 > 0 & fv2 > 0 & fv3 > 0 & fv4 > 2 ) ; var  = 'sa_lwu_toa_c.'fv2'-sa_lwu_toa.'fv1'+sa_swu_toa_c.'fv4'-sa_swu_toa.'fv3 ; endif
+  endif
+
+  if( varid_base = 'aw_net_sfc' )
+    tail1 = 'sa_swu_sfc.ctl'
+    if( sepdir != 'no' ) ; tail1 = 'sa_swu_sfc/' % tail1 ; endif
+    fv1   = dtopen( dir, tail1 )
+    tail2 = 'sa_swd_sfc.ctl'
+    if( sepdir != 'no' ) ; tail2 = 'sa_swd_sfc/' % tail2 ; endif
+    fv2   = dtopen( dir, tail2 )
+    tail3 = 'sa_lwu_sfc.ctl'
+    if( sepdir != 'no' ) ; tail3 = 'sa_lwu_sfc/' % tail3 ; endif
+    fv3   = dtopen( dir, tail3 )
+    tail4 = 'sa_lwd_sfc.ctl'
+    if( sepdir != 'no' ) ; tail4 = 'sa_lwd_sfc/' % tail4 ; endif
+    fv4   = dtopen( dir, tail4 )
+    if( fv1 > 0 & fv2 > 0 & fv3 > 0 & fv4 > 0 )
+      var  = 'sa_swd_sfc.'fv2'-sa_swu_sfc.'fv1'+sa_lwd_sfc.'fv4'-sa_lwu_sfc.'fv3
+    endif
+  endif
+  if( varid_base = 'sh_sfc' )
+    tail = 'sa_sh_sfc.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_sh_sfc/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sa_sh_sfc.'fv ; endif
+  endif
+  if( varid_base = 'lh_sfc' )
+    tail = 'sa_lh_sfc.ctl'
+    if( sepdir != 'no' ) ; tail = 'sa_lh_sfc/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sa_lh_sfc.'fv ; endif
+  endif
+  if( varid_base = 'energy_net_sfc' )
+    tail1 = 'sa_swu_sfc.ctl'
+    if( sepdir != 'no' ) ; tail1 = 'sa_swu_sfc/' % tail1 ; endif
+    fv1   = dtopen( dir, tail1 )
+    tail2 = 'sa_swd_sfc.ctl'
+    if( sepdir != 'no' ) ; tail2 = 'sa_swd_sfc/' % tail2 ; endif
+    fv2   = dtopen( dir, tail2 )
+    tail3 = 'sa_lwu_sfc.ctl'
+    if( sepdir != 'no' ) ; tail3 = 'sa_lwu_sfc/' % tail3 ; endif
+    fv3   = dtopen( dir, tail3 )
+    tail4 = 'sa_lwd_sfc.ctl'
+    if( sepdir != 'no' ) ; tail4 = 'sa_lwd_sfc/' % tail4 ; endif
+    fv4   = dtopen( dir, tail4 )
+    tail5 = 'sa_sh_sfc.ctl'
+    if( sepdir != 'no' ) ; tail5 = 'sa_sh_sfc/' % tail5 ; endif
+    fv5   = dtopen( dir, tail5 )
+    tail6 = 'sa_lh_sfc.ctl'
+    if( sepdir != 'no' ) ; tail6 = 'sa_lh_sfc/' % tail6 ; endif
+    fv6   = dtopen( dir, tail6 )
+    if( fv1 > 0 & fv2 > 0 & fv3 > 0 & fv4 > 0 & fv5 > 0 & fv6 > 0 )
+      var  = 'sa_swd_sfc.'fv2'-sa_swu_sfc.'fv1'+sa_lwd_sfc.'fv4'-sa_lwu_sfc.'fv3'-sa_sh_sfc.'fv5'-sa_lh_sfc.'fv6
+    endif
+  endif
+  if( varid_base = 'land_wg_z1' )
+    tail = 'la_wg.ctl'
+    if( sepdir != 'no' ) ; tail = 'la_wg/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'la_wg.'fv'(z=1)' ; endif
+  endif
+  if( varid_base = 'land_wg_z2' )
+    tail = 'la_wg.ctl'
+    if( sepdir != 'no' ) ; tail = 'la_wg/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'la_wg.'fv'(z=2)' ; endif
+  endif
+  if( varid_base = 'land_wg_z3' )
+    tail = 'la_wg.ctl'
+    if( sepdir != 'no' ) ; tail = 'la_wg/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'la_wg.'fv'(z=3)' ; endif
+  endif
+  if( varid_base = 'land_wg_z4' )
+    tail = 'la_wg.ctl'
+    if( sepdir != 'no' ) ; tail = 'la_wg/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'la_wg.'fv'(z=4)' ; endif
+  endif
+  if( varid_base = 'land_wg_z5' )
+    tail = 'la_wg.ctl'
+    if( sepdir != 'no' ) ; tail = 'la_wg/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'la_wg.'fv'(z=5)' ; endif
+  endif
+
+***** ISCCP *****
+
+  if( varid_base = 'isccp_all' )
+    tail = 'dfq_isccp2.ctl'
+    if( sepdir != 'no' ) ; tail = 'dfq_isccp2/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=1,z=49)' ; endif
+  endif
+
+  if( varid_base = 'isccp_all_vis' )
+    tail = 'dfq_isccp2.ctl'
+    if( sepdir != 'no' ) ; tail = 'dfq_isccp2/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=2,z=7)+sum(100*dfq_isccp2.'fv',z=9,z=14)+sum(100*dfq_isccp2.'fv',z=16,z=21)+sum(100*dfq_isccp2.'fv',z=23,z=28)+sum(100*dfq_isccp2.'fv',z=30,z=35)+sum(100*dfq_isccp2.'fv',z=37,z=42)+sum(100*dfq_isccp2.'fv',z=44,z=49)' ; endif
+  endif
+
+  if( varid_base = 'isccp_all_vis_thin' )
+    tail = 'dfq_isccp2.ctl'
+    if( sepdir != 'no' ) ; tail = 'dfq_isccp2/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=2,z=3)+sum(100*dfq_isccp2.'fv',z=9,z=10)+sum(100*dfq_isccp2.'fv',z=16,z=17)+sum(100*dfq_isccp2.'fv',z=23,z=24)+sum(100*dfq_isccp2.'fv',z=30,z=31)+sum(100*dfq_isccp2.'fv',z=37,z=38)+sum(100*dfq_isccp2.'fv',z=44,z=45)' ; endif
+  endif
+  if( varid_base = 'isccp_all_vis_med' )
+    tail = 'dfq_isccp2.ctl'
+    if( sepdir != 'no' ) ; tail = 'dfq_isccp2/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=4,z=5)+sum(100*dfq_isccp2.'fv',z=11,z=12)+sum(100*dfq_isccp2.'fv',z=18,z=19)+sum(100*dfq_isccp2.'fv',z=25,z=26)+sum(100*dfq_isccp2.'fv',z=32,z=33)+sum(100*dfq_isccp2.'fv',z=39,z=40)+sum(100*dfq_isccp2.'fv',z=46,z=47)' ; endif
+  endif
+  if( varid_base = 'isccp_all_vis_thick' )
+    tail = 'dfq_isccp2.ctl'
+    if( sepdir != 'no' ) ; tail = 'dfq_isccp2/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=6,z=7)+sum(100*dfq_isccp2.'fv',z=13,z=14)+sum(100*dfq_isccp2.'fv',z=20,z=21)+sum(100*dfq_isccp2.'fv',z=27,z=28)+sum(100*dfq_isccp2.'fv',z=34,z=35)+sum(100*dfq_isccp2.'fv',z=41,z=42)+sum(100*dfq_isccp2.'fv',z=48,z=49)' ; endif
+  endif
+
+  if( varid_base = 'isccp_high_vis' )
+    tail = 'dfq_isccp2.ctl'
+    if( sepdir != 'no' ) ; tail = 'dfq_isccp2/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=2,z=7)+sum(100*dfq_isccp2.'fv',z=9,z=14)+sum(100*dfq_isccp2.'fv',z=16,z=21)' ; endif
+  endif
+  if( varid_base = 'isccp_middle_vis' )
+    tail = 'dfq_isccp2.ctl'
+    if( sepdir != 'no' ) ; tail = 'dfq_isccp2/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=23,z=28)+sum(100*dfq_isccp2.'fv',z=30,z=35)' ; endif
+  endif
+  if( varid_base = 'isccp_low_vis' )
+    tail = 'dfq_isccp2.ctl'
+    if( sepdir != 'no' ) ; tail = 'dfq_isccp2/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=37,z=42)+sum(100*dfq_isccp2.'fv',z=44,z=49)' ; endif
+  endif
+  if( varid_base = 'isccp_high_vis_thin' )
+    tail = 'dfq_isccp2/dfq_isccp2.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=2,z=3)+sum(100*dfq_isccp2.'fv',z=9,z=10)+sum(100*dfq_isccp2.'fv',z=16,z=17)' ; endif
+  endif
+  if( varid_base = 'isccp_high_vis_med' )
+    tail = 'dfq_isccp2/dfq_isccp2.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=4,z=5)+sum(100*dfq_isccp2.'fv',z=11,z=12)+sum(100*dfq_isccp2.'fv',z=18,z=19)' ; endif
+  endif
+  if( varid_base = 'isccp_high_vis_thick' )
+    tail = 'dfq_isccp2/dfq_isccp2.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=6,z=7)+sum(100*dfq_isccp2.'fv',z=13,z=14)+sum(100*dfq_isccp2.'fv',z=20,z=21)' ; endif
+  endif
+  if( varid_base = 'isccp_middle_vis_thin' )
+    tail = 'dfq_isccp2/dfq_isccp2.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=23,z=24)+sum(100*dfq_isccp2.'fv',z=30,z=31)' ; endif
+  endif
+  if( varid_base = 'isccp_middle_vis_med' )
+    tail = 'dfq_isccp2/dfq_isccp2.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=25,z=26)+sum(100*dfq_isccp2.'fv',z=32,z=33)' ; endif
+  endif
+  if( varid_base = 'isccp_middle_vis_thick' )
+    tail = 'dfq_isccp2/dfq_isccp2.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=27,z=28)+sum(100*dfq_isccp2.'fv',z=34,z=35)' ; endif
+  endif
+  if( varid_base = 'isccp_low_vis_thin' )
+    tail = 'dfq_isccp2/dfq_isccp2.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=37,z=38)+sum(100*dfq_isccp2.'fv',z=44,z=45)' ; endif
+  endif
+  if( varid_base = 'isccp_low_vis_med' )
+    tail = 'dfq_isccp2/dfq_isccp2.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=39,z=40)+sum(100*dfq_isccp2.'fv',z=46,z=47)' ; endif
+  endif
+  if( varid_base = 'isccp_low_vis_thick' )
+    tail = 'dfq_isccp2/dfq_isccp2.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=41,z=42)+sum(100*dfq_isccp2.'fv',z=48,z=49)' ; endif
+  endif
+  if( varid_base = 'isccp_vis_thin' )
+    tail = 'dfq_isccp2/dfq_isccp2.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=2,z=3)+sum(100*dfq_isccp2.'fv',z=9,z=10)+sum(100*dfq_isccp2.'fv',z=16,z=17)+sum(100*dfq_isccp2.'fv',z=23,z=24)+sum(100*dfq_isccp2.'fv',z=30,z=31)+sum(100*dfq_isccp2.'fv',z=37,z=38)+sum(100*dfq_isccp2.'fv',z=44,z=45)' ; endif
+  endif
+  if( varid_base = 'isccp_vis_med' )
+    tail = 'dfq_isccp2/dfq_isccp2.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=4,z=5)+sum(100*dfq_isccp2.'fv',z=11,z=12)+sum(100*dfq_isccp2.'fv',z=18,z=19)+sum(100*dfq_isccp2.'fv',z=25,z=26)+sum(100*dfq_isccp2.'fv',z=32,z=33)+sum(100*dfq_isccp2.'fv',z=39,z=40)+sum(100*dfq_isccp2.'fv',z=46,z=47)' ; endif
+  endif
+  if( varid_base = 'isccp_vis_thick' )
+    tail = 'dfq_isccp2/dfq_isccp2.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=6,z=7)+sum(100*dfq_isccp2.'fv',z=13,z=14)+sum(100*dfq_isccp2.'fv',z=20,z=21)+sum(100*dfq_isccp2.'fv',z=27,z=28)+sum(100*dfq_isccp2.'fv',z=34,z=35)+sum(100*dfq_isccp2.'fv',z=41,z=42)+sum(100*dfq_isccp2.'fv',z=48,z=49)' ; endif
+  endif
+  if( varid_base = 'isccp_high_middle_vis' )
+    tail = 'dfq_isccp2.ctl'
+    if( sepdir != 'no' ) ; tail = 'dfq_isccp2/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'sum(100*dfq_isccp2.'fv',z=2,z=7)+sum(100*dfq_isccp2.'fv',z=9,z=14)+sum(100*dfq_isccp2.'fv',z=16,z=21)+sum(100*dfq_isccp2.'fv',z=23,z=28)+sum(100*dfq_isccp2.'fv',z=30,z=35)' ; endif
+  endif
+  if( varid_base = 'dfq_isccp2' )
+    tail = 'dfq_isccp2.ctl'
+    if( sepdir != 'no' ) ; tail = 'dfq_isccp2/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'dfq_isccp2.'fv ; endif
+  endif
+
+
+  if( varid_base = 'isccp_ctp_all' )
+    tail = 'dfq_isccp2/dfq_isccp2.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 )
+      var =        '0.5*(50+180)*sum(dfq_isccp2.'fv',z=1,z=7)'
+      var = var % '+0.5*(180+310)*sum(dfq_isccp2.'fv',z=8,z=14)'
+      var = var % '+0.5*(310+440)*sum(dfq_isccp2.'fv',z=15,z=21)'
+      var = var % '+0.5*(440+560)*sum(dfq_isccp2.'fv',z=22,z=28)'
+      var = var % '+0.5*(560+680)*sum(dfq_isccp2.'fv',z=29,z=35)'
+      var = var % '+0.5*(680+800)*sum(dfq_isccp2.'fv',z=36,z=42)'
+      var = var % '+0.5*(800+1000)*sum(dfq_isccp2.'fv',z=43,z=49)'
+      var = '(' % var % ')/sum(dfq_isccp2.'fv',z=1,z=49)'
+    endif
+  endif
+
+  if( varid_base = 'isccp_ctp_all_vis' )
+    tail = 'dfq_isccp2/dfq_isccp2.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 )
+      var =        '0.5*(50+180)*sum(dfq_isccp2.'fv',z=2,z=7)'
+      var = var % '+0.5*(180+310)*sum(dfq_isccp2.'fv',z=9,z=14)'
+      var = var % '+0.5*(310+440)*sum(dfq_isccp2.'fv',z=16,z=21)'
+      var = var % '+0.5*(440+560)*sum(dfq_isccp2.'fv',z=23,z=28)'
+      var = var % '+0.5*(560+680)*sum(dfq_isccp2.'fv',z=30,z=35)'
+      var = var % '+0.5*(680+800)*sum(dfq_isccp2.'fv',z=37,z=42)'
+      var = var % '+0.5*(800+1000)*sum(dfq_isccp2.'fv',z=44,z=49)'
+      var = '(' % var % ')/(sum(dfq_isccp2.'fv',z=2,z=7)+sum(dfq_isccp2.'fv',z=9,z=14)+sum(dfq_isccp2.'fv',z=16,z=21)+sum(dfq_isccp2.'fv',z=23,z=28)+sum(dfq_isccp2.'fv',z=30,z=35)+sum(dfq_isccp2.'fv',z=37,z=42)+sum(dfq_isccp2.'fv',z=44,z=49))'
+    endif
+  endif
+
+  if( varid_base = 'isccp_od_all_vis' )
+    tail = 'dfq_isccp2/dfq_isccp2.ctl'
+    fv   = dtopen( dir, tail )
+    if( fv > 0 )
+      tau.1 = 0
+      tau.2 = 0.5*(math_log(0.3)+math_log(1.3))
+      tau.3 = 0.5*(math_log(1.3)+math_log(3.6))
+      tau.4 = 0.5*(math_log(3.6)+math_log(9.4))
+      tau.5 = 0.5*(math_log(9.4)+math_log(23))
+      tau.6 = 0.5*(math_log(23)+math_log(60))
+      tau.7 = 0.5*(math_log(60)+math_log(380))
+      var1 = ''
+      var2 = ''
+      t = 1
+      z = 1
+      while( z <= 49 )
+*        say z % ':' % t
+        if( t != 1 )
+*          if( z != 2 ) ; var1 = var1 % '+' ; var2 = var2 % '+' ; endif
+*          var1 = var1  % '(' % tau.t % ')' % '*dfq_isccp2.'fv'(z='z')'
+*          var2 = var2  % 'dfq_isccp2.'fv'(z='z')'
+          if( z != 2 ) ; var = var % '+' ; endif
+          var1 = '(' % tau.t % ')' % '*dfq_isccp2.'fv'(z='z')'
+          var = var % '(' % var1 % ')/(sum(dfq_isccp2.'fv',z=2,z=7)+sum(dfq_isccp2.'fv',z=9,z=14)+sum(dfq_isccp2.'fv',z=16,z=21)+sum(dfq_isccp2.'fv',z=23,z=28)+sum(dfq_isccp2.'fv',z=30,z=35)+sum(dfq_isccp2.'fv',z=37,z=42)+sum(dfq_isccp2.'fv',z=44,z=49))'
+        endif
+        t = t + 1
+        if( t > 7 ) ; t = 1 ; endif
+        z = z + 1
+      endwhile
+*      var = '(' % var1 ')/(' % var2 % ')'
+    endif
+  endif
+
+  varid_h = substr( varid_base, 1, 5 )
+  pcat = substr( varid_base, 8, 1 )
+  taucat = substr( varid_base, 12, 1 )
+  if( varid_h = 'isccp' & valnum(pcat) = 1 & valnum(taucat) = 1 )
+    if( pcat >= 1 & pcat <= 7 & taucat >= 0 & taucat <= 6 )
+      tail = 'dfq_isccp2/dfq_isccp2.ctl'
+      n = 1 + (pcat-1) * 7 + taucat
+      fv   = dtopen( dir, tail )
+      if( fv > 0 ) ; var  = '100*dfq_isccp2.'fv'(z='n')' ; endif
+    endif
+  endif
+
+*  if( varid_base = 'sst' )
+  if( varid_base = 'sst' | varid_base = 'icr' | varid_base = 'ice' )
+    varidtmp = varid_base
+    fact = 1
+    if( varid_base = 'icr' ) ; fact = 100 ; endif
+
+    vartmp1=''
+    vartmp2=''
+    if( dir2 != '' )
+      tail = 'lsmask.ctl'
+      if( sepdir != 'no' ) ; tail = 'lsmask/' % tail ; endif
+      fv   = dtopen( dir2, tail )
+      if( fv > 0 )
+        vartmp1 = 'maskout('
+        vartmp2 = ',-lsmask.'fv'(z=1,t=1)+1e-10)'
+      endif
+    endif
+    tail = 'oa_'varidtmp'.ctl'
+    if( sepdir != 'no' ) ; tail = 'oa_' % varidtmp % '/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = fact % '*('vartmp1'oa_' % varidtmp % '.'fv'(z=1)' % vartmp2 % ')' ; endif
+    if( fv <= 0 )
+      tail = 'ol_' % varidtmp % '.ctl'
+      if( sepdir != 'no' ) ; tail = 'ol_' % varidtmp % '/' % tail ; endif
+      fv   = dtopen( dir, tail )
+      if( fv > 0 ) ; var  = fact % '*(' % vartmp1'ol_' % varidtmp % '.'fv'(z=1)' % vartmp2 % ')' ; endif
+    endif    
+  endif
+
+
+***** MIM *****
+  if( varid_base = 'mim_u' )
+    tail = 'zonal.ctl'
+    if( sepdir != 'no' ) ; tail = 'zonal/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = 'u.'fv ; endif
+  endif
+  if( varid_base = 'mim_st' )
+    tail = 'zonal.ctl'
+    if( sepdir != 'no' ) ; tail = 'zonal/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = '1e-10*st.'fv ; endif
+  endif
+  if( varid_base = 'mim_divf' )
+    tail = 'zonal.ctl'
+    if( sepdir != 'no' ) ; tail = 'zonal/' % tail ; endif
+    fv   = dtopen( dir, tail )
+    if( fv > 0 ) ; var  = '86400*divf.'fv ; endif
+  endif
+
+return var
+
+
