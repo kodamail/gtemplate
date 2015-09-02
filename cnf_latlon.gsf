@@ -4,6 +4,8 @@
 * (all the variables should have global scope)
 *
 function cnf_latlon()
+*rc = gsfpath( 'run_list' )
+rc = gsfpath( '../../run_list' )
 
 *
 *----- Variable
