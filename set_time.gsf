@@ -1,0 +1,136 @@
+*
+* Automatic Time Setting
+*
+* [inout]
+*   _year, _time_start, _time_endpp
+*
+* [out]
+*   _term
+*
+function set_time()
+  if( _year = 'clim' ) ; _year = '%y' ; endif
+
+  _term = ''
+  if( _time_start = '_time_start' | _time_start = '' )
+    if( _month >= 1 & _month <= 12 )
+      cm   = cmonth( _month, 3 )
+      cmpp = cmonth( _month+1, 3 )
+      _yearpp = _year
+      if( _month = 12 )
+        if( _year = '%y' ) ; _yearpp = '%ypp'
+        else               ; _yearpp = _yearpp + 1 ; endif
+      endif
+      _term = cmonth( _month ) % ' ' % _year
+      _time_start = '01'cm''_year
+      _time_endpp = '01'cmpp''_yearpp
+    endif
+    if( _month = 345 )
+      _term = 'MAM '_year
+      _time_start = '01mar'_year
+      _time_endpp = '01jun'_year
+    endif
+    if( _month = 678 )
+      _term = 'JJA '_year
+      _time_start = '01jun'_year
+      _time_endpp = '01sep'_year
+    endif
+    if( _month = 901 )
+      _term = 'SON '_year
+      _time_start = '01sep'_year
+      _time_endpp = '01dec'_year
+    endif
+    if( _month = 212 )
+      _term = 'DJF '_year
+      if( _year = '%y' ) ; _yearpp = '%ypp'
+      else               ; _yearpp = _year + 1 ; endif
+      _time_start = '01dec'_year
+      _time_endpp = '01mar'_yearpp
+    endif
+    if( _month = 999 )
+      _term = 'ANU '_year
+      if( _year = '%y' ) ; _yearpp = '%ypp'
+      else               ; _yearpp = _year + 1 ; endif
+      _time_start = '01jan'_year
+      _time_endpp = '01jan'_yearpp
+    endif
+    if( substr(_month,1,3) = 999 )
+      month = substr( _month, 4, 2 )
+      cm   = cmonth( month, 3 )
+      _term = 'ANU (' % cm % _year % '-)'
+      if( _year = '%y' ) ; _yearpp = '%ypp'
+      else               ; _yearpp = _year + 1 ; endif
+      _time_start = '01'cm''_year
+      _time_endpp = '01'cm''_yearpp
+    endif
+  else
+    _term = _time_start' <= time < '_time_endpp
+    _year = ''
+  endif
+
+* _time_start, _time_end -> _time_start.f, _time_end.f
+  f = 1
+  flag = 0
+  while( f <= _fmax )
+    'set dfile '_f2df.f
+    'set z 1'
+
+    if( _time_start.f != '_time_start.'f & _time_start.f != '' )
+      _clim_arg.f = ''
+
+      _time_start.f = t2time( time2t( _time_start.f ) )
+
+      if( _time_end.f = '_time_end.'f | _time_end.f = '' )
+        _time_end.f   = t2time( time2t( _time_endpp.f ) - 1 )
+      endif
+
+      _run.f = _run.f % '(' % _time_start.f % '-' % _time_end.f % ')'
+      say _run.f
+
+    else ; if( _clim_arg.f != '_clim_arg.'f & _clim_arg.f != '' )
+      _time_start.f = ''
+      _time_end.f   = ''
+      _run.f = _run.f % '(' % _clim_arg.f % ')'
+      say _run.f
+
+    else ; if( _year = '%y' )
+
+      if( valnum(_year_start.f) != 1 )
+        _year_start.f = _year_start
+      endif
+      if( valnum(_year_end.f) != 1 )
+        _year_end.f = _year_end
+      endif
+
+*     2001, 2002: dummy
+      tmp = strrep( _time_endpp, '%ypp', 2002 )
+      tmp = strrep(        tmp, '%y'  , 2001 )
+      tmp = t2time( time2t( tmp ) - 1 )
+      tmp = strrep(        tmp, 2002, '%ypp' )
+      _time_end.f = strrep( tmp, 2001, '%y' )
+
+      tmp = strrep( _time_start, '%ypp', _year_end.f+1 )
+      tmp = strrep(        tmp, '%y'  , _year_end.f )
+      tmp = t2time( time2t( tmp ) )
+      tmp = strrep(        tmp, _year_end.f+1, '%ypp' )
+      _time_start.f = strrep( tmp, _year_end.f, '%y' )
+
+      _clim_arg.f = _time_start.f % ' ' % _time_end.f % ' ' % _year_start.f % ' ' % _year_end.f
+      say _run.f % ': ' % _clim_arg.f
+      _time_start.f = ''
+      _time_end.f   = ''
+
+    else
+      _time_start.f = t2time( time2t( _time_start ) )
+      _time_end.f   = t2time( time2t( _time_endpp ) - 1 )
+      _clim_arg.f = ''
+      say _run.f % ': ' % _time_start.f % ' - ' % _time_end.f
+
+    endif ; endif ; endif
+
+    f = f + 1
+  endwhile
+  say ''
+
+  if( _year = '%y' ) ; _year = _year_start % '_' _year_end  ; endif
+
+return

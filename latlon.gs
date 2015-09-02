@@ -1,15 +1,13 @@
-function latlon( args )
-'reinit'
-
 * TODO: support mask for ISCCP topography
+function latlon( args )
+  'reinit'
+  rc = gsfallow( 'on' )
 
-rc = gsfallow( 'on' )
-rc = gsfpath( 'cnf cnf_sample' )
+*----- set frame
+  'set line 0'
+  'draw rec 0 0 11 8.5'
 
-'set line 0'
-'draw rec 0 0 11 8.5'
-
-* set default values
+*----- set default values
   _varid      = ''
   _cbar       = 'hor'
 *  _cbar.1     = '2'
@@ -32,41 +30,41 @@ rc = gsfpath( 'cnf cnf_sample' )
     i = i + 1
   endwhile
 
+*----- load cnf_latlon.gsf
+  rc = gsfpath( 'cnf cnf_sample' )
   ret = cnf_latlon()
 
-if(1 = 2)
-* check existence of cnf file
-  ret = read( cnf'.gsf' )
-  stat = sublin( ret, 1 )
-  if( stat != 0 )
-    ret = read( cnf )
-    stat = sublin( ret, 1 )
-    if( stat != 0 )
-      say 'error: 'cnf'.gsf does not exist'
-      exit
-    else
-      cnf = substr( cnf, 1, math_strlen(cnf)-4 )
-    endif
-  endif
-
-* check multiple-execution
-  ret = read( 'inc_latlon.gsf' )
-  stat = sublin( ret, 1 )
-  if( stat = 0 )
-    say 'error: temporal file inc_latlon.gsf exists. Please remove.'
-    say '(illegal multiple execution may occur)'
-    exit
-  endif
-
-* load cnf
-  ret = write( 'inc_latlon.gsf', 'function inc_latlon()' )
-  ret = write( 'inc_latlon.gsf', 'ret = 'cnf'()' )
-  ret = write( 'inc_latlon.gsf', 'return ret' )
-  ret = close( 'inc_latlon.gsf' )
-  ret = inc_latlon()
-  '!rm inc_latlon.gsf'
-
-endif
+** check existence of cnf file
+*  ret = read( cnf'.gsf' )
+*  stat = sublin( ret, 1 )
+*  if( stat != 0 )
+*    ret = read( cnf )
+*    stat = sublin( ret, 1 )
+*    if( stat != 0 )
+*      say 'error: 'cnf'.gsf does not exist'
+*      exit
+*    else
+*      cnf = substr( cnf, 1, math_strlen(cnf)-4 )
+*    endif
+*  endif
+*
+** check multiple-execution
+*  ret = read( 'inc_latlon.gsf' )
+*  stat = sublin( ret, 1 )
+*  if( stat = 0 )
+*    say 'error: temporal file inc_latlon.gsf exists. Please remove.'
+*    say '(illegal multiple execution may occur)'
+*    exit
+*  endif
+*
+** load cnf
+*  ret = write( 'inc_latlon.gsf', 'function inc_latlon()' )
+*  ret = write( 'inc_latlon.gsf', 'ret = 'cnf'()' )
+*  ret = write( 'inc_latlon.gsf', 'return ret' )
+*  ret = close( 'inc_latlon.gsf' )
+*  ret = inc_latlon()
+*  '!rm inc_latlon.gsf'
+*
 
 * set default and/or necessary values necessary after loading cnf
   i = 1
@@ -96,194 +94,43 @@ endif
     f = f + 1
   endwhile
 
-  cmd_fin = ''
   say ''
 
 ***************************************************************
-
-
-if( _region = 'global' | _region = '_region' | _region = '' ) 
-                               latmin = -90 ; latmax = 90 ; lonmin = 0   ; lonmax = 360 ; endif
-if( _region = 'indian'     ) ; latmin = -30 ; latmax = 30 ; lonmin = 0   ; lonmax = 120 ; endif
-if( _region = 'pacific'    ) ; latmin = -30 ; latmax = 30 ; lonmin = 120 ; lonmax = 240 ; endif
-if( _region = 'atlantic'   ) ; latmin = -30 ; latmax = 30 ; lonmin = 240 ; lonmax = 360 ; endif
-if( _region = 'indwpac'    ) ; latmin = -30 ; latmax = 30 ; lonmin = 60  ; lonmax = 180 ; endif
-if( _region = 'epac'       ) ; latmin = -30 ; latmax = 30 ; lonmin = 180 ; lonmax = 300 ; endif
-if( _region = 'atlantic'   ) ; latmin = -30 ; latmax = 30 ; lonmin = 240 ; lonmax = 360 ; endif
-if( _region = 'nhpac'      ) ; latmin = 20  ; latmax = 80 ; lonmin = 120 ; lonmax = 240 ; endif
-if( _region = 'nhatlantic' ) ; latmin = 20  ; latmax = 80 ; lonmin = 240 ; lonmax = 360 ; endif
-if( _region = 'east_asia'  ) ; latmin = 0   ; latmax = 50 ; lonmin = 80  ; lonmax = 180 ; endif
-if( _region = 'lowlat'     ) ; latmin = -60 ; latmax = 60 ; lonmin = 0   ; lonmax = 360 ; endif
-if( _region = 'tropics'    ) ; latmin = -30 ; latmax = 30 ; lonmin = 0   ; lonmax = 360 ; endif
-
+  set_region()
 
 ***************************************************************
 * Automatic Time Setting
 ***************************************************************
-if( _year = 'clim' ) ; _year = '%y' ; endif
-
-term = ''
-if( _time_start = '_time_start' | _time_start = '' )
-  if( _month >= 1 & _month <= 12 )
-    cm   = cmonth( _month, 3 )
-    cmpp = cmonth( _month+1, 3 )
-    _yearpp = _year
-    if( _month = 12 )
-      if( _year = '%y' ) ; _yearpp = '%ypp'
-      else               ; _yearpp = _yearpp + 1 ; endif
-    endif
-*    term = cmonth( _month )
-    term = cmonth( _month ) % ' ' % _year
-    _time_start = '01'cm''_year
-    _time_endpp = '01'cmpp''_yearpp
-  endif
-  if( _month = 345 )
-*    term = 'MAM'
-    term = 'MAM '_year
-    _time_start = '01mar'_year
-    _time_endpp = '01jun'_year
-  endif
-  if( _month = 678 )
-*    term = 'JJA'
-    term = 'JJA '_year
-    _time_start = '01jun'_year
-    _time_endpp = '01sep'_year
-  endif
-  if( _month = 901 )
-*    term = 'SON'
-    term = 'SON '_year
-    _time_start = '01sep'_year
-    _time_endpp = '01dec'_year
-  endif
-  if( _month = 212 )
-*    term = 'DJF'
-    term = 'DJF '_year
-    if( _year = '%y' ) ; _yearpp = '%ypp'
-    else               ; _yearpp = _year + 1 ; endif
-    _time_start = '01dec'_year
-    _time_endpp = '01mar'_yearpp
-  endif
-  if( _month = 999 )
-*    term = 'ANU'
-    term = 'ANU '_year
-    if( _year = '%y' ) ; _yearpp = '%ypp'
-    else               ; _yearpp = _year + 1 ; endif
-    _time_start = '01jan'_year
-    _time_endpp = '01jan'_yearpp
-  endif
-  if( substr(_month,1,3) = 999 )
-    month = substr( _month, 4, 2 )
-    cm   = cmonth( month, 3 )
-*    term = 'ANU'
-    term = 'ANU (' % cm % _year % '-)'
-    if( _year = '%y' ) ; _yearpp = '%ypp'
-    else               ; _yearpp = _year + 1 ; endif
-    _time_start = '01'cm''_year
-    _time_endpp = '01'cm''_yearpp
-  endif
-else
-  term = _time_start' <= time < '_time_endpp
-  _year = ''
-endif
-
-* _time_start, _time_end -> _time_start.f, _time_end.f
-f = 1
-flag = 0
-while( f <= _fmax )
-  'set dfile '_f2df.f
-  'set z 1'
-
-  if( _time_start.f != '_time_start.'f & _time_start.f != '' )
-    _clim_arg.f = ''
-
-    _time_start.f = t2time( time2t( _time_start.f ) )
-
-    if( _time_end.f = '_time_end.'f | _time_end.f = '' )
-      _time_end.f   = t2time( time2t( _time_endpp.f ) - 1 )
-    endif
-
-    _run.f = _run.f % '(' % _time_start.f % '-' % _time_end.f % ')'
-    say _run.f
-
-  else ; if( _clim_arg.f != '_clim_arg.'f & _clim_arg.f != '' )
-    _time_start.f = ''
-    _time_end.f   = ''
-    _run.f = _run.f % '(' % _clim_arg.f % ')'
-    say _run.f
-
-  else ; if( _year = '%y' )
-
-    if( valnum(_year_start.f) != 1 )
-      _year_start.f = _year_start
-    endif
-    if( valnum(_year_end.f) != 1 )
-      _year_end.f = _year_end
-    endif
-
-*   2001, 2002: dummy
-    tmp = strrep( _time_endpp, '%ypp', 2002 )
-    tmp = strrep(        tmp, '%y'  , 2001 )
-    tmp = t2time( time2t( tmp ) - 1 )
-    tmp = strrep(        tmp, 2002, '%ypp' )
-    _time_end.f = strrep( tmp, 2001, '%y' )
-*    tmp = strrep( _time_endpp, '%ypp', _year_end.f+1 )
-*    tmp = strrep(        tmp, '%y'  , _year_end.f )
-*    tmp = t2time( time2t( tmp ) - 1 )
-*    tmp = strrep(        tmp, _year_end.f+1, '%ypp' )
-*    _time_end.f = strrep( tmp, _year_end.f, '%y' )
-
-    tmp = strrep( _time_start, '%ypp', _year_end.f+1 )
-    tmp = strrep(        tmp, '%y'  , _year_end.f )
-    tmp = t2time( time2t( tmp ) )
-    tmp = strrep(        tmp, _year_end.f+1, '%ypp' )
-    _time_start.f = strrep( tmp, _year_end.f, '%y' )
-
-    _clim_arg.f = _time_start.f % ' ' % _time_end.f % ' ' % _year_start.f % ' ' % _year_end.f
-    say _run.f % ': ' % _clim_arg.f
-    _time_start.f = ''
-    _time_end.f   = ''
-
-  else
-    _time_start.f = t2time( time2t( _time_start ) )
-    _time_end.f   = t2time( time2t( _time_endpp ) - 1 )
-    _clim_arg.f = ''
-    say _run.f % ': ' % _time_start.f % ' - ' % _time_end.f
-
-  endif ; endif ; endif
-
-  f = f + 1
-endwhile
-say ''
-
-if( _year = '%y' ) ; _year = _year_start % '_' _year_end  ; endif
+  set_time()
 
 ***************************************************************
 * Automatic Variable Setting
 ***************************************************************
-f = 1
-while( f <= _fmax )
-  if( _varid.f = '_varid.'f | _varid.f = '' ) ; _varid.f = _varid ; endif
-  say f % ': ' % _varid.f
-  f = f + 1
-endwhile
+  f = 1
+  while( f <= _fmax )
+     if( _varid.f = '_varid.'f | _varid.f = '' ) ; _varid.f = _varid ; endif
+    say f % ': ' % _varid.f
+    f = f + 1
+  endwhile
 
 
 ***************************************************************
 * Variable List
 ***************************************************************
-f = 1
-while( f <= _fmax )
-  sname.f = ''
+  f = 1
+  while( f <= _fmax )
+    sname.f = ''
 
 * varid, varcnf -> name, unit, min, ...
 * 1. call get_varcnf without varcnfid (default varcnf will be set)
 * 2. load cnf
 * 3. call get_varcnf again if varcnfid is set in cnf.
 
-  get_varcnf( f, _varid.f, _varcnfid )
+    get_varcnf( f, _varid.f, _varcnfid )
 
-  f = f + 1
-endwhile
+    f = f + 1
+  endwhile
 
 
 * TODO: detailed description such as the below should be output to txt file if specified.
@@ -322,151 +169,130 @@ endwhile
 ***************************************************************
 * Calculate
 ***************************************************************
-f = 1
-while( f <= _fmax )
-  say 'Processing #'f
-  'set dfile '_f2df.f
-  'set lat 'latmin' 'latmax
-  'set lon 'lonmin' 'lonmax
-  'set z 1'
-  'set t 1'
-  if( _time_start.f != '' & _time_end.f != '' )
-    say 'v'f' = ave( '_var.f', time='_time_start.f', time='_time_end.f' )'
-    'v'f' = ave( '_var.f', time='_time_start.f', time='_time_end.f' )'
-  endif
+  f = 1
+  while( f <= _fmax )
+    say 'Processing #'f
+    'set dfile '_f2df.f
+    'set lat '_latmin' '_latmax
+    'set lon '_lonmin' '_lonmax
+    'set z 1'
+    'set t 1'
+    if( _time_start.f != '' & _time_end.f != '' )
+      say 'v'f' = ave( '_var.f', time='_time_start.f', time='_time_end.f' )'
+      'v'f' = ave( '_var.f', time='_time_start.f', time='_time_end.f' )'
+    endif
 
-  if( _clim_arg.f != '' )
-    prex( 'clave '_var.f' '_clim_arg.f' v'f )
-  endif
+    if( _clim_arg.f != '' )
+      prex( 'clave '_var.f' '_clim_arg.f' v'f )
+    endif
 
-  f = f + 1
-endwhile
+    f = f + 1
+  endwhile
 
 
 ***************************************************************
 * Draw
 ***************************************************************
-d = 1
-while( d <= 6 )
-  i = 1
-  j = 4-d
-  if( j <= 0 ) ; i = 2 ; j = j + 3 ; endif
+  d = 1
+  while( d <= 6 )
+    i = 1
+    j = 4-d
+    if( j <= 0 ) ; i = 2 ; j = j + 3 ; endif
 
-  xo = -0.2 ; yo = 0.1
-  xwid = ''
-  'mul 2 3 'i' 'j' -xoffset 'xo' -yoffset 'yo' 'xwid
-  'set grads off'
-  'set mpdraw '_mpdraw
+    xo = -0.2 ; yo = 0.1
+    xwid = ''
+    'mul 2 3 'i' 'j' -xoffset 'xo' -yoffset 'yo' 'xwid
+    'set grads off'
+    'set mpdraw '_mpdraw
 
-  f1 = subwrd( _disp.d, 1 )
-  f2 = subwrd( _disp.d, 2 )
+    f1 = subwrd( _disp.d, 1 )
+    f2 = subwrd( _disp.d, 2 )
 
-  if( f1 = '' ) ; d = d + 1 ; continue ;  endif
-  'set dfile '_f2df.f1
-  'set z 1'
-*  'set dfile 'f1
+    if( f1 = '' ) ; d = d + 1 ; continue ;  endif
+    'set dfile '_f2df.f1
+    'set z 1'
 
-  'shade const(v'f1',0,-u) -1e+30 1e+30 150 150 150'
+    'shade const(v'f1',0,-u) -1e+30 1e+30 150 150 150'
 
 ***** raw data *****
-  if( f2 = '' )
-*    'color -kind '_color' '_min2d' '_max2d' '_int2d
-    'color -kind '_color.f1' '_min2d.f1' '_max2d.f1' '_int2d.f1
-    'v = v'f1
-  else
-*    'color -kind '_dcolor' '_dmin2d' '_dmax2d' '_dint2d
-    'color -kind '_dcolor.f1' '_dmin2d.f1' '_dmax2d.f1' '_dint2d.f1
-    'v = v'f1' - lterp( v'f2', v'f1' )'
-  endif
-
-  'd v'
-*  if( _cbar.i = d )
-*    xposmin = 5.0 * i - 3.6
-*    xposmax = xposmin + 4.3
-*    'q shades'
-*    if( sublin(result,1) != 'None' )
-*      'xcbar 'xposmin' 'xposmax' 0.4 0.6 -edge triangle -line on -fstep 2'
-*    endif
-*  endif
-  if( _cbar.d = 'hor' )
-    if( d <= 3 ) ; xposmin = 1.4
-    else         ; xposmin = 6.4 ; endif
-    xposmax = xposmin + 4.3
-    yposmin = 0.4 + (j-1) * 2.5
-    yposmax = yposmin + 0.2
-    'q shades'
-    if( sublin(result,1) != 'None' )
-      'xcbar 'xposmin' 'xposmax' 'yposmin' 'yposmax' -edge triangle -line on -fstep 2'
-    endif
-  endif
-
-
-  if( _cont.d = 'on' )
-      'set gxout contour'; 'set cthick 6'; 'set ccolor 1'
     if( f2 = '' )
-*      'set cint '_int2d
-      'set cint '_int2d.f1
+      'color -kind '_color.f1' '_min2d.f1' '_max2d.f1' '_int2d.f1
+      'v = v'f1
     else
-*      'set cint '_dint2d
-      'set cint '_dint2d.f1
+      'color -kind '_dcolor.f1' '_dmin2d.f1' '_dmax2d.f1' '_dint2d.f1
+      'v = v'f1' - lterp( v'f2', v'f1' )'
     endif
-    'd v'
-  endif
 
-  'setfont small'
-  if( f2 = '' ) ; 'draws ('_run.f1')' % sname.f1
-  else ; 'draws ('_run.f1') - ('_run.f2')' % sname.f1 ; endif
+    'd v'
+    if( _cbar.d = 'hor' )
+      if( d <= 3 ) ; xposmin = 1.4
+      else         ; xposmin = 6.4 ; endif
+      xposmax = xposmin + 4.3
+      yposmin = 0.4 + (j-1) * 2.5
+      yposmax = yposmin + 0.2
+      'q shades'
+      if( sublin(result,1) != 'None' )
+        'xcbar 'xposmin' 'xposmax' 'yposmin' 'yposmax' -edge triangle -line on -fstep 2'
+      endif
+    endif
+
+    if( _cont.d = 'on' )
+        'set gxout contour'; 'set cthick 6'; 'set ccolor 1'
+      if( f2 = '' )
+        'set cint '_int2d.f1
+      else
+        'set cint '_dint2d.f1
+      endif
+      'd v'
+    endif
+
+    'setfont small'
+    if( f2 = '' ) ; 'draws ('_run.f1')' % sname.f1
+    else ; 'draws ('_run.f1') - ('_run.f2')' % sname.f1 ; endif
 
 *  if( d = 1 )
 *    'setfont normal'
     'setfont normal -base tl'
-*    'draw string 1.4 8.4 '_name.f1' for 'term' '_year' ['_unit.f1']'
-    'draw string 1.4 8.4 '_name.f1' for 'term' ['_unit.f1']'
+    'draw string 1.4 8.4 '_name.f1' for '_term' ['_unit.f1']'
 *  endif
 
 *** zonal mean ***
-  if( _region = '' | _region = 'global' | _region = '_region' )
-    ypos = 2.5 * j - 1.6
-    if( i = 1 ) ; 'set parea 4.8 5.8 'ypos' 'ypos+2.0 ; endif
-    if( i = 2 ) ; 'set parea 9.8 10.8 'ypos' 'ypos+2.0 ; endif
+    if( _region = '' | _region = 'global' | _region = '_region' )
+      ypos = 2.5 * j - 1.6
+      if( i = 1 ) ; 'set parea 4.8 5.8 'ypos' 'ypos+2.0 ; endif
+      if( i = 2 ) ; 'set parea 9.8 10.8 'ypos' 'ypos+2.0 ; endif
 
-    'set xyrev on'
-*  if( f2 = '' ) ; 'set vrange '_min1d' '_max1d ; 'set xlint '_int1d
-    if( f2 = '' ) ; 'set vrange '_min1d.f1' '_max1d.f1 ; 'set xlint '_int1d.f1
-*  else ; 'set vrange '_dmin1d' '_dmax1d ; 'set xlint '_dint1d ; endif
-    else ; 'set vrange '_dmin1d.f1' '_dmax1d.f1 ; 'set xlint '_dint1d.f1 ; endif
-    'set ylab off'
-    'set cmark 0' ; 'set cthick 6' ; 'set ccolor 1'
-    'zm = ave( v, lon='lonmin', lon='lonmax', -b )'
-    'd zm'
-    'set ylab on'
-  endif
+      'set xyrev on'
+      if( f2 = '' ) ; 'set vrange '_min1d.f1' '_max1d.f1 ; 'set xlint '_int1d.f1
+      else ; 'set vrange '_dmin1d.f1' '_dmax1d.f1 ; 'set xlint '_dint1d.f1 ; endif
+      'set ylab off'
+      'set cmark 0' ; 'set cthick 6' ; 'set ccolor 1'
+      'zm = ave( v, lon='_lonmin', lon='_lonmax', -b )'
+      'd zm'
+      'set ylab on'
+    endif
 
 *** global mean ***
-  'gm = aave( v, lon='lonmin', lon='lonmax', lat='latmin', lat='latmax' )'
-  gm = v2s( 'gm' )
-  if( _region = '' | _region = 'global' | _region = '_region' )
-    'setfont normal -angle 270'
-    'draws -pos tr -base tl -xoffset -0.1 -yoffset -0.5 -color 1 'math_format('%.2f',gm)
-    'setfont normal -angle 0'
-  else
-    'draws -pos tr -color 1 'math_format('%.2f',gm)
+   'gm = aave( v, lon='_lonmin', lon='_lonmax', lat='_latmin', lat='_latmax' )'
+    gm = v2s( 'gm' )
+    if( _region = '' | _region = 'global' | _region = '_region' )
+      'setfont normal -angle 270'
+      'draws -pos tr -base tl -xoffset -0.1 -yoffset -0.5 -color 1 'math_format('%.2f',gm)
+      'setfont normal -angle 0'
+    else
+      'draws -pos tr -color 1 'math_format('%.2f',gm)
+    endif
+
+    d = d + 1
+  endwhile
+
+  if( _save != '_save' & _save != '' )
+*  'save '_save
+    'gxprint '_save'.eps white'
   endif
 
-
-
-  d = d + 1
-endwhile
-
-
-if( _save != '_save' & _save != '' )
-*  'save '_save
-  'gxprint '_save'.eps white'
-endif
-
-cmd_fin
-exit
-
+  exit
+return
 
 *
 * d = v2 - v1

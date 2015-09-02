@@ -1,0 +1,15 @@
+function set_region()
+  if( _region = 'global' | _region = '_region' | _region = '' )
+                                 _latmin = -90 ; _latmax = 90 ; _lonmin = 0   ; _lonmax = 360 ; endif
+  if( _region = 'indian'     ) ; _latmin = -30 ; _latmax = 30 ; _lonmin = 0   ; _lonmax = 120 ; endif
+  if( _region = 'pacific'    ) ; _latmin = -30 ; _latmax = 30 ; _lonmin = 120 ; _lonmax = 240 ; endif
+  if( _region = 'atlantic'   ) ; _latmin = -30 ; _latmax = 30 ; _lonmin = 240 ; _lonmax = 360 ; endif
+  if( _region = 'indwpac'    ) ; _latmin = -30 ; _latmax = 30 ; _lonmin = 60  ; _lonmax = 180 ; endif
+  if( _region = 'epac'       ) ; _latmin = -30 ; _latmax = 30 ; _lonmin = 180 ; _lonmax = 300 ; endif
+  if( _region = 'atlantic'   ) ; _latmin = -30 ; _latmax = 30 ; _lonmin = 240 ; _lonmax = 360 ; endif
+  if( _region = 'nhpac'      ) ; _latmin = 20  ; _latmax = 80 ; _lonmin = 120 ; _lonmax = 240 ; endif
+  if( _region = 'nhatlantic' ) ; _latmin = 20  ; _latmax = 80 ; _lonmin = 240 ; _lonmax = 360 ; endif
+  if( _region = 'east_asia'  ) ; _latmin = 0   ; _latmax = 50 ; _lonmin = 80  ; _lonmax = 180 ; endif
+  if( _region = 'lowlat'     ) ; _latmin = -60 ; _latmax = 60 ; _lonmin = 0   ; _lonmax = 360 ; endif
+  if( _region = 'tropics'    ) ; _latmin = -30 ; _latmax = 30 ; _lonmin = 0   ; _lonmax = 360 ; endif
+return
