@@ -3,22 +3,11 @@ function latlon( args )
 
 * TODO: support mask for ISCCP topography
 
-'!pwd > pwd.tmp'
-ret = read( 'pwd.tmp' )
-pwd = sublin( ret, 2 )
-'!rm -f pwd.tmp'
-gs = pwd'/latlon.gs'
 rc = gsfallow( 'on' )
+rc = gsfpath( 'cnf cnf_sample' )
 
 'set line 0'
 'draw rec 0 0 11 8.5'
-
-sw = subwrd( args, 1 )
-***************************************************************
-***************************************************************
-***************************************************************
-if( sw != 'cnf' )
-  cnf = sw
 
 * set default values
   _varid      = ''
@@ -43,6 +32,9 @@ if( sw != 'cnf' )
     i = i + 1
   endwhile
 
+  ret = cnf_latlon()
+
+if(1 = 2)
 * check existence of cnf file
   ret = read( cnf'.gsf' )
   stat = sublin( ret, 1 )
@@ -74,6 +66,7 @@ if( sw != 'cnf' )
   ret = inc_latlon()
   '!rm inc_latlon.gsf'
 
+endif
 
 * set default and/or necessary values necessary after loading cnf
   i = 1
@@ -106,166 +99,6 @@ if( sw != 'cnf' )
   cmd_fin = ''
   say ''
 
-***************************************************************
-***************************************************************
-***************************************************************
-*
-********** arguements from external file (obsolute) **********
-else
-*  cmd_fin = 'quit'
-  cmd_fin = ''
-
-  _cbar = 'hor'
-  _cbar.1 = '2'
-  _cbar.2 = '5'
-
-  _cont.1 = 'off'
-  _cont.2 = 'off'
-  _cont.3 = 'off'
-  _cont.4 = 'off'
-  _cont.5 = 'off'
-  _cont.6 = 'off'
-
-  _mpdraw = 'on'
-
-  cnf_fname = subwrd( args, 2 )
-
-***** _varid-name
-  tmp = sublin( read( cnf_fname ), 2 )
-  _varid = subwrd( tmp, 1 )
-  _varid.1 = subwrd( tmp, 2 )
-  _varid.2 = subwrd( tmp, 3 )
-  _varid.3 = subwrd( tmp, 4 )
-  _varid.4 = subwrd( tmp, 5 )
-  _varid.5 = subwrd( tmp, 6 )
-  _varid.6 = subwrd( tmp, 7 )
-  say '_varid = ' % _varid
-
-***** ( -ym year month | -time start endpp | -clim year_start year_end month)
-  tmp = sublin( read( cnf_fname ), 2 )
-  p = 1
-  while( p <= 100 )
-    tmp.p  = subwrd( tmp, p )
-    if( tmp.p = '' ) ; break ; endif
-    say p % ": " % tmp.p
-    tmph = strrep( tmp.p, '.', ' ')
-    tmpt = subwrd( tmph, 2 )
-    tmph = subwrd( tmph, 1 )
-
-    if( tmp.p = '-year' )
-*     e.g. year=2004, month=6
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _year  = tmp.p
-      say 'year  = ' % _year
-      p = p + 1 ; continue
-    endif
-
-    if( tmp.p = '-ym' )
-*     e.g. year=2004, month=6
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _year  = tmp.p
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _month = tmp.p
-      say 'year  = ' % _year
-      say 'month = ' % _month
-      p = p + 1 ; continue
-    endif
-
-    if( tmp.p = '-time' )
-*     e.g. _time_start=01jun2004, _time_endpp=01sep2004 (if JJA)
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _time_start  = tmp.p
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _time_endpp  = tmp.p
-      say '_time_start = ' % _time_start
-      say '_time_endpp = ' % _time_endpp
-      p = p + 1 ; continue
-    endif
-
-*    if( tmp.p = '-time.1' )
-    if( tmph = '-time' )
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _time_start.tmpt  = tmp.p
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _time_endpp.tmpt  = tmp.p
-      say '_time_start.' % tmpt % ' = ' % _time_start.tmpt
-      say '_time_endpp.' % tmpt % ' = ' % _time_endpp.tmpt
-      p = p + 1 ; continue
-    endif
-
-    if( tmp.p = '-clim' )
-      _year = 'clim'
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _year_start = tmp.p
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _year_end   = tmp.p
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _month      = tmp.p
-      say _year_start
-      say _year_end
-      say _month
-      p = p + 1 ; continue
-    endif
-
-    if( tmph = '-clim' )
-      _year.tmpt = 'clim'
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _year_start.tmpt = tmp.p
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _year_end.tmpt   = tmp.p
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _month.tmpt      = tmp.p
-      say _year_start.tmpt
-      say _year_end.tmpt
-      say _month.tmpt
-      p = p + 1 ; continue
-    endif
-
-    p = p + 1
-  endwhile
-
-***** number of dataset
-  dnum = sublin( read( cnf_fname ), 2 )
-  say 'dnum = ' % dnum
-***** dataset config (X dnum)
-  d = 1
-  while( d <= dnum )
-    dconf.d = sublin( read( cnf_fname ), 2 )
-    say 'data #' % d % ': ' % dconf.d
-    d = d + 1
-  endwhile
-***** display (X 6)
-  d = 1
-  while( d <= 6 )
-    _disp.d = sublin( read( cnf_fname ), 2 )
-    say 'disp #' % d % ': ' % _disp.d
-    d = d + 1
-  endwhile
-***** save
-  _save = sublin( read( cnf_fname ), 2 )
-
-***************************************************************
-* Open list
-***************************************************************
-f = 1
-_fmax = dnum
-while( f <= _fmax )
-  ret = run_list( dconf.f )
-
-  _run.f = subwrd( ret, 2 )
-  _var.f = subwrd( ret, 4 )
-  if( _var.f = '' )
-    say 'error: file (#=' % f % ') does not exist'
-    'quit'
-  endif
-  _f2df.f = last()
-  f = f + 1
-endwhile
-
-
-endif
-***************************************************************
-***************************************************************
 ***************************************************************
 
 
