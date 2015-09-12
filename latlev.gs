@@ -1,491 +1,50 @@
+*
+* prepare cnf_latlon.gsf in the same directory, cnf/ or cnf_sample/.
+*
 function latlev( args )
-'reinit'
+  'reinit'
+  rc = gsfallow("on")
 
-'!pwd > pwd.tmp'
-ret = read( 'pwd.tmp' )
-pwd = sublin( ret, 2 )
-'!rm -f pwd.tmp'
-gs=pwd'/lat_lev.gs'
-rc = gsfallow("on")
+*----- set frame (depends on frame size ... TODO)
+  'set line 0'
+  'draw rec 0 0 11 8.5'
 
-'set line 0'
-'draw rec 0 0 11 8.5'
+*----- set cnf by loading cnf_latlev.gsf
+  set_cnf()
 
-*cnf = subwrd( args, 1 )
-
-sw = subwrd( args, 1 )
-***************************************************************
-***************************************************************
-***************************************************************
-*
-* set here
-*
-if( sw != 'cnf' )
-*if( cnf != 'cnf' )
-  cnf = sw
-
-* set default values
-  _varid      = ''
-  _cbar       = 'hor'
-  _cbar.1     = '1'
-  _cbar.2     = ''
-  _shade      = 'on'
-  _cont       = 'off'
-  _vec        = 'off'
-*  _vec        = 'on'
-  _time_start = ''
-  _time_end   = ''
-  _year       = 2004
-  _month      = 6
-  _year_start = ''
-  _year_end   = ''
-  _latmin     = -90
-  _latmax     = 90
-  _vert       = 'pressure'
-  _levmin     = 1000
-  _levmax     = 10
-  _xcbar_arg  = '-line on -fstep 2 -foffset 1 -fwidth 0.08 -fheight 0.08'
-  _fmax       = 0
-  _save       = ''
-  i = 1
-  while( i <= 6 )
-    _disp.i  = ''
-    _shade.i = ''
-    _cont.i  = ''
-    _vec.i   = ''
-    _over.i  = ''
-    i = i + 1
-  endwhile
-
-* check existence of cnf file
-  ret = read( cnf'.gsf' )
-  stat = sublin( ret, 1 )
-  if( stat != 0 )
-    ret = read( cnf )
-    stat = sublin( ret, 1 )
-    if( stat != 0 )
-      say 'error: 'cnf'.gsf does not exist'
-      exit
-    else
-      cnf = substr( cnf, 1, math_strlen(cnf)-4 )
-    endif
+*----- calculate aspect ratio for vector
+  'q gxinfo'
+  line = sublin( result, 3 )
+  xmin = subwrd( line, 4 )
+  xmax = subwrd( line, 6 )
+  xw = xmax - xmin
+  line = sublin( result, 4 )
+  ymin = subwrd( line, 4 )
+  ymax = subwrd( line, 6 )
+  yw = ymax - ymin
+* in [km]
+  latw = ( _latmax - _latmin ) * 111
+  if( _vert = 'pressure' )
+    levw = ( 16 * math_log10(_levmin/_levmax) )
+  else
+    levw = ( _levmax - _levmin ) / 1000
   endif
+  ratio = (yw / levw) / (xw / latw)
+  my = 1
+  mz = ratio
 
-* check multiple-execution
-  ret = read( 'inc_latlev.gsf' )
-  stat = sublin( ret, 1 )
-  if( stat = 0 )
-    say 'error: temporal file inc_latlev.gsf exists. Please remove.'
-    say '(illegal multiple execution may occur)'
-    exit
-  endif
 
-* load cnf
-  ret = write( 'inc_latlev.gsf', 'function inc_latlev()' )
-  ret = write( 'inc_latlev.gsf', 'ret = 'cnf'()' )
-  ret = write( 'inc_latlev.gsf', 'return ret' )
-  ret = close( 'inc_latlev.gsf' )
-  ret = inc_latlev()
-  '!rm inc_latlev.gsf'
+  set_time()
 
-* set default and/or necessary values necessary after loading cnf
-  i = 1
-  while( i <= 6 )
-    if( _shade.i = '' ) ; _shade.i = _shade ; endif
-    if( _cont.i  = '' ) ; _cont.i  = _cont  ; endif
-    if( _vec.i   = '' ) ; _vec.i   = _vec   ; endif
-    i = i + 1
-  endwhile
 
+*----- Variable List
   f = 1
   while( f <= _fmax )
-    if( (    _name != '' &    _name !=    '_name' ) & (    _name.f = '' |    _name.f =    '_name.'f ) ) ;    _name.f =    _name ; endif
-    if( (    _unit != '' &    _unit !=    '_unit' ) & (    _unit.f = '' |    _unit.f =    '_unit.'f ) ) ;    _unit.f =    _unit ; endif
-    if( (     _min != '' &     _min !=     '_min' ) & (     _min.f = '' |     _min.f =     '_min.'f ) ) ;     _min.f =     _min ; endif
-    if( (     _int != '' &     _int !=     '_int' ) & (     _int.f = '' |     _int.f =     '_int.'f ) ) ;     _int.f =     _int ; endif
-    if( (     _max != '' &     _max !=     '_max' ) & (     _max.f = '' |     _max.f =     '_max.'f ) ) ;     _max.f =     _max ; endif
-    if( (    _dmin != '' &    _dmin !=    '_dmin' ) & (    _dmin.f = '' |    _dmin.f =    '_dmin.'f ) ) ;    _dmin.f =    _dmin ; endif
-    if( (    _dint != '' &    _dint !=    '_dint' ) & (    _dint.f = '' |    _dint.f =    '_dint.'f ) ) ;    _dint.f =    _dint ; endif
-    if( (    _dmax != '' &    _dmax !=    '_dmax' ) & (    _dmax.f = '' |    _dmax.f =    '_dmax.'f ) ) ;    _dmax.f =    _dmax ; endif
-    if( (   _color != '' &   _color !=   '_color' ) & (   _color.f = '' |   _color.f =   '_color.'f ) ) ;   _color.f =   _color ; endif
-    if( (  _dcolor != '' &  _dcolor !=  '_dcolor' ) & (  _dcolor.f = '' |  _dcolor.f =  '_dcolor.'f ) ) ;  _dcolor.f =  _dcolor ; endif
-    if( (  _colork != '' &  _colork !=  '_colork' ) & (  _colork.f = '' |  _colork.f =  '_colork.'f ) ) ;  _colork.f =  _colork ; endif
-    if( ( _dcolork != '' & _dcolork != '_dcolork' ) & ( _dcolork.f = '' | _dcolork.f = '_dcolork.'f ) ) ; _dcolork.f = _dcolork ; endif
-
+    if( _varid.f = '_varid.'f | _varid.f = '' ) ; _varid.f = _varid ; endif
+    say f % ': ' % _varid.f
+    get_varcnf( f, _varid.f, _varcnfid )
     f = f + 1
   endwhile
-
-  cmd_fin = ''
-  say ''
-
-
-***************************************************************
-***************************************************************
-***************************************************************
-*
-********** arguements from external file **********
-else
-
-*  cmd_fin = 'quit'
-  cmd_fin = ''
-
-  _cbar = 'hor'
-  _cbar.1 = '2'
-  _cbar.2 = '5'
-
-  _cont.1 = 'on'
-  _cont.2 = 'on'
-  _cont.3 = 'on'
-  _cont.4 = 'on'
-  _cont.5 = 'on'
-  _cont.6 = 'on'
-
-  _vert = 'pressure'
-  _levmin = 1000
-  _levmax = 10
-  _latmin = -90 ; _latmax = 90
-
-  cnf_fname = subwrd( args, 2 )
-
-***** var-name
-  _varid = sublin( read( cnf_fname ), 2 )
-*  var = varid
-  say 'varid = ' % _varid
-
-***** ( -ym year month | -time start endpp | -clim year_start year_end month)
-  tmp = sublin( read( cnf_fname ), 2 )
-  p = 1
-  while( p <= 100 )
-    tmp.p  = subwrd( tmp, p )
-    if( tmp.p = '' ) ; break ; endif
-say p % ": " % tmp.p
-    tmph = strrep( tmp.p, '.', ' ')
-    tmpt = subwrd( tmph, 2 )
-    tmph = subwrd( tmph, 1 )
-
-    if( tmp.p = '-year' )
-*     e.g. year=2004, month=6
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _year  = tmp.p
-      say 'year  = ' % _year
-      p = p + 1 ; continue
-    endif
-
-    if( tmp.p = '-ym' )
-*     e.g. year=2004, month=6
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _year  = tmp.p
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _month = tmp.p
-      say 'year  = ' % _year
-      say 'month = ' % _month
-      p = p + 1 ; continue
-    endif
-
-    if( tmp.p = '-time' )
-*     e.g. time_start=01jun2004, time_endpp=01sep2004 (if JJA)
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _time_start  = tmp.p
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _time_endpp  = tmp.p
-      say 'time_start = ' % _time_start
-      say 'time_endpp = ' % _time_endpp
-      p = p + 1 ; continue
-    endif
-
-*    if( tmp.p = '-time.1' )
-    if( tmph = '-time' )
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _time_start.tmpt  = tmp.p
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _time_endpp.tmpt  = tmp.p
-      say 'time_start.' % tmpt % ' = ' % _time_start.tmpt
-      say 'time_endpp.' % tmpt % ' = ' % _time_endpp.tmpt
-      p = p + 1 ; continue
-    endif
-
-    if( tmp.p = '-clim' )
-      _year = 'clim'
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _year_start = tmp.p
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _year_end   = tmp.p
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _month      = tmp.p
-      say _year_start
-      say _year_end
-      say _month
-      p = p + 1 ; continue
-    endif
-
-    if( tmph = '-clim' )
-      _year.tmpt = 'clim'
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _year_start.tmpt = tmp.p
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _year_end.tmpt   = tmp.p
-      p = p + 1 ; tmp.p = subwrd( tmp, p )
-      _month.tmpt      = tmp.p
-      say _year_start.tmpt
-      say _year_end.tmpt
-      say _month.tmpt
-      p = p + 1 ; continue
-    endif
-
-    p = p + 1
-  endwhile
-
-
-*  tmp = sublin( read( cnf_fname ), 2 )
-*  tmp1 = subwrd( tmp, 1 )
-*  tmp2 = subwrd( tmp, 2 )
-*  tmp3 = subwrd( tmp, 3 )
-*  tmp4 = subwrd( tmp, 4 )
-*  if( tmp1 = '-ym' )
-**   e.g. year=2004, month=6
-*    _year  = tmp2
-*    _month = tmp3
-*    say 'year  = ' % _year
-*    say 'month = ' %_month
-*  endif
-*  if( tmp1 = '-time' )
-**  else
-**   e.g. time_start=01jun2004, time_endpp=01sep2004 (if JJA)
-*    _time_start  = tmp2
-*    _time_endpp  = tmp3
-*    say 'time_start = ' % _time_start
-*    say 'time_endpp = ' % _time_endpp
-*  endif
-*  if( tmp1 = '-clim' )
-*    _year = 'clim'
-*    _year_start = tmp2
-*    _year_end   = tmp3
-*    _month      = tmp4
-*    say _year_start
-*    say _year_end
-*    say _month
-*  endif
-
-
-***** number of dataset
-  dnum = sublin( read( cnf_fname ), 2 )
-  say 'dnum = ' % dnum
-***** dataset config (X dnum)
-  d = 1
-  while( d <= dnum )
-    dconf.d = sublin( read( cnf_fname ), 2 )
-    say 'data #' % d % ': ' % dconf.d
-    d = d + 1
-  endwhile
-***** display (X 6)
-  d = 1
-  while( d <= 6 )
-    disp.d = sublin( read( cnf_fname ), 2 )
-    say 'disp #' % d % ': ' % disp.d
-    d = d + 1
-  endwhile
-***** save
-  _save = sublin( read( cnf_fname ), 2 )
-
-***************************************************************
-* Open list
-***************************************************************
-f = 1
-_fmax = dnum
-while( f <= _fmax )
-  ret = run_list( dconf.f )
-  _run.f = subwrd( ret, 2 )
-  _var.f = subwrd( ret, 4 )
-  if( _var.f = '' )
-    say 'error: file (#=' % f % ') does not exist'
-    exit
-  endif
-  _f2df.f = last()
-  f = f + 1
-endwhile
-
-endif
-***************************************************************
-***************************************************************
-***************************************************************
-
-'q gxinfo'
-line = sublin( result, 3 )
-xmin = subwrd( line, 4 )
-xmax = subwrd( line, 6 )
-xw = xmax - xmin
-line = sublin( result, 4 )
-ymin = subwrd( line, 4 )
-ymax = subwrd( line, 6 )
-yw = ymax - ymin
-* in [km]
-latw = ( _latmax - _latmin ) * 111
-if( _vert = 'pressure' )
-  levw = ( 16 * math_log10(_levmin/_levmax) )
-else
-  levw = ( _levmax - _levmin ) / 1000
-endif
-ratio = (yw / levw) / (xw / latw)
-my = 1
-mz = ratio
-
-
-
-***************************************************************
-* Automatic Time Setting
-***************************************************************
-if( _year = 'clim' ) ; _year = '%y' ; endif
-
-term = ''
-if( _time_start = '_time_start' | _time_start = '' )
-  if( _month >= 1 & _month <= 12 )
-    cm   = cmonth( _month, 3 )
-    cmpp = cmonth( _month+1, 3 )
-    yearpp = _year
-    if( _month = 12 )
-      if( _year = '%y' ) ; yearpp = '%ypp'
-      else               ; yearpp = yearpp + 1 ; endif
-    endif
-    term = cmonth( _month )
-    _time_start = '01'cm''_year
-    _time_endpp = '01'cmpp''yearpp
-  endif
-  if( _month = 345 )
-    term = 'MAM'
-    _time_start = '01mar'_year
-    _time_endpp = '01jun'_year
-  endif
-  if( _month = 678 )
-    term = 'JJA'
-    _time_start = '01jun'_year
-    _time_endpp = '01sep'_year
-  endif
-  if( _month = 901 )
-    term = 'SON'
-    _time_start = '01sep'_year
-    _time_endpp = '01dec'_year
-  endif
-  if( _month = 212 )
-    term = 'DJF'
-    if( _year = '%y' ) ; yearpp = '%ypp'
-    else               ; yearpp = _year + 1 ; endif
-    _time_start = '01dec'_year
-    _time_endpp = '01mar'yearpp
-  endif
-  if( _month = 999 )
-    term = 'ANU'
-    if( _year = '%y' ) ; yearpp = '%ypp'
-    else               ; yearpp = _year + 1 ; endif
-    _time_start = '01jan'_year
-    _time_endpp = '01jan'yearpp
-  endif
-else
-  term = _time_start' <= time < '_time_endpp
-  _year = ''
-endif
-
-*_time_endpp = 
-
-** time_start, time_end -> time_start.f, time_end.f
-*f = 1
-*flag = 0
-*while( f <= _fmax )
-*  'set dfile 'f
-*  if( _time_start.f = '_time_start.'f | _time_start.f = '' )
-*    _time_start.f = t2time( time2t( _time_start ) )
-*    _time_end.f   = t2time( time2t( _time_endpp ) - 1 )
-*  else
-*    if( flag = 0 )
-*      term = term % ' (Exception exists)'
-*      flag = 1
-*    endif
-*  endif
-*  say _run.f % ': ' % _time_start.f % ' - ' % _time_end.f
-*  f = f + 1
-*endwhile
-
-* time_start, time_end -> time_start.f, time_end.f
-f = 1
-flag = 0
-while( f <= _fmax )
-  'set dfile '_f2df.f
-
-  if( _time_start.f != '_time_start.'f & _time_start.f != '' )
-    _clim_arg.f = ''
-
-    _time_start.f = t2time( time2t( _time_start.f ) )
-
-    if( _time_end.f = '_time_end.'f | _time_end.f = '' )
-      _time_end.f   = t2time( time2t( _time_endpp.f ) - 1 )
-    endif
-
-    _run.f = _run.f % '(' % _time_start.f % '-' % _time_end.f % ')'
-    say _run.f
-
-  else ; if( _clim_arg.f != '_clim_arg.'f & _clim_arg.f != '' )
-    _time_start.f = ''
-    _time_end.f   = ''
-    _run.f = _run.f % '(' % _clim_arg.f % ')'
-    say _run.f
-
-  else ; if( _year = '%y' )
-
-    if( valnum(_year_start.f) != 1 )
-      _year_start.f = _year_start
-    endif
-    if( valnum(_year_end.f) != 1 )
-      _year_end.f = _year_end
-    endif
-
-    tmp = strrep( _time_endpp, '%ypp', _year_end.f+1 )
-    tmp = strrep(         tmp, '%y'  , _year_end.f )
-    tmp = t2time( time2t( tmp ) - 1 )
-    tmp = strrep(         tmp, _year_end.f+1, '%ypp' )
-    _time_end.f = strrep( tmp, _year_end.f, '%y' )
-
-    tmp = strrep( _time_start, '%ypp', _year_end.f+1 )
-    tmp = strrep(         tmp, '%y'  , _year_end.f )
-    tmp = t2time( time2t( tmp ) )
-    tmp = strrep(         tmp, _year_end.f+1, '%ypp' )
-    _time_start.f = strrep( tmp, _year_end.f, '%y' )
-
-    _clim_arg.f = _time_start.f % ' ' % _time_end.f % ' ' % _year_start.f % ' ' % _year_end.f
-    say _run.f % ': ' % _clim_arg.f
-    _time_start.f = ''
-    _time_end.f   = ''
-  else
-    _time_start.f = t2time( time2t( _time_start ) )
-    _time_end.f   = t2time( time2t( _time_endpp ) - 1 )
-    _clim_arg.f = ''
-    say _run.f % ': ' % _time_start.f % ' - ' % _time_end.f
-
-  endif ; endif ; endif
-
-  f = f + 1
-endwhile
-say ''
-
-if( _year = '%y' ) ; _year = _year_start % '_' _year_end  ; endif
-
-***************************************************************
-* Automatic Variable Setting
-***************************************************************
-f = 1
-while( f <= _fmax )
-  if( _varid.f = '_varid.'f | _varid.f = '' ) ; _varid.f = _varid ; endif
-  say f % ': ' % _varid.f
-  f = f + 1
-endwhile
-
-***************************************************************
-* Variable List
-***************************************************************
-f = 1
-while( f <= _fmax )
-  sname.f = ''
-  get_varcnf( f, _varid.f, _varcnfid )
-  f = f + 1
-endwhile
 
 ***************************************************************
 * Legend
@@ -524,7 +83,7 @@ endwhile
 ***************************************************************
 f = 1
 while( f <= _fmax )
-  say 'Processing #'f
+*  say 'Processing #'f
   'set dfile '_f2df.f
   'set x 1'
   'set lat '_latmin' '_latmax
@@ -536,7 +95,7 @@ while( f <= _fmax )
   zdef = qctlinfo( f, 'zdef', 1 )
   tdef = qctlinfo( f, 'tdef', 1 )
 
-  say 'xdef='xdef
+*  say 'xdef='xdef
   if( xdef > 1 )
     _var.f = 'ave(' % _var.f % ',x=1,x=' % xdef % ')'
   endif
@@ -841,7 +400,6 @@ if( _save != '_save' & _save != '' )
 *  'save '_save
   'gxprint '_save'.eps white'
 endif
-cmd_fin
 
 exit
 ***************************************************************
@@ -1070,4 +628,108 @@ endif
   if(  _dcolor.f =  '_dcolor.'f ) ;  _dcolor.f =  dcolor ; endif
   if(  _colork.f =  '_colork.'f ) ;  _colork.f =  colork ; endif
   if( _dcolork.f = '_dcolork.'f ) ; _dcolork.f = dcolork ; endif
+
+return
+
+
+function set_cnf()
+
+* set default values
+  _varid      = ''
+  _cbar       = 'hor'
+  _cbar.1     = '1'
+  _cbar.2     = ''
+  _shade      = 'on'
+  _cont       = 'off'
+  _vec        = 'off'
+*  _vec        = 'on'
+  _time_start = ''
+  _time_end   = ''
+  _year       = 2004
+  _month      = 6
+  _year_start = ''
+  _year_end   = ''
+  _latmin     = -90
+  _latmax     = 90
+  _vert       = 'pressure'
+  _levmin     = 1000
+  _levmax     = 10
+  _xcbar_arg  = '-line on -fstep 2 -foffset 1 -fwidth 0.08 -fheight 0.08'
+  _fmax       = 0
+  _save       = ''
+  i = 1
+  while( i <= 6 )
+    _disp.i  = ''
+    _shade.i = ''
+    _cont.i  = ''
+    _vec.i   = ''
+    _over.i  = ''
+    i = i + 1
+  endwhile
+
+*----- load cnf_latlon.gsf
+  rc = gsfpath( 'cnf cnf_sample' )
+  ret = cnf_latlev()
+
+** check existence of cnf file
+*  ret = read( cnf'.gsf' )
+*  stat = sublin( ret, 1 )
+*  if( stat != 0 )
+*    ret = read( cnf )
+*    stat = sublin( ret, 1 )
+*    if( stat != 0 )
+*      say 'error: 'cnf'.gsf does not exist'
+*      exit
+*    else
+*      cnf = substr( cnf, 1, math_strlen(cnf)-4 )
+*    endif
+*  endif
+*
+** check multiple-execution
+*  ret = read( 'inc_latlev.gsf' )
+*  stat = sublin( ret, 1 )
+*  if( stat = 0 )
+*    say 'error: temporal file inc_latlev.gsf exists. Please remove.'
+*    say '(illegal multiple execution may occur)'
+*    exit
+*  endif
+*
+** load cnf
+*  ret = write( 'inc_latlev.gsf', 'function inc_latlev()' )
+*  ret = write( 'inc_latlev.gsf', 'ret = 'cnf'()' )
+*  ret = write( 'inc_latlev.gsf', 'return ret' )
+*  ret = close( 'inc_latlev.gsf' )
+*  ret = inc_latlev()
+*  '!rm inc_latlev.gsf'
+
+* set default and/or necessary values necessary after loading cnf
+  i = 1
+  while( i <= 6 )
+    if( _shade.i = '' ) ; _shade.i = _shade ; endif
+    if( _cont.i  = '' ) ; _cont.i  = _cont  ; endif
+    if( _vec.i   = '' ) ; _vec.i   = _vec   ; endif
+    i = i + 1
+  endwhile
+
+  f = 1
+  while( f <= _fmax )
+    if( (    _name != '' &    _name !=    '_name' ) & (    _name.f = '' |    _name.f =    '_name.'f ) ) ;    _name.f =    _name ; endif
+    if( (    _unit != '' &    _unit !=    '_unit' ) & (    _unit.f = '' |    _unit.f =    '_unit.'f ) ) ;    _unit.f =    _unit ; endif
+    if( (     _min != '' &     _min !=     '_min' ) & (     _min.f = '' |     _min.f =     '_min.'f ) ) ;     _min.f =     _min ; endif
+    if( (     _int != '' &     _int !=     '_int' ) & (     _int.f = '' |     _int.f =     '_int.'f ) ) ;     _int.f =     _int ; endif
+    if( (     _max != '' &     _max !=     '_max' ) & (     _max.f = '' |     _max.f =     '_max.'f ) ) ;     _max.f =     _max ; endif
+    if( (    _dmin != '' &    _dmin !=    '_dmin' ) & (    _dmin.f = '' |    _dmin.f =    '_dmin.'f ) ) ;    _dmin.f =    _dmin ; endif
+    if( (    _dint != '' &    _dint !=    '_dint' ) & (    _dint.f = '' |    _dint.f =    '_dint.'f ) ) ;    _dint.f =    _dint ; endif
+    if( (    _dmax != '' &    _dmax !=    '_dmax' ) & (    _dmax.f = '' |    _dmax.f =    '_dmax.'f ) ) ;    _dmax.f =    _dmax ; endif
+    if( (   _color != '' &   _color !=   '_color' ) & (   _color.f = '' |   _color.f =   '_color.'f ) ) ;   _color.f =   _color ; endif
+    if( (  _dcolor != '' &  _dcolor !=  '_dcolor' ) & (  _dcolor.f = '' |  _dcolor.f =  '_dcolor.'f ) ) ;  _dcolor.f =  _dcolor ; endif
+    if( (  _colork != '' &  _colork !=  '_colork' ) & (  _colork.f = '' |  _colork.f =  '_colork.'f ) ) ;  _colork.f =  _colork ; endif
+    if( ( _dcolork != '' & _dcolork != '_dcolork' ) & ( _dcolork.f = '' | _dcolork.f = '_dcolork.'f ) ) ; _dcolork.f = _dcolork ; endif
+
+    f = f + 1
+  endwhile
+
+  say ''
+
+
 return

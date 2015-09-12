@@ -1,126 +1,31 @@
-* TODO: support mask for ISCCP topography
+*
+* prepare cnf_latlon.gsf in the same directory, cnf/ or cnf_sample/.
+*
+* TODO
+* -support mask for ISCCP topography
+*
 function latlon( args )
   'reinit'
   rc = gsfallow( 'on' )
 
-*----- set frame
+*----- set frame (depends on frame size ... TODO)
   'set line 0'
   'draw rec 0 0 11 8.5'
 
-*----- set default values
-  _varid      = ''
-  _cbar       = 'hor'
-*  _cbar.1     = '2'
-*  _cbar.2     = ''
-  _mpdraw     = 'on'
-  _cont       = 'off'
-  _time_start = ''
-  _time_end   = ''
-  _year       = 2004
-  _month      = 6
-  _year_start = ''
-  _year_end   = ''
-  _fmax       = 0
-  _save       = ''
-  i = 1
-  while( i <= 6 )
-    _disp.i = ''
-    _cont.i = ''
-    _cbar.i = ''
-    i = i + 1
-  endwhile
+*----- set cnf by loading cnf_latlon.gsf
+  set_cnf()
 
-*----- load cnf_latlon.gsf
-  rc = gsfpath( 'cnf cnf_sample' )
-  ret = cnf_latlon()
 
-** check existence of cnf file
-*  ret = read( cnf'.gsf' )
-*  stat = sublin( ret, 1 )
-*  if( stat != 0 )
-*    ret = read( cnf )
-*    stat = sublin( ret, 1 )
-*    if( stat != 0 )
-*      say 'error: 'cnf'.gsf does not exist'
-*      exit
-*    else
-*      cnf = substr( cnf, 1, math_strlen(cnf)-4 )
-*    endif
-*  endif
-*
-** check multiple-execution
-*  ret = read( 'inc_latlon.gsf' )
-*  stat = sublin( ret, 1 )
-*  if( stat = 0 )
-*    say 'error: temporal file inc_latlon.gsf exists. Please remove.'
-*    say '(illegal multiple execution may occur)'
-*    exit
-*  endif
-*
-** load cnf
-*  ret = write( 'inc_latlon.gsf', 'function inc_latlon()' )
-*  ret = write( 'inc_latlon.gsf', 'ret = 'cnf'()' )
-*  ret = write( 'inc_latlon.gsf', 'return ret' )
-*  ret = close( 'inc_latlon.gsf' )
-*  ret = inc_latlon()
-*  '!rm inc_latlon.gsf'
-*
-
-* set default and/or necessary values necessary after loading cnf
-  i = 1
-  while( i <= 6 )
-    if( _cont.i = '' ) ; _cont.i = _cont ; endif
-    i = i + 1
-  endwhile
-
-  f = 1
-  while( f <= _fmax )
-    if( (   _name != '' &   _name !=   '_name' ) & (   _name.f = '' |   _name.f =   '_name.'f ) ) ;   _name.f =   _name ; endif
-    if( (   _unit != '' &   _unit !=   '_unit' ) & (   _unit.f = '' |   _unit.f =   '_unit.'f ) ) ;   _unit.f =   _unit ; endif
-    if( (  _min2d != '' &  _min2d !=  '_min2d' ) & (  _min2d.f = '' |  _min2d.f =  '_min2d.'f ) ) ;  _min2d.f =  _min2d ; endif
-    if( (  _int2d != '' &  _int2d !=  '_int2d' ) & (  _int2d.f = '' |  _int2d.f =  '_int2d.'f ) ) ;  _int2d.f =  _int2d ; endif
-    if( (  _max2d != '' &  _max2d !=  '_max2d' ) & (  _max2d.f = '' |  _max2d.f =  '_max2d.'f ) ) ;  _max2d.f =  _max2d ; endif
-    if( ( _dmin2d != '' & _dmin2d != '_dmin2d' ) & ( _dmin2d.f = '' | _dmin2d.f = '_dmin2d.'f ) ) ; _dmin2d.f = _dmin2d ; endif
-    if( ( _dint2d != '' & _dint2d != '_dint2d' ) & ( _dint2d.f = '' | _dint2d.f = '_dint2d.'f ) ) ; _dint2d.f = _dint2d ; endif
-    if( ( _dmax2d != '' & _dmax2d != '_dmax2d' ) & ( _dmax2d.f = '' | _dmax2d.f = '_dmax2d.'f ) ) ; _dmax2d.f = _dmax2d ; endif
-    if( (  _min1d != '' &  _min1d !=  '_min1d' ) & (  _min1d.f = '' |  _min1d.f =  '_min1d.'f ) ) ;  _min1d.f =  _min1d ; endif
-    if( (  _int1d != '' &  _int1d !=  '_int1d' ) & (  _int1d.f = '' |  _int1d.f =  '_int1d.'f ) ) ;  _int1d.f =  _int1d ; endif
-    if( (  _max1d != '' &  _max1d !=  '_max1d' ) & (  _max1d.f = '' |  _max1d.f =  '_max1d.'f ) ) ;  _max1d.f =  _max1d ; endif
-    if( ( _dmin1d != '' & _dmin1d != '_dmin1d' ) & ( _dmin1d.f = '' | _dmin1d.f = '_dmin1d.'f ) ) ; _dmin1d.f = _dmin1d ; endif
-    if( ( _dint1d != '' & _dint1d != '_dint1d' ) & ( _dint1d.f = '' | _dint1d.f = '_dint1d.'f ) ) ; _dint1d.f = _dint1d ; endif
-    if( ( _dmax1d != '' & _dmax1d != '_dmax1d' ) & ( _dmax1d.f = '' | _dmax1d.f = '_dmax1d.'f ) ) ; _dmax1d.f = _dmax1d ; endif
-    if( (  _color != '' &  _color !=  '_color' ) & (  _color.f = '' |  _color.f =  '_color.'f ) ) ;  _color.f =  _color ; endif
-    if( ( _dcolor != '' & _dcolor != '_dcolor' ) & ( _dcolor.f = '' | _dcolor.f = '_dcolor.'f ) ) ; _dcolor.f = _dcolor ; endif
-    f = f + 1
-  endwhile
-
-  say ''
-
-***************************************************************
   set_region()
-
-***************************************************************
-* Automatic Time Setting
-***************************************************************
   set_time()
 
-***************************************************************
-* Automatic Variable Setting
-***************************************************************
+
+*----- Variable List
   f = 1
   while( f <= _fmax )
-     if( _varid.f = '_varid.'f | _varid.f = '' ) ; _varid.f = _varid ; endif
+    if( _varid.f = '_varid.'f | _varid.f = '' ) ; _varid.f = _varid ; endif
     say f % ': ' % _varid.f
-    f = f + 1
-  endwhile
-
-
-***************************************************************
-* Variable List
-***************************************************************
-  f = 1
-  while( f <= _fmax )
-    sname.f = ''
+*    _sname.f = ''
 
 * varid, varcnf -> name, unit, min, ...
 * 1. call get_varcnf without varcnfid (default varcnf will be set)
@@ -165,27 +70,23 @@ function latlon( args )
 *endif
 
 
-
 ***************************************************************
 * Calculate
 ***************************************************************
   f = 1
   while( f <= _fmax )
-    say 'Processing #'f
+*    say 'Processing #'f
     'set dfile '_f2df.f
     'set lat '_latmin' '_latmax
     'set lon '_lonmin' '_lonmax
     'set z 1'
     'set t 1'
     if( _time_start.f != '' & _time_end.f != '' )
-      say 'v'f' = ave( '_var.f', time='_time_start.f', time='_time_end.f' )'
-      'v'f' = ave( '_var.f', time='_time_start.f', time='_time_end.f' )'
+      prex( 'v'f' = ave( '_var.f', time='_time_start.f', time='_time_end.f' )' )
     endif
-
     if( _clim_arg.f != '' )
       prex( 'clave '_var.f' '_clim_arg.f' v'f )
     endif
-
     f = f + 1
   endwhile
 
@@ -247,8 +148,8 @@ function latlon( args )
     endif
 
     'setfont small'
-    if( f2 = '' ) ; 'draws ('_run.f1')' % sname.f1
-    else ; 'draws ('_run.f1') - ('_run.f2')' % sname.f1 ; endif
+    if( f2 = '' ) ; 'draws ('_run.f1')' % _sname.f1
+    else ; 'draws ('_run.f1') - ('_run.f2')' % _sname.f1 ; endif
 
 *  if( d = 1 )
 *    'setfont normal'
@@ -360,6 +261,7 @@ end function
 * varid, varcnfid -> name, unit, min, ...
 *
 function get_varcnf( f, varid, varcnfid )
+  sname = ''
 
 * varid -> varid_base, varid_lev
   target.1 = 'u'
@@ -893,5 +795,98 @@ function get_varcnf( f, varid, varcnfid )
   if( _dmax1d.f = '_dmax1d.'f ) ; _dmax1d.f = dmax1d ; endif
   if(  _color.f =  '_color.'f ) ;  _color.f =  color ; endif
   if( _dcolor.f = '_dcolor.'f ) ; _dcolor.f = dcolor ; endif
+  if( _sname.f  =  '_sname.'f ) ;  _sname.f = sname  ; endif
 
+return
+
+
+function set_cnf()
+*----- set default values
+  _varid      = ''
+  _cbar       = 'hor'
+*  _cbar.1     = '2'
+*  _cbar.2     = ''
+  _mpdraw     = 'on'
+  _cont       = 'off'
+  _time_start = ''
+  _time_end   = ''
+  _year       = 2004
+  _month      = 6
+  _year_start = ''
+  _year_end   = ''
+  _fmax       = 0
+  _save       = ''
+  i = 1
+  while( i <= 6 )
+    _disp.i = ''
+    _cont.i = ''
+    _cbar.i = ''
+    i = i + 1
+  endwhile
+
+*----- load cnf_latlon.gsf
+  rc = gsfpath( 'cnf cnf_sample' )
+  ret = cnf_latlon()
+
+** check existence of cnf file
+*  ret = read( cnf'.gsf' )
+*  stat = sublin( ret, 1 )
+*  if( stat != 0 )
+*    ret = read( cnf )
+*    stat = sublin( ret, 1 )
+*    if( stat != 0 )
+*      say 'error: 'cnf'.gsf does not exist'
+*      exit
+*    else
+*      cnf = substr( cnf, 1, math_strlen(cnf)-4 )
+*    endif
+*  endif
+*
+** check multiple-execution
+*  ret = read( 'inc_latlon.gsf' )
+*  stat = sublin( ret, 1 )
+*  if( stat = 0 )
+*    say 'error: temporal file inc_latlon.gsf exists. Please remove.'
+*    say '(illegal multiple execution may occur)'
+*    exit
+*  endif
+*
+** load cnf
+*  ret = write( 'inc_latlon.gsf', 'function inc_latlon()' )
+*  ret = write( 'inc_latlon.gsf', 'ret = 'cnf'()' )
+*  ret = write( 'inc_latlon.gsf', 'return ret' )
+*  ret = close( 'inc_latlon.gsf' )
+*  ret = inc_latlon()
+*  '!rm inc_latlon.gsf'
+*
+
+* set default and/or necessary values necessary after loading cnf
+  i = 1
+  while( i <= 6 )
+    if( _cont.i = '' ) ; _cont.i = _cont ; endif
+    i = i + 1
+  endwhile
+
+  f = 1
+  while( f <= _fmax )
+    if( (   _name != '' &   _name !=   '_name' ) & (   _name.f = '' |   _name.f =   '_name.'f ) ) ;   _name.f =   _name ; endif
+    if( (   _unit != '' &   _unit !=   '_unit' ) & (   _unit.f = '' |   _unit.f =   '_unit.'f ) ) ;   _unit.f =   _unit ; endif
+    if( (  _min2d != '' &  _min2d !=  '_min2d' ) & (  _min2d.f = '' |  _min2d.f =  '_min2d.'f ) ) ;  _min2d.f =  _min2d ; endif
+    if( (  _int2d != '' &  _int2d !=  '_int2d' ) & (  _int2d.f = '' |  _int2d.f =  '_int2d.'f ) ) ;  _int2d.f =  _int2d ; endif
+    if( (  _max2d != '' &  _max2d !=  '_max2d' ) & (  _max2d.f = '' |  _max2d.f =  '_max2d.'f ) ) ;  _max2d.f =  _max2d ; endif
+    if( ( _dmin2d != '' & _dmin2d != '_dmin2d' ) & ( _dmin2d.f = '' | _dmin2d.f = '_dmin2d.'f ) ) ; _dmin2d.f = _dmin2d ; endif
+    if( ( _dint2d != '' & _dint2d != '_dint2d' ) & ( _dint2d.f = '' | _dint2d.f = '_dint2d.'f ) ) ; _dint2d.f = _dint2d ; endif
+    if( ( _dmax2d != '' & _dmax2d != '_dmax2d' ) & ( _dmax2d.f = '' | _dmax2d.f = '_dmax2d.'f ) ) ; _dmax2d.f = _dmax2d ; endif
+    if( (  _min1d != '' &  _min1d !=  '_min1d' ) & (  _min1d.f = '' |  _min1d.f =  '_min1d.'f ) ) ;  _min1d.f =  _min1d ; endif
+    if( (  _int1d != '' &  _int1d !=  '_int1d' ) & (  _int1d.f = '' |  _int1d.f =  '_int1d.'f ) ) ;  _int1d.f =  _int1d ; endif
+    if( (  _max1d != '' &  _max1d !=  '_max1d' ) & (  _max1d.f = '' |  _max1d.f =  '_max1d.'f ) ) ;  _max1d.f =  _max1d ; endif
+    if( ( _dmin1d != '' & _dmin1d != '_dmin1d' ) & ( _dmin1d.f = '' | _dmin1d.f = '_dmin1d.'f ) ) ; _dmin1d.f = _dmin1d ; endif
+    if( ( _dint1d != '' & _dint1d != '_dint1d' ) & ( _dint1d.f = '' | _dint1d.f = '_dint1d.'f ) ) ; _dint1d.f = _dint1d ; endif
+    if( ( _dmax1d != '' & _dmax1d != '_dmax1d' ) & ( _dmax1d.f = '' | _dmax1d.f = '_dmax1d.'f ) ) ; _dmax1d.f = _dmax1d ; endif
+    if( (  _color != '' &  _color !=  '_color' ) & (  _color.f = '' |  _color.f =  '_color.'f ) ) ;  _color.f =  _color ; endif
+    if( ( _dcolor != '' & _dcolor != '_dcolor' ) & ( _dcolor.f = '' | _dcolor.f = '_dcolor.'f ) ) ; _dcolor.f = _dcolor ; endif
+    f = f + 1
+  endwhile
+
+  say ''
 return

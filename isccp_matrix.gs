@@ -1,84 +1,9 @@
 function isccp_matrix( args )
-'reinit'
+  'reinit'
+  rc = gsfallow( 'on' )
 
-'!pwd > pwd.tmp'
-ret = read( 'pwd.tmp' )
-pwd = sublin( ret, 2 )
-'!rm -f pwd.tmp'
-gs = pwd'/isccp_matrix.gs'
-rc = gsfallow( 'on' )
+  set_cnf()
 
-cnf = subwrd( args, 1 )
-if( cnf = '' )
-  say 'usage: isccp_matrix.gs cnf_isccp_matrix.cnf'
-  exit
-endif
-
-* set default values
-
-*_sw = 'raw'
-*_f1 = 1
-*_f2 = ''
-_type = '7x7'
-i = 1
-while( i <= 6 )
-  _disp.i = ''
-  i = i + 1
-endwhile
-
-
-* check existence of cnf file
-ret = read( cnf'.gsf' )
-stat = sublin( ret, 1 )
-if( stat != 0 )
-  ret = read( cnf )
-  stat = sublin( ret, 1 )
-  if( stat != 0 )
-    say 'error: 'cnf'.gsf does not exist'
-    exit
-  else
-    cnf = substr( cnf, 1, math_strlen(cnf)-4 )
-  endif
-endif
-
-* check multiple-execution
-ret = read( 'inc_isccp_matrix.gsf' )
-stat = sublin( ret, 1 )
-if( stat = 0 )
-  say 'error: temporal file inc_isccp_matrix.gsf exists. Please remove.'
-  say '(illegal multiple execution may occur)'
-  exit
-endif
-
-* load cnf
-ret = write( 'inc_isccp_matrix.gsf', 'function inc_isccp_matrix()' )
-ret = write( 'inc_isccp_matrix.gsf', 'ret = 'cnf'()' )
-ret = write( 'inc_isccp_matrix.gsf', 'return ret' )
-ret = close( 'inc_isccp_matrix.gsf' )
-ret = inc_isccp_matrix()
-'!rm inc_isccp_matrix.gsf'
-
-* set default and/or necessary values necessary after loading cnf
-
-
-***************************************************************
-***************************************************************
-***************************************************************
-
-
-*run.1 = 'AMIP-CNTL'
-*ctl.1 = '/cwork5/kodama/nicam_product/amip/N12/197806/gl09/control/run01/data_conv/isccp/144x72x49/monthly_mean/dfq_isccp2/dfq_isccp2.ctl'
-*ctl_prs.1 = '/cwork5/kodama/nicam_product/amip/N12/197806/gl09/control/run01/data_conv/ml_zlev/144x72x38/monthly_mean/ms_pres/ms_pres.ctl'
-
-*run.2 = 'AMIP-GW'
-*ctl.2 = '/cwork5/kodama/nicam_product/amip/N12/207406/gl09/control/run01/data_conv/isccp/144x72x49/monthly_mean/dfq_isccp2/dfq_isccp2.ctl'
-*ctl_prs.2 = '/cwork5/kodama/nicam_product/amip/N12/207406/gl09/control/run01/data_conv/ml_zlev/144x72x38/monthly_mean/ms_pres/ms_pres.ctl'
-
-*zdef = 38
-
-*run.3 = 'ISCCP obs. (D1)'
-*ctl.3 = '/cwork5/kodama/dataset/isccp/D1nat/monthly/isccp_d1.ctl'
-*ctl_prs.3 = ""
 
 
 
@@ -94,164 +19,8 @@ if( _type = '3x3' )
   _dmin = -5.0 ; _dmax = 5.0 ; _dint = 1.0
 endif
 
-
-if( _region = 'global' | _region = '_region' | _region = '' )
-                               latmin = -90 ; latmax = 90 ; lonmin = 0   ; lonmax = 360 ; endif
-if( _region = 'indian'     ) ; latmin = -30 ; latmax = 30 ; lonmin = 0   ; lonmax = 120 ; endif
-if( _region = 'pacific'    ) ; latmin = -30 ; latmax = 30 ; lonmin = 120 ; lonmax = 240 ; endif
-if( _region = 'atlantic'   ) ; latmin = -30 ; latmax = 30 ; lonmin = 240 ; lonmax = 360 ; endif
-if( _region = 'indwpac'    ) ; latmin = -30 ; latmax = 30 ; lonmin = 60  ; lonmax = 180 ; endif
-if( _region = 'epac'       ) ; latmin = -30 ; latmax = 30 ; lonmin = 180 ; lonmax = 300 ; endif
-if( _region = 'atlantic'   ) ; latmin = -30 ; latmax = 30 ; lonmin = 240 ; lonmax = 360 ; endif
-if( _region = 'nhpac'      ) ; latmin = 20  ; latmax = 80 ; lonmin = 120 ; lonmax = 240 ; endif
-if( _region = 'nhatlantic' ) ; latmin = 20  ; latmax = 80 ; lonmin = 240 ; lonmax = 360 ; endif
-if( _region = 'east_asia'  ) ; latmin = 0   ; latmax = 50 ; lonmin = 80  ; lonmax = 180 ; endif
-if( _region = 'lowlat'     ) ; latmin = -60 ; latmax = 60 ; lonmin = 0   ; lonmax = 360 ; endif
-if( _region = 'tropics'    ) ; latmin = -30 ; latmax = 30 ; lonmin = 0   ; lonmax = 360 ; endif
-
-
-
-***************************************************************
-* Automatic Time Setting
-***************************************************************
-if( _year = 'clim' ) ; _year = '%y' ; endif
-
-term = ''
-if( _time_start = '_time_start' | _time_start = '' )
-  if( _month >= 1 & _month <= 12 )
-    cm   = cmonth( _month, 3 )
-    cmpp = cmonth( _month+1, 3 )
-    _yearpp = _year
-    if( _month = 12 )
-      if( _year = '%y' ) ; _yearpp = '%ypp'
-      else               ; _yearpp = _yearpp + 1 ; endif
-    endif
-*    term = cmonth( _month )
-    term = cmonth( _month ) % ' ' % _year
-    _time_start = '01'cm''_year
-    _time_endpp = '01'cmpp''_yearpp
-  endif
-  if( _month = 345 )
-*    term = 'MAM'
-    term = 'MAM '_year
-    _time_start = '01mar'_year
-    _time_endpp = '01jun'_year
-  endif
-  if( _month = 678 )
-*    term = 'JJA'
-    term = 'JJA '_year
-    _time_start = '01jun'_year
-    _time_endpp = '01sep'_year
-  endif
-  if( _month = 901 )
-*    term = 'SON'
-    term = 'SON '_year
-    _time_start = '01sep'_year
-    _time_endpp = '01dec'_year
-  endif
-  if( _month = 212 )
-*    term = 'DJF'
-    term = 'DJF '_year
-    if( _year = '%y' ) ; _yearpp = '%ypp'
-    else               ; _yearpp = _year + 1 ; endif
-    _time_start = '01dec'_year
-    _time_endpp = '01mar'_yearpp
-  endif
-  if( _month = 999 )
-*    term = 'ANU'
-    term = 'ANU '_year
-    if( _year = '%y' ) ; _yearpp = '%ypp'
-    else               ; _yearpp = _year + 1 ; endif
-    _time_start = '01jan'_year
-    _time_endpp = '01jan'_yearpp
-  endif
-  if( substr(_month,1,3) = 999 )
-    month = substr( _month, 4, 2 )
-    cm   = cmonth( month, 3 )
-*    term = 'ANU'
-    term = 'ANU (' % cm % _year % '-)'
-    if( _year = '%y' ) ; _yearpp = '%ypp'
-    else               ; _yearpp = _year + 1 ; endif
-    _time_start = '01'cm''_year
-    _time_endpp = '01'cm''_yearpp
-  endif
-else
-  term = _time_start' <= time < '_time_endpp
-  _year = ''
-endif
-
-* _time_start, _time_end -> _time_start.f, _time_end.f
-f = 1
-flag = 0
-while( f <= _fmax )
-  'set dfile '_f2df.f
-  'set z 1'
-
-  if( _time_start.f != '_time_start.'f & _time_start.f != '' )
-    _clim_arg.f = ''
-
-    _time_start.f = t2time( time2t( _time_start.f ) )
-
-    if( _time_end.f = '_time_end.'f | _time_end.f = '' )
-      _time_end.f   = t2time( time2t( _time_endpp.f ) - 1 )
-    endif
-
-    _run.f = _run.f % '(' % _time_start.f % '-' % _time_end.f % ')'
-    say _run.f
-
-  else ; if( _clim_arg.f != '_clim_arg.'f & _clim_arg.f != '' )
-    _time_start.f = ''
-    _time_end.f   = ''
-    _run.f = _run.f % '(' % _clim_arg.f % ')'
-    say _run.f
-
-  else ; if( _year = '%y' )
-
-    if( valnum(_year_start.f) != 1 )
-      _year_start.f = _year_start
-    endif
-    if( valnum(_year_end.f) != 1 )
-      _year_end.f = _year_end
-    endif
-
-*   2001, 2002: dummy
-    tmp = strrep( _time_endpp, '%ypp', 2002 )
-    tmp = strrep(        tmp, '%y'  , 2001 )
-    tmp = t2time( time2t( tmp ) - 1 )
-    tmp = strrep(        tmp, 2002, '%ypp' )
-    _time_end.f = strrep( tmp, 2001, '%y' )
-*    tmp = strrep( _time_endpp, '%ypp', _year_end.f+1 )
-*    tmp = strrep(        tmp, '%y'  , _year_end.f )
-*    tmp = t2time( time2t( tmp ) - 1 )
-*    tmp = strrep(        tmp, _year_end.f+1, '%ypp' )
-*    _time_end.f = strrep( tmp, _year_end.f, '%y' )
-
-    tmp = strrep( _time_start, '%ypp', _year_end.f+1 )
-    tmp = strrep(        tmp, '%y'  , _year_end.f )
-    tmp = t2time( time2t( tmp ) )
-    tmp = strrep(        tmp, _year_end.f+1, '%ypp' )
-    _time_start.f = strrep( tmp, _year_end.f, '%y' )
-
-    _clim_arg.f = _time_start.f % ' ' % _time_end.f % ' ' % _year_start.f % ' '\
- % _year_end.f
-    say _run.f % ': ' % _clim_arg.f
-    _time_start.f = ''
-    _time_end.f   = ''
-
-  else
-    _time_start.f = t2time( time2t( _time_start ) )
-    _time_end.f   = t2time( time2t( _time_endpp ) - 1 )
-    _clim_arg.f = ''
-    say _run.f % ': ' % _time_start.f % ' - ' % _time_end.f
-
-  endif ; endif ; endif
-
-  f = f + 1
-endwhile
-say ''
-
-if( _year = '%y' ) ; _year = _year_start % '_' _year_end  ; endif
-
+  set_region()
+  set_time()
 
 
 ***************************************************************
@@ -261,8 +30,8 @@ f = 1
 while( f <= _fmax )
   if( _var_pres.f != '' & _var_pres.f != '_var_pres.'f )
     'set dfile '_f2df.f+1
-    'set lat 'latmin' 'latmax
-    'set lon 'lonmin' 'lonmax
+    'set lat '_latmin' '_latmax
+    'set lon '_lonmin' '_lonmax
     'set t 1'
     'set z 1'
     zdef = qctlinfo( _f2df.f+1, 'zdef', 1 )
@@ -285,8 +54,8 @@ f = 1
 while( f <= _fmax )
   say 'Processing #'f' (mask)'
   'set dfile '_f2df.f
-  'set lat 'latmin' 'latmax
-  'set lon 'lonmin' 'lonmax
+  'set lat '_latmin' '_latmax
+  'set lon '_lonmin' '_lonmax
   'set t 1'
   'set z 1'
 
@@ -316,8 +85,8 @@ f = 1
 while( f <= _fmax )
   say 'Processing #'f' (mask-mask)'
   'set dfile '_f2df.f
-  'set lat 'latmin' 'latmax
-  'set lon 'lonmin' 'lonmax
+  'set lat '_latmin' '_latmax
+  'set lon '_lonmin' '_lonmax
   'set t 1'
   'set z 1'
 
@@ -344,8 +113,8 @@ while( f <= _fmax )
 
 ************************ NICAM ****************************
   if( _type.f = 'nicam' )
-    'set lat 'latmin' 'latmax
-    'set lon 'lonmin' 'lonmax
+    'set lat '_latmin' '_latmax
+    'set lon '_lonmin' '_lonmax
     'set t 1'
 
 * i: thin -> thick
@@ -422,7 +191,7 @@ while( f <= _fmax )
 
             z = q*7+p-7
 
-            prex( 'temp = aave( maskout( a'f'z'z', prs'f'-'pb.j' ), lon='lonmin', lon='lonmax', lat='latmin', lat='latmax' )' )
+            prex( 'temp = aave( maskout( a'f'z'z', prs'f'-'pb.j' ), lon='_lonmin', lon='_lonmax', lat='_latmin', lat='_latmax' )' )
             value.f.i.j = value.f.i.j + v2s( 'temp' )
 
             p = p + 1
@@ -505,8 +274,8 @@ while( f <= _fmax )
       i = imin
       while( i <= imax )
 
-        'set lon 'lonmin' 'lonmax
-        'set lat 'latmin' 'latmax
+        'set lon '_lonmin' '_lonmax
+        'set lat '_latmin' '_latmax
 
         if( _time_start.f != '' & _time_end.f != '' )
           prex( 'var'f'i'i'j'j' = ave( 'var.i.j', time='_time_start.f', time='_time_end.f' )' )
@@ -516,7 +285,7 @@ while( f <= _fmax )
         'var'f'i'i'j'j' = maskout(var'f'i'i'j'j',mask'f'(t=1)-0.5)'
 
         'set x 1' ; 'set y 1'
-        'temp = aave( maskout(var'f'i'i'j'j',mask'f'(t=1)-0.5), lon='lonmin', lon='lonmax', lat='latmin', lat='latmax' )'
+        'temp = aave( maskout(var'f'i'i'j'j',mask'f'(t=1)-0.5), lon='_lonmin', lon='_lonmax', lat='_latmin', lat='_latmax' )'
 
         value.f.i.j = v2s( 'temp' )
         say f' 'i' 'j' 'value.f.i.j
@@ -712,3 +481,59 @@ function v2s( var )
   'd 'var
   value = subwrd( result, 4 )
 return value
+
+
+function set_cnf()
+* set default values
+
+*_sw = 'raw'
+*_f1 = 1
+*_f2 = ''
+_type = '7x7'
+i = 1
+while( i <= 6 )
+  _disp.i = ''
+  i = i + 1
+endwhile
+
+*----- load cnf_latlon.gsf
+  rc = gsfpath( 'cnf cnf_sample' )
+  ret = cnf_isccp_matrix()
+
+if(1=2)
+* check existence of cnf file
+ret = read( cnf'.gsf' )
+stat = sublin( ret, 1 )
+if( stat != 0 )
+  ret = read( cnf )
+  stat = sublin( ret, 1 )
+  if( stat != 0 )
+    say 'error: 'cnf'.gsf does not exist'
+    exit
+  else
+    cnf = substr( cnf, 1, math_strlen(cnf)-4 )
+  endif
+endif
+
+* check multiple-execution
+ret = read( 'inc_isccp_matrix.gsf' )
+stat = sublin( ret, 1 )
+if( stat = 0 )
+  say 'error: temporal file inc_isccp_matrix.gsf exists. Please remove.'
+  say '(illegal multiple execution may occur)'
+  exit
+endif
+
+* load cnf
+ret = write( 'inc_isccp_matrix.gsf', 'function inc_isccp_matrix()' )
+ret = write( 'inc_isccp_matrix.gsf', 'ret = 'cnf'()' )
+ret = write( 'inc_isccp_matrix.gsf', 'return ret' )
+ret = close( 'inc_isccp_matrix.gsf' )
+ret = inc_isccp_matrix()
+'!rm inc_isccp_matrix.gsf'
+endif
+
+* set default and/or necessary values necessary after loading cnf
+
+
+return
