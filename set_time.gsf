@@ -67,6 +67,10 @@ function set_time()
     _year = ''
   endif
 
+  if( _year = '%y' )
+    _term = _term % '(' % _year_start % '-' % _year_end % ')'
+  endif
+
 * _time_start, _time_end -> _time_start.f, _time_end.f
   f = 1
   flag = 0
