@@ -1,0 +1,23 @@
+*
+* runid = 'GPCP.v2.2'
+*   cdir = ''
+*
+*
+function rl_gpcp( runid, varid_base, varid_lev, cdir, flag_show_dir )
+  run = '' ; var = '' ; ymd = ''
+
+  if( runid = 'GPCP.v2.2' )
+    run = 'GPCP.v2.2'
+    dir = '/hoge/gpcp_v2.2'
+    ymd = '19790101-20131231'
+    if( flag_show_dir = 1 ) ; return dir ; endif
+    if( flag_show_dir = 2 ) ; return ymd ; endif
+
+    if( varid_base = 'precip' )
+      fv   = dtopen( dir, 'gpcp_v2.2_psg.ctl' )
+      var = 'precip.'fv'(z=1)'
+    endif
+  endif
+
+  return run % ' ' % var
+return

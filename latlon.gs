@@ -825,6 +825,7 @@ function set_cnf()
   endwhile
 
 *----- load cnf_latlon.gsf
+*  rc = gsfpath( 'cnf cnf_sample database' )
   rc = gsfpath( 'cnf cnf_sample' )
   ret = cnf_latlon()
 
