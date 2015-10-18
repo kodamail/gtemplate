@@ -9,7 +9,9 @@ function rl_cmap( runid, varid_base, varid_lev, cdir, flag_show_dir )
   if( runid = 'CMAP' )
     run = 'CMAP'
     dir = '/hoge/CMAP'
+    ymd = '19790101-20131231'
     if( flag_show_dir = 1 ) ; return dir ; endif
+    if( flag_show_dir = 2 ) ; return ymd ; endif
 
     if( varid_base = 'precip' )
       fv   = dtopen( dir, 'precip.mon.mean.nc', 'sdfopen' )

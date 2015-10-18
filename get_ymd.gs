@@ -5,7 +5,7 @@ function get_ymd( args )
   runid  = subwrd( args, 1 )
   output = subwrd( args, 2 )
 
-  tmp = rl_get_ymd( runid )
+  tmp = rlint_get_ymd( runid )
 
   if( output != '' )
     ret = write( output, tmp )

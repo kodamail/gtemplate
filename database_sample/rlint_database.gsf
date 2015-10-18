@@ -1,11 +1,11 @@
-function rl_database( runid, varid_base, varid_lev, cdir, flag_show_dir )
+function rlint_database( runid, varid_base, varid_lev, cdir, flag_show_dir )
   ret = ''
   while ( 1 = 1 )
 
 *   list database function here
 
-    ret = rl_gpcp( runid, varid_base, varid_lev, cdir, flag_show_dir )
-    if ( subwrd( ret, 1 ) != '' ) ; break ; endif
+*    ret = rl_gpcp( runid, varid_base, varid_lev, cdir, flag_show_dir )
+*    if ( subwrd( ret, 1 ) != '' ) ; break ; endif
 
     ret = rl_cmap( runid, varid_base, varid_lev, cdir, flag_show_dir )
     if ( subwrd( ret, 1 ) != '' ) ; break ; endif

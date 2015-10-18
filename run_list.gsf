@@ -57,7 +57,7 @@ function run_list( args )
 *
 * rl_* returns run name and variable expression if possible.
 *
-  tmp = rl_database( runid, varid_base, varid_lev, cdir, flag_show_dir )
+  tmp = rlint_database( runid, varid_base, varid_lev, cdir, flag_show_dir )
   if( tmp != '' )
     if( flag_show_dir = 1 ) ; return tmp ; endif
     run = subwrd( tmp, 1 )

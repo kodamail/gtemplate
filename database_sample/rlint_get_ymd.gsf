@@ -1,0 +1,14 @@
+function rlint_get_ymd( runid )
+  ret = ''
+
+  while( 1 = 1 )
+
+    ret = rl_cmap( runid, '', '', '', 2 )
+    if ( subwrd( ret, 1 ) != '' ) ; break ; endif
+
+    ret = rl_gpcp( runid, '', '', '', 2 )
+    if ( subwrd( ret, 1 ) != '' ) ; break ; endif
+
+    break
+  endwhile
+return ret
