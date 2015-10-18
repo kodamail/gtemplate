@@ -180,7 +180,7 @@ while( d <= 6 )
 *      'color '_color.f1
 
 * TODO: color or colork
-      'color '_min.f1' '_max.f1' '_int.f1' -kind '_colork.f1
+      'color '_min.f1' '_max.f1' '_int.f1' -gxout shaded -kind '_colork.f1
       'd v'f1
 
 *   for calculating minimum value of mass streamfunction
@@ -310,7 +310,7 @@ while( d <= 6 )
     if( _shade.d = 'on' )
 *      'color '_dmin.f1' '_dmax.f1' '_dint.f1' -kind '_dcolor.f1
 
-      'color '_dmin.f1' '_dmax.f1' '_dint.f1' -kind '_dcolork.f1
+      'color '_dmin.f1' '_dmax.f1' '_dint.f1' -gxout shaded -kind '_dcolork.f1
 *      'color '_dcolor.f1
       'd d'
 

@@ -117,10 +117,10 @@ function latlon( args )
 
 ***** raw data *****
     if( f2 = '' )
-      'color -kind '_color.f1' '_min2d.f1' '_max2d.f1' '_int2d.f1
+      'color -gxout shaded -kind '_color.f1' '_min2d.f1' '_max2d.f1' '_int2d.f1
       'v = v'f1
     else
-      'color -kind '_dcolor.f1' '_dmin2d.f1' '_dmax2d.f1' '_dint2d.f1
+      'color -gxout shaded -kind '_dcolor.f1' '_dmin2d.f1' '_dmax2d.f1' '_dint2d.f1
       'v = v'f1' - lterp( v'f2', v'f1' )'
     endif
 

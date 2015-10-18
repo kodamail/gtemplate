@@ -361,12 +361,12 @@ while( d <= dmax )
     title2 = '('_run.f1')'
     kind = 'white-(0)->grainbow'
 *  kind = 'white->blue->purple'
-    'color '_min' '_max' '_int' -kind 'kind' -xcbar 1.4 9.6 0.7 1.0 -line on -fw 0.18 -fh 0.195 -ft 7.2 -edge triangle'
+    'color '_min' '_max' '_int' -gxout shaded -kind 'kind' -xcbar 1.4 9.6 0.7 1.0 -line on -fw 0.18 -fh 0.195 -ft 7.2 -edge triangle'
   else
     title2 = '('_run.f1') - ('_run.f2')'
 *    kind = 'white-(0)->grainbow'
     kind = 'purple->blue->white->red->maroon'
-    'color '_dmin' '_dmax' '_dint' -kind 'kind' -xcbar 1.4 9.6 0.7 1.0 -line on -fw 0.18 -fh 0.195 -ft 7.2 -edge triangle'
+    'color '_dmin' '_dmax' '_dint' -gxout shaded -kind 'kind' -xcbar 1.4 9.6 0.7 1.0 -line on -fw 0.18 -fh 0.195 -ft 7.2 -edge triangle'
   endif
 
   j = 1
