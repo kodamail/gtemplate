@@ -189,7 +189,7 @@ function latlon( args )
 
   if( _save != '_save' & _save != '' )
 *  'save '_save
-    'gxprint '_save'.eps white'
+    prex( 'gxprint '_save'.eps white' )
   endif
 
   exit
