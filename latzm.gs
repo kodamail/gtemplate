@@ -2,18 +2,21 @@
 * prepare cnf_latzm.gsf in the same directory, cnf/ or cnf_sample/.
 *
 function latzm( args )
-'reinit'
+  'reinit'
   rc = gsfallow( 'on' )
 
 *----- set frame (depends on frame size ... TODO)
   'set line 0'
   'draw rec 0 0 11 8.5'
 
-*----- set cnf by loading cnf_latlon.gsf
+*----- set cnf by loading cnf_latzm.gsf
   set_cnf()
-
+  set_region()
+  if( _lonmin != 0 | _lonmax != 360 )
+    say 'error: lon_min='_lonmin' and lon_max='_lonmax' for latzm.gs is not valid.'
+    exit
+  endif
   set_time()
-
 
 
 *----- Variable List
@@ -129,9 +132,9 @@ endwhile
 
 'setfont normal'
 if( name = '' | unit = '' )
-  'draws Zonal means, 'term' 'year
+  'draws Zonal means, '_term
 else
-  'draws Zonal Mean 'name' ['unit'], 'term' '_year
+  'draws Zonal Mean 'name' ['unit'], '_term
 endif
 * TODO: _sname.f
 
@@ -535,7 +538,7 @@ function set_cnf()
   _fmax       = 0
   _save       = ''
 
-*----- load cnf_latlon.gsf
+*----- load cnf_latzm.gsf
   rc = gsfpath( 'cnf cnf_sample' )
   ret = cnf_latzm()
 

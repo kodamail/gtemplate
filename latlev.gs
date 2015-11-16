@@ -3,7 +3,7 @@
 *
 function latlev( args )
   'reinit'
-  rc = gsfallow("on")
+  rc = gsfallow( 'on' )
 
 *----- set frame (depends on frame size ... TODO)
   'set line 0'
