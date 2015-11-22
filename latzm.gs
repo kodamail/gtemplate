@@ -407,6 +407,13 @@ function get_varcnf( f, varid, varcnfid )
     dmin = -20 ; dint = 10 ; dmax = 20
   endif
 
+  if( varid = 'sst' )
+    name = 'Sea Surface Temperature'
+    unit = 'K'
+    min  = 270 ; int  = 10  ; max  = 306
+    dmin = -3  ; dint = 1.5 ; dmax = 3
+  endif
+
   if( varid = 'sw_up_toa' | varid = 'sw_up_clr_toa' )
     name = 'Upward Shortwave Radiation @ TOA'
     if( varid = 'sw_up_clr_toa' ) ; name = name % ' (Clear Sky)' ; endif
