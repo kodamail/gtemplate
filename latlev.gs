@@ -384,7 +384,7 @@ while( d <= 6 )
 
   if( d = 1 )
     'setfont small'
-    'draws -xoffset -0.5 -yoffset 0.25 -pos tl '_name.f1' for 'term' '_year' ['_unit.f1']'
+    'draws -xoffset -0.5 -yoffset 0.25 -pos tl '_name.f1' for '_term' ['_unit.f1']'
   endif
 
   d = d + 1
