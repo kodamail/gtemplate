@@ -19,7 +19,6 @@ function latlon( args )
   set_region()
   set_time()
 
-
 *----- Variable List
   f = 1
   while( f <= _fmax )
@@ -375,17 +374,22 @@ function get_varcnf( f, varid, varcnfid )
     endif
   endif
 
-  if( varid = 'land_wg_z1' | varid = 'land_wg_z2' | varid = 'land_wg_z3' | varid = 'land_wg_z4' | varid = 'land_wg_z5' )
-    if( varid = 'land_wg_z1' ) ; name = 'Soil Water @ z=1' ; endif
-    if( varid = 'land_wg_z2' ) ; name = 'Soil Water @ z=2' ; endif
-    if( varid = 'land_wg_z3' ) ; name = 'Soil Water @ z=3' ; endif
-    if( varid = 'land_wg_z4' ) ; name = 'Soil Water @ z=4' ; endif
-    if( varid = 'land_wg_z5' ) ; name = 'Soil Water @ z=5' ; endif
+*  if( varid = 'land_wg_z1' | varid = 'land_wg_z2' | varid = 'land_wg_z3' | varid = 'land_wg_z4' | varid = 'land_wg_z5' )
+  if( substr(varid,1,7) = 'land_wg' )
+    if( varid = 'land_wg1' ) ; name = 'Soil Water @ z=1' ; endif
+    if( varid = 'land_wg2' ) ; name = 'Soil Water @ z=2' ; endif
+    if( varid = 'land_wg3' ) ; name = 'Soil Water @ z=3' ; endif
+    if( varid = 'land_wg4' ) ; name = 'Soil Water @ z=4' ; endif
+    if( varid = 'land_wg5' ) ; name = 'Soil Water @ z=5' ; endif
     unit = '0-1'
-    min2d  = 0    ; int2d  = 0.1 ; max2d  = 1
-    dmin2d = -0.5 ; dint2d = 0.1 ; dmax2d = 0.5
-    min1d  = 0    ; int1d  = 0.5 ; max1d  = 1
-    dmin1d = -0.5 ; dint1d = 0.1 ; dmax1d = 0.5
+    min2d  = 0.1  ; int2d  = 0.1  ; max2d  = 0.9
+    dmin2d = -0.2 ; dint2d = 0.04 ; dmax2d = 0.2
+    min1d  = 0    ; int1d  = 0.25 ; max1d  = 1
+    dmin1d = -0.1 ; dint1d = 0.05 ; dmax1d = 0.1
+    if( varid = 'land_wg5' )
+      dmin2d = -0.1 ; dint2d = 0.02 ; dmax2d = 0.1
+      dmin1d = -0.05 ; dint1d = 0.025 ; dmax1d = 0.05
+    endif
     color  = 'grainbow'
     dcolor = 'purple->bluered->maroon'
   endif
