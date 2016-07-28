@@ -1,6 +1,10 @@
 function set_region()
   if( _region = 'global' | _region = '_region' | _region = '' )
                                  _latmin = -90 ; _latmax = 90 ; _lonmin = 0   ; _lonmax = 360 ; endif
+
+  if( _region = 'nh'         ) ; _latmin = 0   ; _latmax = 90 ; _lonmin = 0   ; _lonmax = 360 ; endif
+  if( _region = 'sh'         ) ; _latmin = -90 ; _latmax = 0  ; _lonmin = 0   ; _lonmax = 360 ; endif
+
   if( _region = 'indian'     ) ; _latmin = -30 ; _latmax = 30 ; _lonmin = 0   ; _lonmax = 120 ; endif
   if( _region = 'pacific'    ) ; _latmin = -30 ; _latmax = 30 ; _lonmin = 120 ; _lonmax = 240 ; endif
   if( _region = 'atlantic'   ) ; _latmin = -30 ; _latmax = 30 ; _lonmin = 240 ; _lonmax = 360 ; endif
@@ -15,4 +19,8 @@ function set_region()
 
   if( _region = 'nhmid'      ) ; _latmin = 30  ; _latmax = 60 ; _lonmin = 0   ; _lonmax = 360 ; endif
   if( _region = 'shmid'      ) ; _latmin = -60 ; _latmax = -30; _lonmin = 0   ; _lonmax = 360 ; endif
+  if( _region = 'nhhigh'     ) ; _latmin = 60  ; _latmax = 90 ; _lonmin = 0   ; _lonmax = 360 ; endif
+  if( _region = 'shhigh'     ) ; _latmin = -90 ; _latmax = -60; _lonmin = 0   ; _lonmax = 360 ; endif
+
+
 return
