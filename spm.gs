@@ -30,161 +30,157 @@ function spm( args )
     f = f + 1
   endwhile
 
-name = _name.1
-unit = _unit.1
-f = 2
-while( f <= _fmax )
-  if( name != _name.f | unit != _unit.f ) ; name = '' ; unit = '' ; break ; endif
-  f = f + 1
-endwhile
+  name = _name.1
+  unit = _unit.1
+  f = 2
+  while( f <= _fmax )
+    if( name != _name.f | unit != _unit.f ) ; name = '' ; unit = '' ; break ; endif
+    f = f + 1
+  endwhile
 
 
 ***************************************************************
 * Calculate
 ***************************************************************
-f = 1
-while( f <= _fmax )
-*  say 'Processing #'f
-  'set dfile '_f2df.f
-  xdef = qctlinfo( f, 'xdef', 1 )
-  ydef = qctlinfo( f, 'ydef', 1 )
-  zdef = qctlinfo( f, 'zdef', 1 )
-  tdef = qctlinfo( f, 'tdef', 1 )
+  f = 1
+  while( f <= _fmax )
+*    say 'Processing #'f
+    'set dfile '_f2df.f
+    xdef = qctlinfo( f, 'xdef', 1 )
+    ydef = qctlinfo( f, 'ydef', 1 )
+    zdef = qctlinfo( f, 'zdef', 1 )
+    tdef = qctlinfo( f, 'tdef', 1 )
 
-  if( _lsmask = 'lnd' | _lsmask = 'ocn' )
-    if( xdef > 360 )
-      prex( 'xopen /ceist/nicam/hpci/amip/N12/197806/gl09/control/run01/output/invariant/lsmask/02560x01280.zorg.torg/lsmask.ctl' )
-    else
-      prex( 'xopen /ceist/nicam/hpci/amip/N12/197806/gl09/control/run01/output/invariant/lsmask/00288x00145.zorg.torg/lsmask.ctl' )
+    if( _lsmask = 'lnd' | _lsmask = 'ocn' )
+*    if( xdef > 360 )
+*      prex( 'xopen /ceist/nicam/hpci/amip/N12/197806/gl09/control/run01/output/invariant/lsmask/02560x01280.zorg.torg/lsmask.ctl' )
+*    else
+*      prex( 'xopen /ceist/nicam/hpci/amip/N12/197806/gl09/control/run01/output/invariant/lsmask/00288x00145.zorg.torg/lsmask.ctl' )
+*    endif
+      prex( 'xopen '_lsmask_ctl )
+      'set x 1 'xdef
+      'set y 1 'ydef
+      'set z 1'
+      'set t 1'
+      fn = last();
+
+      if( _lsmask = 'lnd' )
+        prex( 'mask = lterp(  lsmask.'fn'(z=1,t=1)-0.5, '_var.f' )' )
+      endif
+      if( _lsmask = 'ocn' )
+        prex( 'mask = lterp( -lsmask.'fn'(z=1,t=1)+0.5, '_var.f' )' )
+      endif
+
+      'set x 1'
+      'set y 1'
+      'set z 1'
+      'set time '_time_start.f' '_time_end.f
+      prex( 'v'f' = aave( maskout('_var.f',mask), lon='_lonmin', lon='_lonmax', lat='_latmin', lat='_latmax' )' )
+
+      'close 'fn
     endif
-    'set x 1 'xdef
-    'set y 1 'ydef
-    'set z 1'
-    'set t 1'
-    fn = last();
 
-    if( _lsmask = 'lnd' )
-      prex( 'mask = lterp(lsmask.'fn'(z=1,t=1)-0.5,'_var.f')' )
-    endif
-    if( _lsmask = 'ocn' )
-      prex( 'mask = lterp(-lsmask.'fn'(z=1,t=1)+0.5,'_var.f')' )
+    if( _lsmask = 'all'  )
+      'set x 1'
+      'set y 1'
+      'set z 1'
+      'set time '_time_start.f' '_time_end.f
+      prex( 'v'f' = aave( '_var.f', lon='_lonmin', lon='_lonmax', lat='_latmin', lat='_latmax' )' )
     endif
 
-    'set x 1'
-    'set y 1'
-    'set z 1'
-    'set time '_time_start.f' '_time_end.f
-    prex( 'v'f' = aave( maskout('_var.f',mask), lon='_lonmin', lon='_lonmax', lat='_latmin', lat='_latmax' )' )
-
-    'close 'fn
-  endif
-
-  if( _lsmask = 'all'  )
-    'set x 1'
-    'set y 1'
-    'set z 1'
-    'set time '_time_start.f' '_time_end.f
-    prex( 'v'f' = aave( '_var.f', lon='_lonmin', lon='_lonmax', lat='_latmin', lat='_latmax' )' )
-  endif
-
-  f = f + 1
-endwhile
+    f = f + 1
+  endwhile
 
 
 ***************************************************************
 * Draw
 ***************************************************************
-'mul 1 2 1 2'
-'set grads off'
+  'mul 1 2 1 2'
+  'set grads off'
 
-f = 1
-while( f <= _fmax )
-  'set dfile '_f2df.f
-  'set x 1'
-  'set y 1'
-  'set z 1'
-  'set time '_time_start.f' '_time_end.f
+  f = 1
+  while( f <= _fmax )
+    'set dfile '_f2df.f
+    'set x 1'
+    'set y 1'
+    'set z 1'
+*    'set time '_time_start.f' '_time_end.f
+    'set time '_time_start.1' '_time_end.1
 
-  'set vrange '_min.f' '_max.f
-  'set ylint '_int.f
-  'set xlopts 1 6 0.18'
-  'set ylopts 1 6 0.18'
-  'set cmark 0'
-  'set cthick '_cthick.f ; 'set ccolor '_ccolor.f ; 'set cstyle '_cstyle.f
-  'd v'f
+    'set vrange '_min.f' '_max.f
+    'set ylint '_int.f
+    'set xlopts 1 6 0.18'
+    'set ylopts 1 6 0.18'
+    'set cmark 0'
+    'set cthick '_cthick.f ; 'set ccolor '_ccolor.f ; 'set cstyle '_cstyle.f
+    'd v'f
 
-  yoffset = -0.3 * f
-  'setfont normal'
-  if( name = '' | unit = '' )
-    'draws -pos tl -base l -xoffset 0.7 -yoffset 'yoffset' -color '_ccolor.f' '_name.f' ['_unit.f'], '_run.f
-  else
-    'draws -pos tl -base l -xoffset 0.7 -yoffset 'yoffset' -color '_ccolor.f' '_run.f
-  endif
-  ypos = 7.8 - (f-1) * 0.3
-  'set line '_ccolor.f' '_cstyle.f' '_cthick.f
-  'draw line 1.1 'ypos' 1.6 'ypos
-
-  f = f + 1
-endwhile
-
-'setfont normal'
-*if( name = '' | unit = '' )
-*  'draws '_term
-*else
-*  'draws 'name', '_region', '_lsmask' ['unit']'
-*endif
-
-if( _lsmask = 'all' )
-  'draws 'name', '_region' ['unit']'
-else
-  'draws 'name', '_region'-'_lsmask' ['unit']'
-endif
-* TODO: _sname.f
-
-****************************
-if( _diff = -1 ) ; exit ; endif
-*'mul 1 2 1 1 -yoffset 0.3'
-'mul 1 2 1 1'
-'set dfile 1'
-'set grads off'
-
-f = 1
-*b = 1
-while( f <= _fmax )
-  'set vrange '_dmin.f' '_dmax.f
-  'set ylint '_dint.f
-  'set xlopts 1 6 0.18'
-  'set ylopts 1 6 0.18'
-  'set cmark 0'
-  'set cthick '_cthick.f ; 'set ccolor '_ccolor.f ; 'set cstyle '_cstyle.f
-  'd lterp(v'f',v'_diff') - v'_diff
-
-  if( f != _diff )
     yoffset = -0.3 * f
     'setfont normal'
-
     if( name = '' | unit = '' )
       'draws -pos tl -base l -xoffset 0.7 -yoffset 'yoffset' -color '_ccolor.f' '_name.f' ['_unit.f'], '_run.f
     else
       'draws -pos tl -base l -xoffset 0.7 -yoffset 'yoffset' -color '_ccolor.f' '_run.f
     endif
-
-*    ypos = 4.1 - (f-1) * 0.3
-    ypos = 3.8 - (f-1) * 0.3
+    ypos = 7.8 - (f-1) * 0.3
     'set line '_ccolor.f' '_cstyle.f' '_cthick.f
     'draw line 1.1 'ypos' 1.6 'ypos
+
+    f = f + 1
+  endwhile
+
+  'setfont normal'
+  if( _lsmask = 'all' )
+    'draws 'name', '_region' ['unit']'
+  else
+    'draws 'name', '_region'-'_lsmask' ['unit']'
   endif
+* TODO: _sname.f
 
-  f = f + 1
-endwhile
+****************************
+  if( _diff = -1 ) ; exit ; endif
+*'mul 1 2 1 1 -yoffset 0.3'
+  'mul 1 2 1 1'
+  'set dfile 1'
+  'set grads off'
 
-'setfont normal'
-'draws Comparison with '_run._diff
+  f = 1
+*b = 1
+  while( f <= _fmax )
+    'set vrange '_dmin.f' '_dmax.f
+    'set ylint '_dint.f
+    'set xlopts 1 6 0.18'
+    'set ylopts 1 6 0.18'
+    'set cmark 0'
+    'set cthick '_cthick.f ; 'set ccolor '_ccolor.f ; 'set cstyle '_cstyle.f
+    'd lterp(v'f',v'_diff') - v'_diff
 
-if( _save != '_save' & _save != '' )
+    if( f != _diff )
+      yoffset = -0.3 * f
+      'setfont normal'
+
+      if( name = '' | unit = '' )
+        'draws -pos tl -base l -xoffset 0.7 -yoffset 'yoffset' -color '_ccolor.f' '_name.f' ['_unit.f'], '_run.f
+      else
+        'draws -pos tl -base l -xoffset 0.7 -yoffset 'yoffset' -color '_ccolor.f' '_run.f
+      endif
+
+*    ypos = 4.1 - (f-1) * 0.3
+      ypos = 3.8 - (f-1) * 0.3
+      'set line '_ccolor.f' '_cstyle.f' '_cthick.f
+      'draw line 1.1 'ypos' 1.6 'ypos
+    endif
+
+    f = f + 1
+  endwhile
+
+  'setfont normal'
+  'draws Comparison with '_run._diff
+
+  if( _save != '_save' & _save != '' )
 *  'save '_save
-  prex( 'gxprint '_save'.eps white' )
-endif
+    prex( 'gxprint '_save'.eps white' )
+  endif
 
 ***************************************************************
 exit
@@ -286,6 +282,7 @@ function set_cnf()
   _save       = ''
 
   _lsmask     = 'all'
+  _lsmask_ctl = 'lsmask.ctl'
 
 *----- load cnf_spm.gsf
   rc = gsfpath( 'cnf cnf_sample' )
