@@ -599,7 +599,7 @@ endif
     if( (   _color != '' &   _color !=   '_color' ) & (   _color.f = '' |   _color.f =   '_color.'f ) ) ;   _color.f =  _color ; endif
     if( (  _dcolor != '' &  _dcolor !=  '_dcolor' ) & (  _dcolor.f = '' |  _dcolor.f =  '_dcolor.'f ) ) ;  _dcolor.f = _dcolor ; endif
 
-*    if( ( _ccolor.f = '' |  _ccolor.f =  '_ccolor.'f ) ) ;  _ccolor.f = f       ; endif
+    if( ( _ccolor.f = '' |  _ccolor.f =  '_ccolor.'f ) ) ;  _ccolor.f = f       ; endif
     f = f + 1
   endwhile
 
