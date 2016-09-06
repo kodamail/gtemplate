@@ -586,9 +586,20 @@ endif
 * set default and/or necessary values necessary after loading cnf
   f = 1
   while( f <= _fmax )
-    if( (  _ccolor.f = '' |  _ccolor.f =  '_ccolor.'f ) ) ;  _ccolor.f = f       ; endif
+    if( (    _name != '' &    _name !=    '_name' ) & (    _name.f = '' |    _name.f =    '_name.'f ) ) ;    _name.f =   _name ; endif
+    if( (    _unit != '' &    _unit !=    '_unit' ) & (    _unit.f = '' |    _unit.f =    '_unit.'f ) ) ;    _unit.f =   _unit ; endif
+    if( (     _min != '' &     _min !=     '_min' ) & (     _min.f = '' |     _min.f =     '_min.'f ) ) ;     _min.f =    _min ; endif
+    if( (     _max != '' &     _max !=     '_max' ) & (     _max.f = '' |     _max.f =     '_max.'f ) ) ;     _max.f =    _max ; endif
+    if( (     _int != '' &     _int !=     '_int' ) & (     _int.f = '' |     _int.f =     '_int.'f ) ) ;     _int.f =    _int ; endif
+    if( (    _dmin != '' &    _dmin !=    '_dmin' ) & (    _dmin.f = '' |    _dmin.f =    '_dmin.'f ) ) ;    _dmin.f =   _dmin ; endif
+    if( (    _dmax != '' &    _dmax !=    '_dmax' ) & (    _dmax.f = '' |    _dmax.f =    '_dmax.'f ) ) ;    _dmax.f =   _dmax ; endif
+    if( (    _dint != '' &    _dint !=    '_dint' ) & (    _dint.f = '' |    _dint.f =    '_dint.'f ) ) ;    _dint.f =   _dint ; endif
     if( (  _cstyle != '' &  _cstyle !=  '_cstyle' ) & (  _cstyle.f = '' |  _cstyle.f =  '_cstyle.'f ) ) ;  _cstyle.f = _cstyle ; endif
     if( (  _cthick != '' &  _cthick !=  '_cthick' ) & (  _cthick.f = '' |  _cthick.f =  '_cthick.'f ) ) ;  _cthick.f = _cthick ; endif
+    if( (   _color != '' &   _color !=   '_color' ) & (   _color.f = '' |   _color.f =   '_color.'f ) ) ;   _color.f =  _color ; endif
+    if( (  _dcolor != '' &  _dcolor !=  '_dcolor' ) & (  _dcolor.f = '' |  _dcolor.f =  '_dcolor.'f ) ) ;  _dcolor.f = _dcolor ; endif
+
+*    if( ( _ccolor.f = '' |  _ccolor.f =  '_ccolor.'f ) ) ;  _ccolor.f = f       ; endif
     f = f + 1
   endwhile
 
