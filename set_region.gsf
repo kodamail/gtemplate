@@ -12,4 +12,7 @@ function set_region()
   if( _region = 'east_asia'  ) ; _latmin = 0   ; _latmax = 50 ; _lonmin = 80  ; _lonmax = 180 ; endif
   if( _region = 'lowlat'     ) ; _latmin = -60 ; _latmax = 60 ; _lonmin = 0   ; _lonmax = 360 ; endif
   if( _region = 'tropics'    ) ; _latmin = -30 ; _latmax = 30 ; _lonmin = 0   ; _lonmax = 360 ; endif
+
+  if( _region = 'nhmid'      ) ; _latmin = 30  ; _latmax = 60 ; _lonmin = 0   ; _lonmax = 360 ; endif
+  if( _region = 'shmid'      ) ; _latmin = -60 ; _latmax = -30; _lonmin = 0   ; _lonmax = 360 ; endif
 return
