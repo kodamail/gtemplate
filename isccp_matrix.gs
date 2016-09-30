@@ -356,7 +356,7 @@ while( d <= dmax )
   f2 = subwrd( _disp.d, 2 )
   if( f1 = '' ) ; d = d + 1 ; continue ;  endif
 
-  title1 = 'ISCCP CF [%] for 'term', '_region
+  title1 = 'ISCCP CF [%] for '_term', '_region
   if( f2 = '' )
     title2 = '('_run.f1')'
     kind = 'white-(0)->grainbow'
