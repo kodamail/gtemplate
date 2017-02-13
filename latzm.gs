@@ -129,9 +129,9 @@ endwhile
 
 'setfont normal'
 if( name = '' | unit = '' )
-  'draws Zonal means, 'term' 'year
+  'draws Zonal means, '_term' 'year
 else
-  'draws Zonal Mean 'name' ['unit'], 'term' '_year
+  'draws Zonal Mean 'name' ['unit'], '_term' '_year
 endif
 * TODO: _sname.f
 
@@ -150,9 +150,14 @@ while( f <= _fmax )
   'set ylopts 1 6 0.18'
   'set cmark 0'
   'set cthick '_cthick.f ; 'set ccolor '_ccolor.f ; 'set cstyle '_cstyle.f
-  'd lterp(v'f',v'_diff') - v'_diff
+*  'd lterp(v'f',v'_diff') - v'_diff
+  'v = lterp(v'f',v'_diff') - v'_diff
+  'd v'
 
-  gm = v2s( '(gm'f'-gm'_diff')' )
+  'gm = ave( v, lat='_latmin', lat='_latmax' )'
+  gm = v2s( 'gm' )
+
+*  gm = v2s( '(gm'f'-gm'_diff')' )
   gm = math_format( '%.2f', gm )
 
   if( f != _diff )
