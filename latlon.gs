@@ -93,15 +93,21 @@ function latlon( args )
 ***************************************************************
 * Draw
 ***************************************************************
+  first = 1
   d = 1
   while( d <= 6 )
     i = 1
     j = 4-d
     if( j <= 0 ) ; i = 2 ; j = j + 3 ; endif
 
-    xo = -0.2 ; yo = 0.1
-    xwid = ''
-    'mul 2 3 'i' 'j' -xoffset 'xo' -yoffset 'yo' 'xwid
+*    xo = -0.2 ; yo = 0.1
+*    xwid = ''
+*    'mul 2 3 'i' 'j' -xoffset 'xo' -yoffset 'yo' 'xwid
+
+    xo = -0.2 ; yo = -0.15
+    xwid = '' ; yint = '-yint 0.62'
+    'mul 2 3 'i' 'j' -xoffset 'xo' -yoffset 'yo' 'xwid' 'yint
+
     'set grads off'
     'set mpdraw '_mpdraw
 
@@ -128,11 +134,14 @@ function latlon( args )
       if( d <= 3 ) ; xposmin = 1.4
       else         ; xposmin = 6.4 ; endif
       xposmax = xposmin + 4.3
-      yposmin = 0.4 + (j-1) * 2.5
-      yposmax = yposmin + 0.2
+*      yposmin = 0.4 + (j-1) * 2.5
+      yposmin = 0.2 + (j-1) * 2.5
+*      yposmax = yposmin + 0.2
+      yposmax = yposmin + 0.15
       'q shades'
       if( sublin(result,1) != 'None' )
-        'xcbar 'xposmin' 'xposmax' 'yposmin' 'yposmax' -edge triangle -line on -fstep 2'
+*        'xcbar 'xposmin' 'xposmax' 'yposmin' 'yposmax' -edge triangle -line on -fstep 2'
+        'xcbar 'xposmin' 'xposmax' 'yposmin' 'yposmax' -edge triangle -line on -fstep 2 -fw 0.10 -fh 0.10 -ft 4'
       endif
     endif
 
@@ -146,19 +155,58 @@ function latlon( args )
       'd v'
     endif
 
-    'setfont small'
-    if( f2 = '' ) ; 'draws ('_run.f1')' % _sname.f1
-    else ; 'draws ('_run.f1') - ('_run.f2')' % _sname.f1 ; endif
+    ymonit = 0
+    if( _monit.d = 'bias' )
+      ymonit = 0.062
+      'bias = aave( v, lon='_lonmin', lon='_lonmax', lat='_latmin', lat='_latmax' )'
+      bias = v2s( 'bias' )
+      bias = math_format( '%.2f', bias )
+      'rmse = aave( sqrt((v)*(v)), lon='_lonmin', lon='_lonmax', lat='_latmin', lat='_latmax' )'
+      rmse = v2s( 'rmse' )
+      rmse = math_format( '%.2f', rmse )
+      'scorr = scorr( v'f1', lterp( v'f2', v'f1' ), lon='_lonmin', lon='_lonmax', lat='_latmin', lat='_latmax' )'
+      scorr = v2s( 'scorr' )
+      scorr = math_format( '%.2f', scorr )
+      'set strsiz 0.08 0.08'
+      'set string 1 c 3'
+      'draws -pos tr -base r -color 14 -yoffset -0.027 bias='bias', rmse='rmse', scorr='scorr
+    endif
 
-*  if( d = 1 )
-*    'setfont normal'
-    'setfont normal -base tl'
+*    'setfont small'
+*    if( f2 = '' ) ; 'draws ('_run.f1')' % _sname.f1
+*    else ; 'draws ('_run.f1') - ('_run.f2')' % _sname.f1 ; endif
+
+    'set strsiz 0.10 0.10'
+    'set string 1 c 4.0'
+    r30.1 = substr(_run.f1,1,30)
+    if( r30.1 !=_run.f1 ) ; r30.1 = r30.1 % '...' ; endif
+    r15.1 = substr(_run.f1,1,15)
+    if( r15.1 !=_run.f1 ) ; r15.1 = r15.1 % '...' ; endif
+    r15.2 = substr(_run.f2,1,15)
+    if( r15.2 !=_run.f2 ) ; r15.2 = r15.2 % '...' ; endif
+*    if( f2 = '' ) ; 'draws -yoffset 0.065 ('r30.1')' % _sname.f1
+*    else ; 'draws -yoffset 0.065 ('r15.1') - ('r15.2')' % _sname.f1 ; endif
+    if( f2 = '' ) ; 'draws -yoffset 'ymonit' ('r30.1')' % _sname.f1
+    else ; 'draws -yoffset 'ymonit' ('r15.1') - ('r15.2')' % _sname.f1 ; endif
+
+
+  if( first = 1 )
+    first = 0
+*    'setfont normal -base tl'
+    'set strsiz 0.1 0.1'
+    'set string 1 tl 4.0'
     'draw string 1.4 8.4 '_name.f1' for '_term' ['_unit.f1']'
-*  endif
+  endif
 
 *** zonal mean ***
     if( _region = '' | _region = 'global' | _region = '_region' )
-      ypos = 2.5 * j - 1.6
+
+*    xo = -0.2 ; yo = -0.15
+*    xwid = '' ; yint = '-yint 0.62'
+
+
+*      ypos = 2.5 * j - 1.6
+      ypos = 2.62 * j - 1.72 - 0.25
       if( i = 1 ) ; 'set parea 4.8 5.8 'ypos' 'ypos+2.0 ; endif
       if( i = 2 ) ; 'set parea 9.8 10.8 'ypos' 'ypos+2.0 ; endif
 
@@ -175,12 +223,16 @@ function latlon( args )
 *** global mean ***
    'gm = aave( v, lon='_lonmin', lon='_lonmax', lat='_latmin', lat='_latmax' )'
     gm = v2s( 'gm' )
+*    'set strsiz 0.15 0.15'
+*    'set string 1 c 6.0 270'
     if( _region = '' | _region = 'global' | _region = '_region' )
       'setfont normal -angle 270'
       'draws -pos tr -base tl -xoffset -0.1 -yoffset -0.5 -color 1 'math_format('%.2f',gm)
+*      'draws -pos tr -base tl -xoffset -0.1 -yoffset -0.5 -color 14 'math_format('%.2f',gm)
       'setfont normal -angle 0'
     else
       'draws -pos tr -color 1 'math_format('%.2f',gm)
+*      'draws -pos tr -color 14 'math_format('%.2f',gm)
     endif
 
     d = d + 1

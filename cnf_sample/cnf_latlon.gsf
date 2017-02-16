@@ -37,6 +37,7 @@ function cnf_latlon()
 * _disp.i: Fig. number to draw on the i-th panel
 * _cont.i: contour on/off (default: following _cont)
 * _cont  : default contour on/off (default: off)
+* _monit.i: = 'bias' for bias monitor
 *
 *
 * sample: 3 raw figs. and 2 diff. figs
@@ -52,6 +53,8 @@ function cnf_latlon()
 *    _disp.6 = '3 1'
 *    _cbar.3 = 'hor'
 *    _cbar.6 = 'hor'
+*    _monit.5 = 'bias'
+*    _monit.6 = 'bias'
   endif
 *
 *----- Time
