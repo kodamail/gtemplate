@@ -158,18 +158,18 @@ function latlon( args )
     ymonit = 0
     if( _monit.d = 'bias' )
       ymonit = 0.062
-      'bias = aave( v, lon='_lonmin', lon='_lonmax', lat='_latmin', lat='_latmax' )'
+      prex( 'bias = aave( v, lon='_lonmin', lon='_lonmax', lat='_latmin', lat='_latmax' )' )
       bias = v2s( 'bias' )
       bias = math_format( '%.2f', bias )
-      'rmse = aave( sqrt((v)*(v)), lon='_lonmin', lon='_lonmax', lat='_latmin', lat='_latmax' )'
+      prex( 'rmse = aave( sqrt((v)*(v)), lon='_lonmin', lon='_lonmax', lat='_latmin', lat='_latmax' )' )
       rmse = v2s( 'rmse' )
       rmse = math_format( '%.2f', rmse )
-      'scorr = scorr( v'f1', lterp( v'f2', v'f1' ), lon='_lonmin', lon='_lonmax', lat='_latmin', lat='_latmax' )'
-      scorr = v2s( 'scorr' )
-      scorr = math_format( '%.2f', scorr )
+      prex( 'sc = scorr( v'f1', lterp( v'f2', v'f1' ), lon='_lonmin', lon='_lonmax', lat='_latmin', lat='_latmax' )' )
+      sc = v2s( 'sc' )
+      sc = math_format( '%.2f', sc )
       'set strsiz 0.08 0.08'
       'set string 1 c 3'
-      'draws -pos tr -base r -color 14 -yoffset -0.027 bias='bias', rmse='rmse', scorr='scorr
+      'draws -pos tr -base r -color 14 -yoffset -0.027 bias='bias', rmse='rmse', scorr='sc
     endif
 
 *    'setfont small'
