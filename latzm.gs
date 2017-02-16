@@ -376,6 +376,13 @@ function get_varcnf( f, varid, varcnfid )
     dmin = -40 ; dint = 20 ; dmax = 40
   endif
 
+  if( varid = 'mslp' )
+    name = 'MSLP'
+    unit = 'hPa'
+    min  = 980 ; int  = 20 ; max  = 1030
+    dmin = -10  ; dint = 5 ; dmax = 10
+  endif
+
   if( varid = 'precip' )
     name = 'Precipitation'
     unit = 'mm/day'
