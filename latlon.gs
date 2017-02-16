@@ -513,10 +513,12 @@ function get_varcnf( f, varid, varcnfid )
   if( varid = 'mslp' )
     name = 'MSLP'
     unit = 'hPa'
-    min2d  = 1000 ; int2d  = 2 ; max2d  = 1030
-*    dmin2d = -10  ; dint2d = 2 ; dmax2d = 10
-    dmin2d = -5   ; dint2d = 1 ; dmax2d = 5
-    min1d  = 1005 ; int1d  = 5 ; max1d  = 1025
+*    min2d  = 1000 ; int2d  = 2 ; max2d  = 1030
+    min2d  = 980 ; int2d  = 4 ; max2d  = 1030
+    dmin2d = -10  ; dint2d = 2 ; dmax2d = 10
+*    dmin2d = -5   ; dint2d = 1 ; dmax2d = 5
+*    min1d  = 1005 ; int1d  = 5 ; max1d  = 1025
+    min1d  = 980 ; int1d  = 20 ; max1d  = 1030
     dmin1d = -10  ; dint1d = 5 ; dmax1d = 10
     color  = 'purple->blue->aqua->lime->yellow->red->maroon'
     dcolor = 'bluered'
