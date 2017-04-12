@@ -376,8 +376,9 @@ function get_varcnf( f, varid, varcnfid )
     dmin = -40 ; dint = 20 ; dmax = 40
   endif
 
-  if( varid = 'mslp' )
+  if( varid = 'mslp' | varid = 'mslp_ecmwf' )
     name = 'MSLP'
+    if( varid = 'mslp_ecmwf' ) ; name = name % '`becmwf`n'; endif
     unit = 'hPa'
     min  = 980 ; int  = 20 ; max  = 1030
     dmin = -10  ; dint = 5 ; dmax = 10
