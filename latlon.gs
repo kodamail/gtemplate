@@ -145,7 +145,30 @@ function latlon( args )
       endif
     endif
 
+    'set gxout contour'
+    'set clab off'
+    'set cthick 1'
+    'set ccolor 1'
+    if( f2 = '' )
+      'set cmin '_max2d.f1+_int2d.f1
+      'set cint '_int2d.f1
+    else
+      'set cmin '_dmax2d.f1+_dint2d.f1
+      'set cint '_dint2d.f1
+    endif
+    'd v'
+    'set cthick 1'
+    if( f2 = '' )
+      'set cmin '_max2d.f1+_int2d.f1
+      'set cint '_int2d.f1
+    else
+      'set cmin '_dmax2d.f1+_dint2d.f1
+      'set cint '_dint2d.f1
+    endif
+    'd v'
+
     if( _cont.d = 'on' )
+        'set clab on'
         'set gxout contour'; 'set cthick 6'; 'set ccolor 1'
       if( f2 = '' )
         'set cint '_int2d.f1
