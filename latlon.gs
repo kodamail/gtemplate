@@ -159,10 +159,10 @@ function latlon( args )
     'd v'
     'set cthick 1'
     if( f2 = '' )
-      'set cmin '_max2d.f1+_int2d.f1
+      'set cmax '_min2d.f1-_int2d.f1
       'set cint '_int2d.f1
     else
-      'set cmin '_dmax2d.f1+_dint2d.f1
+      'set cmax '_dmin2d.f1-_dint2d.f1
       'set cint '_dint2d.f1
     endif
     'd v'
