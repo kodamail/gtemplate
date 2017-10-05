@@ -264,6 +264,13 @@ function get_varcnf( f, varid, varcnfid )
     dmin = -50  ; dint = 25  ; dmax = 50
   endif
 
+  if( varid = 'aw_down_toa' )
+    name = 'Downward Long+Shortwave Radiation @ TOA'
+    unit = 'W/m^2'
+    min  = 0   ; int  = 250 ; max  = 500
+    dmin = -50 ; dint = 25  ; dmax = 50
+  endif
+
   if( varid = 'aw_net_sfc' )
     name = 'Down-Upward Long+Shortwave Radiation @ Surface'
     unit = 'W/m^2'
@@ -331,6 +338,20 @@ function get_varcnf( f, varid, varcnfid )
     unit = 'W/m^2'
     min  = -200 ; int  = 100 ; max  = 200
     dmin = -50  ; dint = 25  ; dmax = 50
+  endif
+
+  if( varid = 'lw_down_toa' )
+    name = 'Downward Longwave Radiation @ TOA'
+    unit = 'W/m^2'
+    min  = 0 ; int  = 2  ; max  = 6
+    dmin = -50 ; dint = 25  ; dmax = 50
+  endif
+
+  if( varid = 'lw_net_toa' )
+    name = 'Down-Upward Longwave Radiation @ TOA'
+    unit = 'W/m^2'
+    min  = -300 ; int  =50  ; max  = -100
+    dmin = -50 ; dint = 25  ; dmax = 50
   endif
 
   if( varid = 'lw_up_toa' | varid = 'lw_up_clr_toa' )
