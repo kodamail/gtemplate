@@ -368,6 +368,18 @@ function get_varcnf( f, varid, varcnfid )
     dcolor = 'bluered'
   endif
 
+  if( varid = 'aw_down_toa' )
+    name = 'Downward Long+Shortwave Radiation @ TOA'
+    unit = 'W/m^2'
+    min2d  = 0   ; int2d  = 50  ; max2d  = 500
+    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
+    min1d  = 0   ; int1d  = 250 ; max1d  = 500
+    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+*    color  = 'grainbow'
+    dcolor = 'bluered'
+  endif
+
   if( varid = 'aw_net_sfc' )
     name = 'Down-Upward Long+Shortwave Radiation @ Surface'
     unit = 'W/m^2'
@@ -533,6 +545,28 @@ function get_varcnf( f, varid, varcnfid )
     dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
     min1d  = 100 ; int1d  = 50  ; max1d  = 300
     dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'lw_net_toa' )
+    name = 'Down-Upward Longwave Radiation @ TOA'
+    unit = 'W/m^2'
+    min2d  = -340 ; int2d  = 20  ; max2d  = -100
+    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
+    min1d  = -300 ; int1d  = 50  ; max1d  = -100
+    dmin1d = -50 ; dint1d = 25  ; dmax1d = 50
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'lw_down_toa' )
+    name = 'Downward Longwave Radiation @ TOA'
+    unit = 'W/m^2'
+    min2d  = 1 ; int2d  = 1  ; max2d  = 5
+    dmin2d = -0.5 ; dint2d = 0.1  ; dmax2d = 0.5
+    min1d  = 0 ; int1d  = 2  ; max1d  = 6
+    dmin1d = -0.5 ; dint1d = 0.5  ; dmax1d = 0.5
     color  = 'purple->blue->aqua->lime->yellow->red->maroon'
     dcolor = 'bluered'
   endif
