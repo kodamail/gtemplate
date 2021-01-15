@@ -113,7 +113,8 @@ function varid_sep( varid )
   target.4 = 'rh'
   target.5 = 'qv'
   target.6 = 'land_wg'
-  tarmax = 6
+  target.7 = 'ws'
+  tarmax = 7
 
   varid_base = varid
   varid_lev = ''

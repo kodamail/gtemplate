@@ -344,7 +344,8 @@ function get_varcnf( f, varid, varcnfid )
   target.3 = 't'
   target.4 = 'rh'
   target.5 = 'qv'
-  tarmax = 5
+  target.6 = 'ws'
+  tarmax = 6
 
   tar = 1
   while( tar <= tarmax )
@@ -859,31 +860,33 @@ function get_varcnf( f, varid, varcnfid )
     name = '2m Temperature'
     unit = 'K'
     min2d  = 200 ; int2d  = 10 ; max2d  = 320
-    dmin2d = -10 ; dint2d = 1  ; dmax2d = 10
+*    dmin2d = -10 ; dint2d = 1  ; dmax2d = 10
+    dmin2d = -8 ; dint2d = 1  ; dmax2d = 8
     min1d  = 220 ; int1d  = 30 ; max1d  = 310
     dmin1d = -6  ; dint1d = 3  ; dmax1d = 6
     color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
+*    dcolor = 'bluered'
+    dcolor = 'purple->bluered->maroon'
   endif
 
   if( varid_base = 't' & valnum(varid_lev) != 0 )
     name = 'Temperature @ 'varid_lev'hPa'
     unit = '%'
     min2d  = 220 ; int2d  = 5  ; max2d  = 300
-    dmin2d = -10 ; dint2d = 1  ; dmax2d = 10
+    dmin2d = -10 ; dint2d = 2  ; dmax2d = 10
     min1d  = 220 ; int1d  = 30 ; max1d  = 300
-    dmin1d = -6  ; dint1d = 3  ; dmax1d = 6
+    dmin1d = -10  ; dint1d = 5  ; dmax1d = 10
     if( varid_lev <= 500 )
       min2d  = 200 ; int2d  = 5  ; max2d  = 280
-      dmin2d = -10 ; dint2d = 1  ; dmax2d = 10
+      dmin2d = -10 ; dint2d = 2  ; dmax2d = 10
       min1d  = 200 ; int1d  = 30 ; max1d  = 280
-      dmin1d = -6  ; dint1d = 3  ; dmax1d = 6
+      dmin1d = -10  ; dint1d = 5  ; dmax1d = 10
     endif
     if( varid_lev <= 300 )
       min2d  = 180 ; int2d  = 5  ; max2d  = 260
-      dmin2d = -10 ; dint2d = 1  ; dmax2d = 10
+      dmin2d = -10 ; dint2d = 2  ; dmax2d = 10
       min1d  = 180 ; int1d  = 30 ; max1d  = 260
-      dmin1d = -6  ; dint1d = 3  ; dmax1d = 6
+      dmin1d = -10  ; dint1d = 5  ; dmax1d = 10
     endif
     color  = 'purple->blue->aqua->lime->yellow->red->maroon'
     dcolor = 'bluered'
@@ -903,12 +906,32 @@ function get_varcnf( f, varid, varcnfid )
   if( varid_base = 'u' & valnum(varid_lev) != 0 )
     name = 'Zonal Wind @ 'varid_lev'hPa'
     unit = 'm/s'
-    min2d  = -30 ; int2d  = 5  ; max2d  = 30
-    dmin2d = -10 ; dint2d = 2  ; dmax2d = 10
-    min1d  = -30 ; int1d  = 15 ; max1d  = 30
-    dmin1d = -10 ; dint1d = 5  ; dmax1d = 10
-    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
-    dcolor = 'bluered'
+    min2d  = -50 ; int2d  = 10  ; max2d  = 50
+    dmin2d = -25 ; dint2d = 5  ; dmax2d = 25
+    min1d  = -50 ; int1d  = 30 ; max1d  = 50
+    dmin1d = -25 ; dint1d = 15  ; dmax1d = 25
+*    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+*    dcolor = 'bluered'
+    if( varid_lev >= 300 )
+      min2d  = -35 ; int2d  = 5  ; max2d  = 35
+      dmin2d = -15 ; dint2d = 3  ; dmax2d = 15
+      min1d  = -35 ; int1d  = 20 ; max1d  = 35
+      dmin1d = -15 ; dint1d = 10  ; dmax1d = 15
+    endif
+    if( varid_lev >= 500 )
+      min2d  = -25 ; int2d  = 5  ; max2d  = 25
+      dmin2d = -10 ; dint2d = 2  ; dmax2d = 10
+      min1d  = -25 ; int1d  = 15 ; max1d  = 25
+      dmin1d = -10 ; dint1d = 5  ; dmax1d = 10
+    endif
+    if( varid_lev >= 700 )
+      min2d  = -20 ; int2d  = 4  ; max2d  = 20
+      dmin2d = -10 ; dint2d = 2  ; dmax2d = 10
+      min1d  = -20 ; int1d  = 10 ; max1d  = 20
+      dmin1d = -10 ; dint1d = 5  ; dmax1d = 10
+    endif
+    color  = 'purple->bluered->maroon'
+    dcolor = 'purple->bluered->maroon'
   endif
 
   if( varid = 'v10m' )
@@ -929,6 +952,28 @@ function get_varcnf( f, varid, varcnfid )
     dmin2d = -2.5 ; dint2d = 0.5 ; dmax2d = 2.5
     min1d  = -5   ; int1d  = 2.5 ; max1d  = 5
     dmin1d = -2   ; dint1d = 1   ; dmax1d = 2
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'ws10m' )
+    name = '10m Wind Speed'
+    unit = 'm/s'
+    min2d  = 1 ; int2d  = 1 ; max2d  = 12
+    dmin2d = -5  ; dint2d = 1 ; dmax2d = 5
+    min1d  = 0 ; int1d  = 3 ; max1d  = 12
+    dmin1d = -4  ; dint1d = 2 ; dmax1d = 4
+    color  = 'white-(0)->purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid_base = 'ws' & valnum(varid_lev) != 0 )
+    name = 'Wind Speed @ 'varid_lev'hPa'
+    unit = 'm/s'
+    min2d  = 2   ; int2d  = 2   ; max2d  = 20
+    dmin2d = -5 ; dint2d = 1 ; dmax2d = 5
+    min1d  = 0   ; int1d  = 5 ; max1d  = 20
+    dmin1d = -5   ; dint1d = 2.5   ; dmax1d = 5
     color  = 'purple->blue->aqua->lime->yellow->red->maroon'
     dcolor = 'bluered'
   endif

@@ -243,7 +243,8 @@ function get_varcnf( f, varid, varcnfid )
   target.3 = 't'
   target.4 = 'rh'
   target.5 = 'qv'
-  tarmax = 5
+  target.6 = 'ws'
+  tarmax = 6
 
   tar = 1
   while( tar <= tarmax )
@@ -590,6 +591,21 @@ function get_varcnf( f, varid, varcnfid )
     min  = -5   ; int  = 2.5 ; max  = 5
     dmin = -2   ; dint = 1   ; dmax = 2
   endif
+
+  if( varid = 'ws10m' )
+    name = '10m Wind Speed'
+    unit = 'm/s'
+    min  = 0  ; int  = 3 ; max  = 12
+    dmin = -4 ; dint = 2 ; dmax = 4
+  endif
+
+  if( varid_base = 'ws' & valnum(varid_lev) != 0 )
+    name = 'Wind Speed @ 'varid_lev'hPa'
+    unit = 'm/s'
+    min  = 0  ; int  = 5   ; max  = 20
+    dmin = -5 ; dint = 2.5 ; dmax = 5
+  endif
+
 
 * set default varcnf to global varcnf 
   if(  _name.f =  '_name.'f ) ;  _name.f =  name ; endif
