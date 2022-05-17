@@ -260,10 +260,18 @@ function latlon( args )
     d = d + 1
   endwhile
 
-  if( _save != '_save' & _save != '' )
-*  'save '_save
+  ext = getext( _save )
+  if( ext = 'png' )
+    prex( 'save -lh '_save )
+  else
     prex( 'gxprint '_save'.eps white' )
   endif
+
+*  if( _save != '_save' & _save != '' )
+**  'save '_save
+*    prex( 'gxprint '_save'.eps white' )
+**    prex( 'save -lh '_save'.png' )
+*  endif
 
   exit
 return
@@ -483,7 +491,7 @@ function get_varcnf( f, varid, varcnfid )
 
   if( varid = 'iwp' )
     name = 'Ice Water Path'
-    unit = 'g/m^2'
+    unit = 'kg/m^2'
     min2d  = 20  ; int2d  = 20  ; max2d  = 200
     dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
     min1d  = 0   ; int1d  = 100 ; max1d  = 200
@@ -664,7 +672,7 @@ function get_varcnf( f, varid, varcnfid )
 
   if( varid = 'lwp' )
     name = 'Liquid Water Path'
-    unit = 'g/m^2'
+    unit = 'kg/m^2'
     min2d  = 20  ; int2d  = 20  ; max2d  = 200
     dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
     min1d  = 0   ; int1d  = 100 ; max1d  = 200
@@ -768,6 +776,17 @@ function get_varcnf( f, varid, varcnfid )
     min1d  = 0   ; int1d  = 25 ; max1d  = 100
     dmin1d = -20 ; dint1d = 10 ; dmax1d = 20
     color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'snow' )
+    name = 'Snow amount'
+    unit = 'kg/m^2'
+    min2d  = 30 ; int2d  = 30   ; max2d  = 210
+    dmin2d = -50  ; dint2d = 10 ; dmax2d = 50
+    min1d  = 0 ; int1d  = 50  ; max1d  = 300
+    dmin1d = -50  ; dint1d = 25 ; dmax1d = 50
+    color  = 'white-(0)->purple->blue->aqua->lime->yellow->red->maroon'
     dcolor = 'bluered'
   endif
 
@@ -896,6 +915,17 @@ function get_varcnf( f, varid, varcnfid )
       min1d  = 180 ; int1d  = 30 ; max1d  = 260
       dmin1d = -10  ; dint1d = 5  ; dmax1d = 10
     endif
+    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
+    dcolor = 'bluered'
+  endif
+
+  if( varid = 'ts' )
+    name = 'Surface skip temperature'
+    unit = 'K'
+    min2d  = 200 ; int2d  = 10 ; max2d  = 320
+    dmin2d = -10 ; dint2d = 1  ; dmax2d = 10
+    min1d  = 220 ; int1d  = 30 ; max1d  = 310
+    dmin1d = -6  ; dint1d = 3  ; dmax1d = 6
     color  = 'purple->blue->aqua->lime->yellow->red->maroon'
     dcolor = 'bluered'
   endif
