@@ -15,7 +15,6 @@ function latlon( args )
 *----- set cnf by loading cnf_latlon.gsf
   set_cnf()
 
-
   set_region()
   set_time()
 
@@ -35,7 +34,6 @@ function latlon( args )
 
     f = f + 1
   endwhile
-
 
 * TODO: detailed description such as the below should be output to txt file if specified.
 ***************************************************************
@@ -560,9 +558,8 @@ function get_varcnf( f, varid, varcnfid )
     endif ; endif
   endif
 
-  if( varid = 'lh_sfc' | varid = 'sh_sfc' )
-    if( varid = 'sh_sfc' ) ; name = 'Surface Sensible Heat Flux' ; endif
-    if( varid = 'lh_sfc' ) ; name = 'Surface Latent Heat Flux'   ; endif
+  if( varid = 'lh_sfc' )
+    name = 'Surface Latent Heat Flux'
     unit = 'W/m^2'
     min2d  = -200 ; int2d  = 40  ; max2d  = 200
     dmin2d = -100 ; dint2d = 20  ; dmax2d = 100
@@ -571,6 +568,17 @@ function get_varcnf( f, varid, varcnfid )
 *    color  = 'purple->blue->aqua->lime->yellow->red->maroon'
     color  = 'purple->bluered->maroon'
 *    dcolor = 'bluered'
+    dcolor = 'purple->bluered->maroon'
+  endif
+
+  if( varid = 'sh_sfc' )
+    name = 'Surface Sensible Heat Flux'
+    unit = 'W/m^2'
+    min2d  = -100 ; int2d  = 20  ; max2d  = 100
+    dmin2d = -50 ; dint2d = 10  ; dmax2d = 50
+    min1d  = -100 ; int1d  = 50 ; max1d  = 100
+    dmin1d = -25  ; dint1d = 15  ; dmax1d = 25
+    color  = 'purple->bluered->maroon'
     dcolor = 'purple->bluered->maroon'
   endif
 

@@ -3,7 +3,7 @@
 *
 *
 * run_list(
-*   runid, varid[, [ -cdir ] cdir ] [-show-dir]
+*   runid, varid[, [ -cdir ] cdir ] [-show-dir] [-show-pdir] [-show-cdir]
 * )
 *
 * use rc = gsfpath( 'PATH PATH/database' ) to set path for gsf from gs
@@ -17,8 +17,10 @@ function run_list( args )
 *  rc = gsfpath( 'database' )
   runid = ''
   varid = ''
-  cdir = ''
-  flag_show_dir = 0
+  cdir  = ''
+  cdir2 = ''
+*  flag_show_dir = 0
+  flag_show = ''
   i = 1
   while( i < 1000 )
     flag = 0
@@ -27,8 +29,21 @@ function run_list( args )
     if( flag = 0 & key = '-cdir' )
       flag = 1 ; cdir = subwrd( args, i ) ; i = i + 1
     endif
+    if( flag = 0 & key = '-cdir2' )
+      flag = 1 ; cdir2 = subwrd( args, i ) ; i = i + 1
+    endif
     if( flag = 0 & key = '-show-dir' )
-      flag = 1 ; flag_show_dir = 1
+*      flag = 1 ; flag_show_dir = 1
+      flag = 1 ; flag_show = 'dir'
+    endif 
+    if( flag = 0 & key = '-show-pdir' )
+      flag = 1 ; flag_show = 'pdir'
+    endif 
+    if( flag = 0 & key = '-show-cdir' )
+      flag = 1 ; flag_show = 'cdir'
+    endif 
+    if( flag = 0 & key = '-show-cdir2' )
+      flag = 1 ; flag_show = 'cdir2'
     endif 
     if( flag = 0 & runid = '' )
       flag = 1 ; runid = key
@@ -40,6 +55,10 @@ function run_list( args )
       flag = 1 ; cdir = key
     endif
   endwhile
+
+  if( flag_show = 'cdir'  ) ; return cdir  ; endif
+  if( flag_show = 'cdir2' ) ; return cdir2 ; endif
+
 *
 *-----
 *
@@ -57,9 +76,10 @@ function run_list( args )
 *
 * rl_* returns run name and variable expression if possible.
 *
-  tmp = rlint_database( runid, varid_base, varid_lev, cdir, flag_show_dir )
+  tmp = rlint_database( runid, varid_base, varid_lev, cdir, flag_show )
   if( tmp != '' )
-    if( flag_show_dir = 1 ) ; return tmp ; endif
+*    if( flag_show_dir = 1 ) ; return tmp ; endif
+    if( flag_show != '' ) ; return tmp ; endif
     run = subwrd( tmp, 1 )
     var = subwrd( tmp, 2 )
     vary = subwrd( tmp, 3 )

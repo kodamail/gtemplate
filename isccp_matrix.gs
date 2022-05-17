@@ -28,6 +28,7 @@ endif
 ***************************************************************
 f = 1
 while( f <= _fmax )
+*  say f % ' / ' % _fmax
   if( _var_pres.f != '' & _var_pres.f != '_var_pres.'f )
     'set dfile '_f2df.f+1
     'set lat '_latmin' '_latmax
@@ -35,10 +36,14 @@ while( f <= _fmax )
     'set t 1'
     'set z 1'
     zdef = qctlinfo( _f2df.f+1, 'zdef', 1 )
-    if( _time_start.f != '' ) 
+*    if( _time_start.f != '' ) 
+    if( _time_start.f != '' & _time_end.f != '' )
       prex( 'prs'f' = ave( max('_var_pres.f'/100,z=1,z='zdef'), time='_time_start.f', time='_time_end.f' )' )
-    else
-      prex( 'clave max('_var_pres.f'/100,z=1,z='zdef') 'clim.f' prs'f )
+    endif
+    if( _clim_arg.f != '' )
+*      prex( 'clave max('_var_pres.f'/100,z=1,z='zdef') 'clim.f' prs'f )
+      prex( 'clave max('_var_pres.f'/100,z=1,z='zdef') '_clim_arg.f' prs'f )
+*      say _clim_arg.f
     endif
   endif
   f = f + 1
